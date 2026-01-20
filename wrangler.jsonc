@@ -12,5 +12,24 @@
   "observability": {
     "enabled": true
   },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "Database"
+      ]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DATABASE",
+      "database_id": "5e1515a7-d272-4986-8ca7-1368a862882d"
+    },
+    {
+      "binding": "DB",
+      "database_name": "linkee-enthusiastic-platypus",
+      "database_id": "02a8f9af-e8aa-45f1-b273-153596b9ec7e"
+    }
+  ],
   "vars": {}
 }
