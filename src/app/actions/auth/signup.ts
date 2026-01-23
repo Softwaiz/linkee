@@ -4,7 +4,7 @@ import { db } from "@db/index";
 import { getRequestInfo } from "rwsdk/worker";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import * as cookie from "cookie";
+import { identityCookie } from "../../../cookies";
 
 export const handleSignup = async (data: SignupInput) => {
     try {
@@ -33,7 +33,7 @@ export const handleSignup = async (data: SignupInput) => {
 
         let signed = jwt.sign({ id: newUser!.id, name: `${newUser?.firstName} ${newUser?.lastName}` }, process.env.SIGNING_KEY!, { expiresIn: '7d' });
 
-        const serialized = await cookie.serialize("identity", signed, {
+        const serialized = identityCookie.set(signed, {
             maxAge: 60 * 60 * 24 * 7,
         });
 

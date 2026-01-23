@@ -8,19 +8,20 @@ import Signup from "@/pages/auth/signup";
 import BaseLayout from "@/layouts/base";
 import * as cookie from "cookie";
 import { db } from "@db/index";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import AppHomePage from "@/pages/protected/app";
 import ProtectedLayout from "@/layouts/protected";
 import { requireIdentity } from "@/middlewares/authentication";
+import { identityCookie } from "./cookies";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, ctx: DefaultAppContext) {
   try {
-    const identityCookie = cookie.parse(request.headers.get("cookie") || '').identity;
-    if (!identityCookie) {
+    const token = identityCookie.get(request.headers);
+    if (!token) {
       return;
     }
-    let parsed = jwt.verify(identityCookie, process.env.SIGNING_KEY!) as { id: string; name: string; email: string; };
+    let parsed = jwt.verify(token, process.env.SIGNING_KEY!) as { id: string; name: string; email: string; };
 
     const user = await db
       .selectFrom("users")
