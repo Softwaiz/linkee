@@ -33,6 +33,12 @@
       "@components/*": [
         "./src/app/components/*"
       ],
+      "@actions/*": [
+        "./src/app/actions/*"
+      ],
+      "@layouts/*": [
+        "./src/app/layouts/*"
+      ],
       "@db/*": [
         "./src/db/*"
       ]

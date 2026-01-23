@@ -1,4 +1,5 @@
 import styles from "./styles/globals.css?url";
+import { WrappedToaster } from "./toaster";
 
 export const Document: React.FC<{ children: React.ReactNode }> = ({
   children,

@@ -11,4 +11,9 @@ export default defineConfig({
     redwood(),
     tailwindcss(),
   ],
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  }
 });

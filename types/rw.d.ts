@@ -1,8 +1,9 @@
 import type { AppContext } from "../src/worker";
+import { User } from "@db/index";
 
 declare module "rwsdk/worker" {
-  interface DefaultAppContext extends AppContext {}
-
-  // App is the type of your defineApp export in src/worker.tsx
+  interface DefaultAppContext extends AppContext {
+    user?: User;
+  }
   export type App = typeof import("../src/worker").default;
 }
