@@ -6,13 +6,14 @@ import LoginPage from "@/pages/auth/signin";
 import Home from "@/pages/landing/home";
 import Signup from "@/pages/auth/signup";
 import BaseLayout from "@/layouts/base";
-import * as cookie from "cookie";
 import { db } from "@db/index";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
-import AppHomePage from "@/pages/protected/app";
+import jwt from "jsonwebtoken";
 import ProtectedLayout from "@/layouts/protected";
 import { requireIdentity } from "@/middlewares/authentication";
 import { identityCookie } from "./cookies";
+import CompositionPage from "@/pages/protected/compose";
+import DashboardPage from "@/pages/protected/app";
+import CollectionPage from "@/pages/protected/collections/single";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, ctx: DefaultAppContext) {
@@ -48,13 +49,11 @@ export default defineApp([
       route("/", Home),
       route("/signin", LoginPage),
       route("/signup", Signup),
-
-      prefix("/app",
-        [
-          layout(ProtectedLayout, [
-            route("/", [requireIdentity,AppHomePage])
-          ])
-        ])
+      layout(ProtectedLayout, [
+        route("/home", [requireIdentity, DashboardPage]),
+        route("/collections/new", [requireIdentity, CompositionPage]),
+        route("/collections/:id", [CollectionPage])
+      ])
     ])
   ]),
 ]);

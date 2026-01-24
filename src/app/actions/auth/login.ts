@@ -45,6 +45,6 @@ export async function handleLogin(data: LoginData) {
     return {
         success: true,
         message: `Connected as ${user?.email}.`,
-        redirectTo: "/app"
+        redirectTo: "/home"
     }
 }

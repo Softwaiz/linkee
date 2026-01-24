@@ -28,7 +28,7 @@ export default function Signin() {
             .then((res) => {
                 if(res.success) {
                     toast.success(res.message);
-                    navigate(res.redirectTo || "/app");
+                    navigate(res.redirectTo || "/home");
                 }
                 else {
                     toast.error(res.message || "Login failed. Please try again.");
