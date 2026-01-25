@@ -1,5 +1,5 @@
 import { layout, prefix, render, route } from "rwsdk/router";
-import { DefaultAppContext, defineApp } from "rwsdk/worker";
+import { DefaultAppContext, defineApp, RequestInfo } from "rwsdk/worker";
 import { Document } from "@/Document";
 import { setCommonHeaders } from "@/headers";
 import LoginPage from "@/pages/auth/signin";
@@ -11,10 +11,12 @@ import jwt from "jsonwebtoken";
 import ProtectedLayout from "@/layouts/protected";
 import { requireIdentity } from "@/middlewares/authentication";
 import { identityCookie } from "./cookies";
-import CompositionPage from "@/pages/protected/compose";
+import CreateCollectionPage from "@/pages/protected/collections/new";
 import DashboardPage from "@/pages/protected/app";
 import CollectionPage from "@/pages/protected/collections/single";
+import EditCollectionPage from "@/pages/protected/collections/edit";
 export { Database } from "@db/durableObject";
+
 
 async function verifyUserFromCookie(request: Request, ctx: DefaultAppContext) {
   try {
@@ -51,8 +53,9 @@ export default defineApp([
       route("/signup", Signup),
       layout(ProtectedLayout, [
         route("/home", [requireIdentity, DashboardPage]),
-        route("/collections/new", [requireIdentity, CompositionPage]),
-        route("/collections/:id", [CollectionPage])
+        route("/collections/new", [requireIdentity, CreateCollectionPage]),
+        route("/collections/:id", [CollectionPage]),
+        route("/collections/:id/edit", [requireIdentity, (props: RequestInfo) => <EditCollectionPage id={props.params.id}/>])
       ])
     ])
   ]),

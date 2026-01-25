@@ -1,9 +1,10 @@
 "use server";
-import { Page } from "@/lib/types";
-import { db } from "@db/index";
+import { CreateCollectionSchema } from "@/validations/collection/create";
+import { Collection, db } from "@db/index";
 import { getRequestInfo } from "rwsdk/worker";
+import z from "zod";
 
-export async function createCollection(page: Page) {
+export async function createCollection(page: Partial<Collection>) {
     const { ctx } = getRequestInfo();
     if (!ctx.user) {
         return {
@@ -12,12 +13,24 @@ export async function createCollection(page: Page) {
         }
     }
 
+    const validated = CreateCollectionSchema.safeParse(page);
+
+    if(!validated.success) {
+        return {
+            success: false,
+            message: "Your collection seems incorrect.",
+            errors: z.treeifyError(validated.error)
+        }
+    }
+
+    let data = validated.data;
+
     const createdItem = await db.insertInto("boards").values({
         id: crypto.randomUUID(),
         userId: ctx.user.id,
-        label: page.title,
-        description: page.description ?? 'No description provided.',
-        nodes: JSON.stringify(page.sections),
+        label: data.label,
+        description: data.description ?? 'No description provided.',
+        nodes: JSON.stringify(data.nodes),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     })

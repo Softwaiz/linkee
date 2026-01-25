@@ -18,11 +18,11 @@ interface CollectionCardProps {
 }
 
 export function CollectionCard({ collection, onDelete, onDuplicate }: CollectionCardProps) {
-  const totalLinks = collection.sections.reduce(
+  const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalSections = collection.sections.length
+  const totalSections = collection.nodes.length
 
   return (
     <div className="group relative flex flex-col rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
@@ -53,7 +53,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
             <DropdownMenuSeparator />
             <DropdownMenuItem 
               onClick={() => onDelete(collection.id)}
-              className="text-destructive focus:text-destructive"
+              className="bg-destructive text-destructive-foreground focus:text-destructive-foreground focus:bg-destructive"
             >
               Delete
             </DropdownMenuItem>
@@ -63,7 +63,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
 
       <a href={`/collections/${collection.id}`} className="flex flex-1 flex-col">
         <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
-          {collection.title || 'Untitled Collection'}
+          {collection.label || 'Untitled Collection'}
         </h3>
         <p className="mb-4 line-clamp-2 flex-1 text-sm text-muted-foreground">
           {collection.description || 'No description'}

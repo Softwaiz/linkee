@@ -24,7 +24,7 @@ export type Section = {
 
 export type Page = {
   id: string
-  title: string
+  label: string
   description?: string
-  sections: Section[]
+  nodes: Section[]
 }

@@ -1,14 +1,11 @@
 'use client'
-
 import { useDroppable } from '@dnd-kit/core'
 import {
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { GripVertical, Plus, Pencil, Trash2, Link2, Type, Save } from 'lucide-react'
-import type { Section, SectionItem } from '@/lib/types'
+import { Plus, Pencil, Trash2, Link2, Type } from 'lucide-react'
 import { LinkCard } from './links-card'
 import { TextBlock } from './text-block'
 import { cn } from '@/lib/utils'
@@ -19,14 +16,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import { Group, GroupItem } from '@/validations/collection/create'
 
 interface SectionBlockProps {
-  section: Section
+  section: Group
   onEditSection: () => void
   onDeleteSection: () => void
   onAddLink: () => void
   onAddText: () => void
-  onEditItem: (item: SectionItem) => void
+  onEditItem: (item: GroupItem) => void
   onDeleteItem: (itemId: string) => void
 }
 

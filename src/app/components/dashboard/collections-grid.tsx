@@ -5,8 +5,12 @@ import { CollectionCard } from './collection-card'
 import { AddCollectionCard } from './add-collection-card'
 import { DashboardHeader } from './dashboard-header'
 import { navigate } from 'rwsdk/client'
+import { Collection } from '@db/index'
+import { toast } from 'sonner'
+import { deleteCollection } from '@/actions/collections/delete'
+import { duplicate } from '@/actions/collections/duplicate'
 
-export function CollectionsGrid({ items }: { items: Page[] }) {
+export function CollectionsGrid({ items }: { items: Collection[] }) {
   const [collections, setCollections] = useState<Page[]>(items)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -14,23 +18,52 @@ export function CollectionsGrid({ items }: { items: Page[] }) {
     if (!searchQuery.trim()) return collections
     const query = searchQuery.toLowerCase()
     return collections.filter(
-      c => c.title.toLowerCase().includes(query) || c.description?.toLowerCase().includes(query)
+      c => c.label.toLowerCase().includes(query) || c.description?.toLowerCase().includes(query)
     )
   }, [collections, searchQuery])
 
   const handleDelete = (id: string) => {
-    setCollections(prev => prev.filter(c => c.id !== id))
+    let toastId = `delete.${id}`;
+    toast.loading("Deleting collection ...", { id: toastId });
+
+    deleteCollection(id)
+      .then((value) => {
+        if (value.success) {
+          toast.success("Deleted !", {
+            id: toastId,
+            description: value.message
+          });
+          window.location.reload();
+        }
+        else {
+          toast.error("Error.", {
+            id: toastId,
+            description: value.message
+          });
+        }
+      });
   }
 
   const handleDuplicate = (id: string) => {
-    const collection = collections.find(c => c.id === id)
-    if (!collection) return
-    const duplicate: Page = {
-      ...structuredClone(collection),
-      id: crypto.randomUUID(),
-      title: `${collection.title} (copy)`
-    }
-    setCollections(prev => [duplicate, ...prev])
+    let toastId = `duplicate.${id}`;
+    toast.loading("Duplicating collection ...", { id: toastId });
+
+    duplicate(id)
+      .then((value) => {
+        if (value.success) {
+          toast.success("Duplicated !", {
+            id: toastId,
+            description: value.message
+          });
+          navigate(window.location.pathname);
+        }
+        else {
+          toast.error("Error.", {
+            id: toastId,
+            description: value.message
+          });
+        }
+      });
   }
 
   return (

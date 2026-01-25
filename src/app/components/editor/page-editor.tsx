@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -22,7 +22,6 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { Plus, Layers, Save, GripVertical, ChevronRight } from 'lucide-react'
-import type { Page, Section, SectionItem, LinkItem, TextItem } from '@/lib/types'
 import { SectionBlock } from './section-block'
 import { SectionDialog, LinkDialog, TextDialog } from './dialog'
 import { EditorHeader } from './header'
@@ -34,38 +33,74 @@ import { CSS } from '@dnd-kit/utilities'
 import { createCollection } from '@/actions/collections/create'
 import { toast } from 'sonner'
 import { navigate } from 'rwsdk/client'
+import { CollectionInput, Group, GroupItem, LinkItem, TextItem } from '@/validations/collection/create'
+import { Collection } from '@db/index'
+import { updateCollection } from '@/actions/collections/update'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
 }
 
-const initialPage: Page = {
+const initialPage: Partial<CollectionInput> = {
   id: generateId(),
-  title: 'My Resource Collection',
+  label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
-  sections: [],
+  nodes: [],
 }
 
-export function PageEditor() {
-  const [page, setPage] = useState<Page>(initialPage)
+export function PageEditor({ collection }: { collection?: Collection }) {
+
+  const storageKey = `collection.${collection?.id ?? "new"}.draft`;
+
+  const [page, setPage] = useState<Partial<CollectionInput>>(() => {
+    if (collection) {
+      return collection;
+    }
+
+    if (globalThis.localStorage) {
+      let previous = localStorage.getItem(storageKey);
+      if (previous) {
+        return JSON.parse(previous);
+      }
+    }
+    return initialPage;
+  });
+
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeDragType, setActiveDragType] = useState<'section' | 'item' | null>(null)
 
-  // Dialog states
   const [sectionDialogOpen, setSectionDialogOpen] = useState(false)
   const [linkDialogOpen, setLinkDialogOpen] = useState(false)
   const [textDialogOpen, setTextDialogOpen] = useState(false)
-  const [editingSection, setEditingSection] = useState<Section | null>(null)
+  const [editingSection, setEditingSection] = useState<Group | null>(null)
   const [editingLink, setEditingLink] = useState<LinkItem | null>(null)
   const [editingText, setEditingText] = useState<TextItem | null>(null)
   const [targetSectionId, setTargetSectionId] = useState<string | null>(null)
 
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
 
+  const timerRef = useRef<NodeJS.Timeout>(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+
+  ///auto save to localstorage
+  useEffect(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      setSavingDraft(true);
+      localStorage.setItem(storageKey, JSON.stringify(page));
+      setSavingDraft(false);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    }, 5000);
+  }, [storageKey, page]);
+
   const activeSection = useMemo(() => {
     if (!activeSectionId) return null
-    return page.sections.find((s) => s.id === activeSectionId) || null
-  }, [page.sections, activeSectionId]);
+    return page.nodes!.find((s) => s.id === activeSectionId) || null
+  }, [page.nodes, activeSectionId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -82,7 +117,7 @@ export function PageEditor() {
     const { active } = event
     setActiveId(active.id as string)
 
-    const isSection = page.sections.some((s) => s.id === active.id)
+    const isSection = page.nodes!.some((s) => s.id === active.id)
     setActiveDragType(isSection ? 'section' : 'item')
   }
 
@@ -94,10 +129,10 @@ export function PageEditor() {
     const overId = over.id as string
 
     // Find if active is an item and over is a different section
-    const activeSection = page.sections.find((s) =>
+    const activeSection = page.nodes!.find((s) =>
       s.items.some((item) => item.id === activeId)
     )
-    const overSection = page.sections.find(
+    const overSection = page.nodes!.find(
       (s) => s.id === overId || s.items.some((item) => item.id === overId)
     )
 
@@ -112,7 +147,7 @@ export function PageEditor() {
 
       return {
         ...prev,
-        sections: prev.sections.map((section) => {
+        nodes: prev.nodes!.map((section) => {
           if (section.id === activeSection.id) {
             return {
               ...section,
@@ -146,23 +181,23 @@ export function PageEditor() {
     const overId = over.id as string
 
     // Check if dragging sections
-    const activeIsSection = page.sections.some((s) => s.id === activeId)
-    const overIsSection = page.sections.some((s) => s.id === overId)
+    const activeIsSection = page.nodes!.some((s) => s.id === activeId)
+    const overIsSection = page.nodes!.some((s) => s.id === overId)
 
     if (activeIsSection && overIsSection) {
       setPage((prev) => {
-        const oldIndex = prev.sections.findIndex((s) => s.id === activeId)
-        const newIndex = prev.sections.findIndex((s) => s.id === overId)
+        const oldIndex = prev.nodes!.findIndex((s) => s.id === activeId)
+        const newIndex = prev.nodes!.findIndex((s) => s.id === overId)
         return {
           ...prev,
-          sections: arrayMove(prev.sections, oldIndex, newIndex),
+          nodes: arrayMove(prev.nodes!, oldIndex, newIndex),
         }
       })
       return
     }
 
     // Reorder items within a section
-    const section = page.sections.find(
+    const section = page.nodes!.find(
       (s) =>
         s.items.some((item) => item.id === activeId) &&
         s.items.some((item) => item.id === overId)
@@ -171,7 +206,7 @@ export function PageEditor() {
     if (section) {
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) => {
+        nodes: prev.nodes!.map((s) => {
           if (s.id !== section.id) return s
           const oldIndex = s.items.findIndex((item) => item.id === activeId)
           const newIndex = s.items.findIndex((item) => item.id === overId)
@@ -190,7 +225,7 @@ export function PageEditor() {
     setSectionDialogOpen(true)
   }
 
-  const handleEditSection = (section: Section) => {
+  const handleEditSection = (section: Group) => {
     setEditingSection(section)
     setSectionDialogOpen(true)
   }
@@ -199,13 +234,13 @@ export function PageEditor() {
     if (editingSection) {
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) =>
+        nodes: prev.nodes!.map((s) =>
           s.id === editingSection.id ? { ...s, ...data } : s
         ),
       }))
     } else {
       let id = generateId();
-      const newSection: Section = {
+      const newSection: Group = {
         id: id,
         title: data.title,
         description: data.description,
@@ -213,7 +248,7 @@ export function PageEditor() {
       }
       setPage((prev) => ({
         ...prev,
-        sections: [...prev.sections, newSection],
+        nodes: [...prev.nodes!, newSection],
       }));
       setActiveSectionId(id);
     }
@@ -223,7 +258,7 @@ export function PageEditor() {
   const handleDeleteSection = (sectionId: string) => {
     setPage((prev) => ({
       ...prev,
-      sections: prev.sections.filter((s) => s.id !== sectionId),
+      nodes: prev.nodes!.filter((s) => s.id !== sectionId),
     }))
   }
 
@@ -246,7 +281,7 @@ export function PageEditor() {
     if (editingLink) {
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) =>
+        nodes: prev.nodes!.map((s) =>
           s.id === targetSectionId
             ? {
               ...s,
@@ -267,7 +302,7 @@ export function PageEditor() {
       }
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) =>
+        nodes: prev.nodes!.map((s) =>
           s.id === targetSectionId ? { ...s, items: [...s.items, newLink] } : s
         ),
       }))
@@ -295,7 +330,7 @@ export function PageEditor() {
     if (editingText) {
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) =>
+        nodes: prev.nodes!.map((s) =>
           s.id === targetSectionId
             ? {
               ...s,
@@ -314,7 +349,7 @@ export function PageEditor() {
       }
       setPage((prev) => ({
         ...prev,
-        sections: prev.sections.map((s) =>
+        nodes: prev.nodes!.map((s) =>
           s.id === targetSectionId ? { ...s, items: [...s.items, newText] } : s
         ),
       }))
@@ -326,7 +361,7 @@ export function PageEditor() {
   const handleDeleteItem = (sectionId: string, itemId: string) => {
     setPage((prev) => ({
       ...prev,
-      sections: prev.sections.map((s) =>
+      nodes: prev.nodes!.map((s) =>
         s.id === sectionId
           ? { ...s, items: s.items.filter((item) => item.id !== itemId) }
           : s
@@ -334,7 +369,7 @@ export function PageEditor() {
     }))
   }
 
-  const handleEditItem = (item: SectionItem, sectionId: string) => {
+  const handleEditItem = (item: GroupItem, sectionId: string) => {
     if (item.type === 'link') {
       handleEditLink(item, sectionId)
     } else {
@@ -344,23 +379,28 @@ export function PageEditor() {
 
   const [saving, setSaving] = useState(false);
 
-  const handleSaveCollection = useCallback(() => {
+  const handleUpdateCollection = useCallback(() => {
     setSaving(true);
-    createCollection(page)
+    let toastId = `collection.${collection?.id!}.save`;
+    toast.loading("Saving", { id: toastId });
+
+    updateCollection(collection?.id!, page)
       .then((value) => {
-        if (value.success && value.created) {
+        if (value.success && value.updated) {
           toast.success(
             "Saved !",
             {
+              id: toastId,
               description: value.message,
               action: <Button onClick={() => {
-                navigate(value.created?.id || '');
+                navigate(value.updated?.id || '');
               }}>View</Button>
-            })
+            });
         }
         else {
           toast.error("Your collection was not saved.",
             {
+              id: toastId,
               description: value.message,
             });
         }
@@ -368,7 +408,41 @@ export function PageEditor() {
       .finally(() => {
         setSaving(false);
       })
-  }, [page]);
+  }, [page, collection]);
+
+  const handleSaveCollection = useCallback(() => {
+    if (collection) {
+      return handleUpdateCollection();
+    }
+
+    setSaving(true);
+    toast.loading("Saving", { id: "collection.save" });
+    createCollection(page)
+      .then((value) => {
+        if (value.success && value.created) {
+          toast.success(
+            "Saved !",
+            {
+              id: "collection.save",
+              description: value.message,
+              action: <Button onClick={() => {
+                navigate(value.created?.id || '');
+              }}>View</Button>
+            })
+          localStorage.removeItem('collection.draft');
+        }
+        else {
+          toast.error("Your collection was not saved.",
+            {
+              id: "collection.save",
+              description: value.message,
+            });
+        }
+      })
+      .finally(() => {
+        setSaving(false);
+      })
+  }, [page, collection]);
 
   return (
     <div className="min-h-dvh bg-neutral-200">
@@ -380,10 +454,10 @@ export function PageEditor() {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="container mx-auto grid grid-cols-5 mt-8 min-h-[80vh]">
-          <div className="relative col-span-2 bg-neutral-100 shadow-sm rounded-l-lg space-y-4 border border-r border-neutral-200">
+        <div className="container mx-auto grid grid-cols-5 py-4 min-h-[80vh]">
+          <div className="relative col-span-2 bg-neutral-50 shadow-sm rounded-l-lg space-y-4 border border-r border-neutral-200">
 
-            <div className="w-full h-full absolute top-0 left-0 z-0 rounded-l-lg overflow-hidden">
+            <div className="w-full h-full absolute top-0 left-0 z-0 rounded-l-lg overflow-hidden hidden">
               <img
                 src="/images/background-pink.png"
                 alt="background image"
@@ -391,13 +465,13 @@ export function PageEditor() {
               />
             </div>
 
-            <div className="relative z-1 w-full min-h-full bg-neutral-600/20 text-neutral-100 px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
+            <div className="relative z-1 w-full min-h-full bg-neutral-900 text-neutral-200 px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
               <div className="space-y-4">
                 <div className='space-y-2'>
-                  <Label>Name this collection</Label>
+                  <Label className='popover-foreground'>Name this collection</Label>
                   <Input
-                    value={page.title}
-                    onChange={(e) => setPage((prev) => ({ ...prev, title: e.target.value }))}
+                    value={page.label}
+                    onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
                     placeholder="Page Title"
                     className="bg-white/10 border-0 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
                   />
@@ -416,11 +490,11 @@ export function PageEditor() {
                 </div>
               </div>
               <SortableContext
-                items={page.sections.map((s) => s.id)}
+                items={page.nodes!.map((s) => s.id)}
                 strategy={verticalListSortingStrategy}
               >
                 <ReorderableSectionList
-                  sections={page.sections}
+                  sections={page.nodes!}
                   onSectionSelect={(id) => {
                     setActiveSectionId(id);
                   }}
@@ -442,7 +516,7 @@ export function PageEditor() {
                 )}
               </DragOverlay>
 
-              {page.sections.length > 0 && (
+              {page.nodes!.length > 0 && (
                 <Button
                   onClick={handleAddSection}
                   variant="default"
@@ -467,7 +541,7 @@ export function PageEditor() {
                 onDeleteItem={(itemId) => handleDeleteItem(activeSection.id, itemId)}
               />
             }
-            {!activeSection && page.sections.length === 0 && (
+            {!activeSection && page.nodes!.length === 0 && (
               <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary">
                   <Layers className="size-6 text-muted-foreground" />
@@ -485,28 +559,25 @@ export function PageEditor() {
               </div>
             )}
           </div>
+          <div className="col-span-5 flex flex-row items-center justify-end my-4">
+            <Button
+              title='Save this collection'
+              className='text-sm flex flex-row items-center justify-center gap-2'
+              disabled={saving}
+              onClick={() => {
+                handleSaveCollection();
+              }}>
+              {
+                saving ? <>
+                  Save this collection
+                </> : <>
+                  Save this collection
+                  <Save className="size-4" /></>
+              }
+            </Button>
+          </div>
         </div>
       </DndContext>
-
-      <div className="container mx-auto">
-        <div className="w-full flex flex-row items-center justify-end my-8">
-          <Button
-            title='Save this collection'
-            className='text-sm flex flex-row items-center justify-center gap-2'
-            disabled={saving}
-            onClick={() => {
-              handleSaveCollection();
-            }}>
-            {
-              saving ? <>
-                Save this collection
-              </> : <>
-                Save this collection
-                <Save className="size-4" /></>
-            }
-          </Button>
-        </div>
-      </div>
 
       <SectionDialog
         open={sectionDialogOpen}
@@ -530,7 +601,7 @@ export function PageEditor() {
   )
 }
 
-function ReorderableSectionList({ sections, onSectionSelect }: { sections: Section[], onSectionSelect: (sectionId: string) => void }) {
+function ReorderableSectionList({ sections, onSectionSelect }: { sections: Group[], onSectionSelect: (sectionId: string) => void }) {
 
   return <div className='w-full space-y-2'>
     {sections.map((section) => (
@@ -541,7 +612,7 @@ function ReorderableSectionList({ sections, onSectionSelect }: { sections: Secti
   </div>
 }
 
-function DraggableSectionCard({ section, onClick }: { section: Section, onClick: () => void }) {
+function DraggableSectionCard({ section, onClick }: { section: Group, onClick: () => void }) {
 
   const {
     attributes,

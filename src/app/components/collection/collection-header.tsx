@@ -35,7 +35,7 @@ export function CollectionHeader({ collectionId, title }: CollectionHeaderProps)
             <span className="hidden sm:inline">Share</span>
           </Button>
           <Button size="sm" className="gap-2" asChild>
-            <a href={`/editor/${collectionId}`}>
+            <a href={`/collections/${collectionId}/edit`}>
               <Pencil className="size-4" />
               Edit
             </a>
