@@ -1,6 +1,6 @@
 'use client'
 
-import { MoreHorizontal, ExternalLink, Layers, Link as LinkIcon } from 'lucide-react'
+import { MoreHorizontal, ExternalLink, Layers, Link as LinkIcon, Share } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -32,9 +32,9 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="size-8 opacity-0 transition-opacity group-hover:opacity-100"
             >
               <MoreHorizontal className="size-4" />
@@ -42,16 +42,22 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <a href={`/collection/${collection.id}`} className="flex items-center gap-2">
+              <a href={`/collection/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
                 <ExternalLink className="size-4" />
                 Open
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a href={`/shared/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+                <Share className="size-4" />
+                Share
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDuplicate(collection.id)}>
               Duplicate
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={() => onDelete(collection.id)}
               className="bg-destructive text-destructive-foreground focus:text-destructive-foreground focus:bg-destructive"
             >
@@ -61,7 +67,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
         </DropdownMenu>
       </div>
 
-      <a href={`/collections/${collection.id}`} className="flex flex-1 flex-col">
+      <a href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
         <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
           {collection.label || 'Untitled Collection'}
         </h3>

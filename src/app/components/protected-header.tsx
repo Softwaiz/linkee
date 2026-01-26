@@ -17,7 +17,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut, User as UserIcon, ChevronDown, Search } from "lucide-react";
+import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { handleLogout } from "../actions/auth/logout";
 import { Input } from "./ui/input";
@@ -68,26 +68,44 @@ export function ProtectedHeader({ user }: ProtectedHeaderProps) {
         <>
             <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
                 <div className="container mx-auto flex h-14 items-center justify-between gap-2">
-                    <div className="mr-4 flex grow">
+                    <div className="mr-4 flex">
                         <a className="mr-6 flex items-center space-x-2" href="/home">
                             <Logo />
                             <span className="font-bold inline-block">Linkee</span>
                         </a>
                     </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="relative">
+                    <div className="flex items-center justify-center gap-3 grow">
+                        <div className="relative w-full max-w-2/3">
                             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 type="text"
                                 placeholder="Search collections..."
                                 value={searchQueryDraft}
                                 onChange={(e) => handleSearchChange(e.target.value)}
-                                className="w-64 bg-muted/50 pl-9 focus:bg-background"
+                                className="w-full bg-muted/50 pl-9 focus:bg-background"
                             />
                         </div>
                     </div>
-
+                    <div className="flex flex-row items-center justify-center gap-2">
+                        <Button size="sm" variant="ghost" asChild>
+                            <a href="/home">
+                                <Home />
+                                Home
+                            </a>
+                        </Button>
+                        <Button size="sm" variant="ghost" asChild>
+                            <a href="/discover">
+                                <Lightbulb />
+                                Discover
+                            </a>
+                        </Button>
+                        <Button size="sm" variant="ghost" asChild>
+                            <a href="/collections/new">
+                                <SquareStack />
+                                Create yours
+                            </a>
+                        </Button>
+                    </div>
 
                     <div className="flex items-center gap-2">
                         <DropdownMenu>

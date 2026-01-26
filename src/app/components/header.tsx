@@ -2,14 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Logo } from "./logo";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-            <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                <a href="/" className="text-xl font-bold tracking-tight">
+        <header className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+            <div className="container mx-auto h-16 flex items-center justify-between">
+                <a href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
+                    <Logo />
                     Linkee
                 </a>
 

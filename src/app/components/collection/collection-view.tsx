@@ -10,21 +10,21 @@ interface CollectionViewProps {
   collection: Collection;
 }
 
-export function CollectionView({ collection }: CollectionViewProps) {
+export function CollectionView({ collection, readOnly }: CollectionViewProps & { readOnly?: boolean }) {
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
   const totalSections = collection.nodes.length
 
-  
   return (
     <div className="min-h-screen bg-background">
       <CollectionHeader
+        readOnly={readOnly}
         collectionId={collection.id}
         title={collection.label} />
 
-      <main className="mx-auto max-w-4xl px-4 py-12">
+      <main className="container mx-auto px-4 py-12">
         <div className="mb-12 text-center">
           <div className="mb-6 inline-flex size-16 items-center justify-center rounded-2xl bg-accent/10 text-accent">
             <Layers className="size-8" />
@@ -62,17 +62,19 @@ export function CollectionView({ collection }: CollectionViewProps) {
             </div>
             <h3 className="mb-2 font-medium text-foreground">No sections yet</h3>
             <p className="mb-6 text-sm text-muted-foreground">
-              Start building your collection by adding sections and links
+              {readOnly ? 'This collection is empty.' : 'Start building your collection by adding sections and links'}
             </p>
-            <Button asChild>
-              <a href={`/editor/${collection.id}`}>
-                <Pencil className="mr-2 size-4" />
-                Start Editing
-              </a>
-            </Button>
+            {!readOnly && (
+              <Button asChild>
+                <a href={`/editor/${collection.id}`}>
+                  <Pencil className="mr-2 size-4" />
+                  Start Editing
+                </a>
+              </Button>
+            )}
           </div>
         )}
-        {collection.nodes.length > 0 && (
+        {collection.nodes.length > 0 && !readOnly && (
           <div className="mt-16 flex justify-center">
             <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
               <a href={`/editor/${collection.id}`}>

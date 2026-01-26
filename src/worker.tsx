@@ -17,6 +17,9 @@ import CollectionPage from "@/pages/protected/collections/single";
 import EditCollectionPage from "@/pages/protected/collections/edit";
 import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
+import PublicProfilePage from "@/pages/@/single";
+import PublicCollectionPage from "@/pages/shared/single";
+import Sitemap from "@/pages/sitemap";
 export { Database } from "@db/durableObject";
 
 
@@ -53,7 +56,10 @@ export default defineApp([
       route("/", Home),
       route("/signin", LoginPage),
       route("/signup", Signup),
-      route("medias/*", mediaResolver),
+      route("/medias/*", mediaResolver),
+      route("/@:alias", PublicProfilePage),
+      route("/shared/:id", PublicCollectionPage),
+      route("/sitemap", Sitemap),
 
       prefix("/", [
         requireIdentity,

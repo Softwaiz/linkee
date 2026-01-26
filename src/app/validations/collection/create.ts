@@ -32,7 +32,9 @@ export const CreateCollectionSchema = z.object({
     id: z.string().optional(),
     label: z.string(),
     description: z.string().optional().default(""),
+    slug: z.string().optional(),
     nodes: z.array(GroupSchema),
 });
+
 export type CollectionInput = z.infer<typeof CreateCollectionSchema>;
 

@@ -36,6 +36,8 @@ import { navigate } from 'rwsdk/client'
 import { CollectionInput, Group, GroupItem, LinkItem, TextItem } from '@/validations/collection/create'
 import { Collection } from '@db/index'
 import { updateCollection } from '@/actions/collections/update'
+import { checkSlugAvailability } from '@/actions/collections/check-slug'
+import { Loader2, Check, X } from 'lucide-react'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -46,6 +48,7 @@ const initialPage: Partial<CollectionInput> = {
   label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
   nodes: [],
+  slug: '',
 }
 
 export function PageEditor({ collection }: { collection?: Collection }) {
@@ -81,6 +84,43 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
   const timerRef = useRef<NodeJS.Timeout>(null);
   const [savingDraft, setSavingDraft] = useState(false);
+
+  // Slug validation state
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+  const [slugMessage, setSlugMessage] = useState<string>("");
+  const [isCheckingSlug, setIsCheckingSlug] = useState(false);
+  const slugTimerRef = useRef<NodeJS.Timeout>(null);
+
+  useEffect(() => {
+    // Don't validate if slug is empty or hasn't changed from original (if editing)
+    if (!page.slug || (collection && page.slug === collection.slug && page.slug.trim() !== "")) {
+      return;
+    }
+
+    if (slugTimerRef.current) {
+      clearTimeout(slugTimerRef.current);
+    }
+
+    // reset state
+    setSlugAvailable(null);
+    setSlugMessage("");
+    setIsCheckingSlug(false);
+
+    slugTimerRef.current = setTimeout(async () => {
+      setIsCheckingSlug(true);
+      setSlugMessage("Checking availability...");
+      const result = await checkSlugAvailability(page.slug!, collection?.id);
+      setSlugAvailable(result.available);
+      setSlugMessage(result.message || "");
+      setIsCheckingSlug(false);
+    }, 500);
+
+    return () => {
+      if (slugTimerRef.current) {
+        clearTimeout(slugTimerRef.current);
+      }
+    }
+  }, [page.slug, collection?.slug, collection?.id]);
 
   ///auto save to localstorage
   useEffect(() => {
@@ -477,6 +517,28 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   />
                 </div>
                 <div className='space-y-2'>
+                  <Label className='popover-foreground'>Tag (URL slug)</Label>
+                  <div className="relative">
+                    <Input
+                      value={page.slug || ''}
+                      onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
+                      placeholder="my-awesome-tag"
+                      className={`bg-white/10 border-0 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                        }`}
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
+                      {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
+                      {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
+                    </div>
+                  </div>
+                  {slugMessage && (
+                    <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
+                      {slugMessage}
+                    </p>
+                  )}
+                </div>
+                <div className='space-y-2'>
                   <Label>What resources does it contain ?</Label>
                   <Textarea
                     value={page.description || ''}
@@ -563,7 +625,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
             <Button
               title='Save this collection'
               className='text-sm flex flex-row items-center justify-center gap-2'
-              disabled={saving}
+              disabled={saving || slugAvailable === false}
               onClick={() => {
                 handleSaveCollection();
               }}>

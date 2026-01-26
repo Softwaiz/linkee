@@ -15,7 +15,7 @@ export async function createCollection(page: Partial<Collection>) {
 
     const validated = CreateCollectionSchema.safeParse(page);
 
-    if(!validated.success) {
+    if (!validated.success) {
         return {
             success: false,
             message: "Your collection seems incorrect.",
@@ -25,10 +25,21 @@ export async function createCollection(page: Partial<Collection>) {
 
     let data = validated.data;
 
+    if (data.slug) {
+        const existing = await db.selectFrom("boards").select("id").where("slug", "=", data.slug).executeTakeFirst();
+        if (existing) {
+            return {
+                success: false,
+                message: "This tag is already taken."
+            }
+        }
+    }
+
     const createdItem = await db.insertInto("boards").values({
         id: crypto.randomUUID(),
         userId: ctx.user.id,
         label: data.label,
+        slug: data.slug,
         description: data.description ?? 'No description provided.',
         nodes: JSON.stringify(data.nodes),
         createdAt: new Date().toISOString(),

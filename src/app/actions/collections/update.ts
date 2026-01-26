@@ -47,11 +47,24 @@ export async function updateCollection(id: string, page: Partial<Collection>) {
         }
     }
 
+    if (data.slug && data.slug !== candidate.slug) {
+        const existing = await db.selectFrom("boards").select("id").where("slug", "=", data.slug).where("id", "!=", id).executeTakeFirst();
+        if (existing) {
+            return {
+                success: false,
+                message: "This tag is already taken."
+            }
+        }
+    }
+
     const updatedItem = await db.updateTable("boards")
         .set({
             ...candidate,
             id: candidate.id,
             userId: ctx.user.id,
+            label: data.label,
+            description: data.description ?? candidate.description,
+            slug: data.slug ?? candidate.slug,
             nodes: JSON.stringify(data.nodes),
             createdAt: candidate.createdAt,
             updatedAt: new Date().toISOString()
