@@ -20,13 +20,19 @@
 			],
 		}
 	],
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "DATABASE",
-        "class_name": "Database",
-      }
-    ]
-  },
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "DATABASE",
+				"class_name": "Database",
+			}
+		]
+	},
+	"r2_buckets": [
+		{
+			"bucket_name": "linkee",
+			"binding": "R2"
+		}
+	],
 	"vars": {}
 }

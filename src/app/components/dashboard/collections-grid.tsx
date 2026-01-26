@@ -3,7 +3,6 @@ import { useState, useMemo } from 'react'
 import type { Page } from '@/lib/types'
 import { CollectionCard } from './collection-card'
 import { AddCollectionCard } from './add-collection-card'
-import { DashboardHeader } from './dashboard-header'
 import { navigate } from 'rwsdk/client'
 import { Collection } from '@db/index'
 import { toast } from 'sonner'
@@ -67,10 +66,9 @@ export function CollectionsGrid({ items }: { items: Collection[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+    <div className="min-h-dvh bg-background">
 
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      <main className="container mx-auto px-4 py-10">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-foreground">Your Collections</h1>
           <p className="mt-1 text-muted-foreground">

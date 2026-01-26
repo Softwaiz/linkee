@@ -35,4 +35,30 @@ export const migrations = {
             await db.schema.dropTable("boards").ifExists().execute();
         },
     },
+    "002_add_alias_to_users": {
+        async up(db) {
+            return [
+                await db.schema
+                    .alterTable("users")
+                    .addColumn("alias", "text")
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.alterTable("users").dropColumn("alias").execute();
+        }
+    },
+    "003_add_image_to_users": {
+        async up(db) {
+            return [
+                await db.schema
+                    .alterTable("users")
+                    .addColumn("image", "text")
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.alterTable("users").dropColumn("image").execute();
+        }
+    }
 } satisfies Migrations;

@@ -1,7 +1,15 @@
 import { LayoutProps } from "rwsdk/router";
+import { ProtectedHeader } from "../components/protected-header";
+import { getRequestInfo } from "rwsdk/worker";
+import { redirect } from "../../utils/sdk";
 
-export default function ProtectedLayout(props: LayoutProps) {
+export default async function ProtectedLayout(props: LayoutProps) {
+    const { ctx, request } = getRequestInfo();
+
     return <>
-        {props.children}
+        <ProtectedHeader user={ctx.user!} />
+        <main>
+            {props.children}
+        </main>
     </>
 }

@@ -13,7 +13,7 @@ export default async function CollectionPage({ params }: RequestInfo) {
 
     if (!board) {
         return <div>
-            <title>404 -  Collection not found</title>
+            <title>404 - Collection not found</title>
             <h1>
                 The requested collection was not found.
                 <Button asChild>

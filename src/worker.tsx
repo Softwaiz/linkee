@@ -15,6 +15,8 @@ import CreateCollectionPage from "@/pages/protected/collections/new";
 import DashboardPage from "@/pages/protected/app";
 import CollectionPage from "@/pages/protected/collections/single";
 import EditCollectionPage from "@/pages/protected/collections/edit";
+import ProfilePage from "@/pages/protected/profile";
+import mediaResolver from "@/pages/media";
 export { Database } from "@db/durableObject";
 
 
@@ -51,12 +53,18 @@ export default defineApp([
       route("/", Home),
       route("/signin", LoginPage),
       route("/signup", Signup),
-      layout(ProtectedLayout, [
-        route("/home", [requireIdentity, DashboardPage]),
-        route("/collections/new", [requireIdentity, CreateCollectionPage]),
-        route("/collections/:id", [CollectionPage]),
-        route("/collections/:id/edit", [requireIdentity, (props: RequestInfo) => <EditCollectionPage id={props.params.id}/>])
-      ])
+      route("medias/*", mediaResolver),
+
+      prefix("/", [
+        requireIdentity,
+        layout(ProtectedLayout, [
+          route("home", [DashboardPage]),
+          route("collections/new", [CreateCollectionPage]),
+          route("collections/:id", [CollectionPage]),
+          route("collections/:id/edit", [(props: RequestInfo) => <EditCollectionPage id={props.params.id} />]),
+          route("profile", ProfilePage),
+        ])
+      ]),
     ])
   ]),
 ]);

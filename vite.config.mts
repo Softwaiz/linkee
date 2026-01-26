@@ -12,8 +12,5 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
   }
 });
