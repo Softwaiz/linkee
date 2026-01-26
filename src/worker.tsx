@@ -1,6 +1,7 @@
 import { layout, prefix, render, route } from "rwsdk/router";
 import { DefaultAppContext, defineApp, RequestInfo } from "rwsdk/worker";
 import { Document } from "@/Document";
+import { NoDefaultSEODocument } from "@/NoDefaultSeoDocument";
 import { setCommonHeaders } from "@/headers";
 import LoginPage from "@/pages/auth/signin";
 import Home from "@/pages/landing/home";
@@ -57,8 +58,7 @@ export default defineApp([
       route("/signin", LoginPage),
       route("/signup", Signup),
       route("/medias/*", mediaResolver),
-      route("/@:alias", PublicProfilePage),
-      route("/shared/:id", PublicCollectionPage),
+
       route("/sitemap", Sitemap),
 
       prefix("/", [
@@ -72,5 +72,9 @@ export default defineApp([
         ])
       ]),
     ])
+  ]),
+  render(NoDefaultSEODocument, [
+    route("/@:alias", PublicProfilePage),
+    route("/shared/:id", PublicCollectionPage),
   ]),
 ]);
