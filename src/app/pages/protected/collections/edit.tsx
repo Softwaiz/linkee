@@ -1,19 +1,20 @@
 import { PageEditor } from '@/components/editor/page-editor'
 import { Collection, db } from '@db/index'
+import { CollectionNotFound } from './not-found';
 
 export default async function EditCollectionPage({ id }: { id: string }) {
 
     const collection = await db
         .selectFrom("boards")
         .selectAll()
-        .where("id", "=", id)
+        .where((eb) => eb.or([
+            eb("id", "=", id),
+            eb("slug", "=", id)
+        ]))
         .executeTakeFirst() as unknown as Collection;
 
     if (!collection) {
-        return <>
-            <title>404 - Collection not found</title>
-            <meta name="description" content="This collection does not exist or was removed by it's author." />
-        </>
+        return <CollectionNotFound />
     }
 
     return <>

@@ -22,6 +22,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
       <CollectionHeader
         readOnly={readOnly}
         collectionId={collection.id}
+        collectionSlug={collection.slug}
         title={collection.label} />
 
       <main className="container mx-auto px-4 py-12">
@@ -66,7 +67,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
             </p>
             {!readOnly && (
               <Button asChild>
-                <a href={`/editor/${collection.id}`}>
+                <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
                   <Pencil className="mr-2 size-4" />
                   Start Editing
                 </a>
@@ -77,7 +78,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
         {collection.nodes.length > 0 && !readOnly && (
           <div className="mt-16 flex justify-center">
             <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
-              <a href={`/editor/${collection.id}`}>
+              <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
                 <Pencil className="size-4" />
                 Edit this collection
               </a>

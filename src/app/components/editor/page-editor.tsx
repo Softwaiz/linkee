@@ -433,7 +433,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               id: toastId,
               description: value.message,
               action: <Button onClick={() => {
-                navigate(value.updated?.id || '');
+                navigate(`/collections/${value.updated?.slug ?? value.updated?.id}`);
               }}>View</Button>
             });
         }
@@ -466,7 +466,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               id: "collection.save",
               description: value.message,
               action: <Button onClick={() => {
-                navigate(value.created?.id || '');
+                navigate(`/collections/${value.created?.slug ?? value.created?.id}`);
               }}>View</Button>
             })
           localStorage.removeItem('collection.draft');

@@ -10,12 +10,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface CollectionHeaderProps {
+  collectionSlug?: string;
   collectionId: string
   title: string
   readOnly?: boolean
 }
 
-export function CollectionHeader({ collectionId, title, readOnly }: CollectionHeaderProps) {
+export function CollectionHeader({ collectionId, collectionSlug, title, readOnly }: CollectionHeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-start gap-4">
@@ -33,7 +34,14 @@ export function CollectionHeader({ collectionId, title, readOnly }: CollectionHe
         <div className="flex items-center gap-2">
           {!readOnly && (
             <>
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 bg-transparent"
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/shared/${collectionSlug ?? collectionId}`);
+                }}
+              >
                 <Share2 className="size-4" />
                 <span className="hidden sm:inline">Share</span>
               </Button>
