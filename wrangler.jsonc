@@ -33,10 +33,5 @@
 			"bucket_name": "linkee",
 			"binding": "R2"
 		}
-	],
-	"vars": {
-		"WORK_FACTOR": true,
-		"SIGNING_KEY": true,
-		"R2_PUBLIC_URL": true
-	}
+	]
 }
