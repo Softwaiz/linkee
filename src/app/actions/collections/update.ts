@@ -65,6 +65,8 @@ export async function updateCollection(id: string, page: Partial<Collection>) {
             label: data.label,
             description: data.description ?? candidate.description,
             slug: data.slug ?? candidate.slug,
+            picture: data.picture ?? candidate.picture,
+            banner: data.banner ?? candidate.banner,
             nodes: JSON.stringify(data.nodes),
             createdAt: candidate.createdAt,
             updatedAt: new Date().toISOString()

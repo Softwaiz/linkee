@@ -34,6 +34,8 @@ export const CreateCollectionSchema = z.object({
     label: z.string(),
     description: z.string().optional().default(""),
     slug: z.string().optional(),
+    picture: z.string().optional(),
+    banner: z.string().optional(),
     nodes: z.array(GroupSchema),
 });
 

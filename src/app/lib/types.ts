@@ -27,5 +27,9 @@ export type Page = {
   id: string
   label: string
   description?: string
+  slug?: string
+  picture?: string
+  banner?: string
+  sourceId?: string
   nodes: Section[]
 }

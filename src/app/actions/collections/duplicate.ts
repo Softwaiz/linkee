@@ -35,6 +35,7 @@ export const duplicate = serverAction(async function (id: string) {
         nodes: JSON.stringify(selected.nodes),
         id: crypto.randomUUID(),
         label: `${selected.label} (copy)`,
+        sourceId: selected.id,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
     }).returning(["id"]).executeTakeFirst();

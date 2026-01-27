@@ -70,5 +70,28 @@ export const migrations = {
         async down(db) {
             await db.schema.alterTable("boards").dropColumn("slug").execute()
         }
+    },
+    "005_add_collection_images": {
+        async up(db) {
+            return [
+                await db.schema
+                    .alterTable("boards")
+                    .addColumn("picture", "text")
+                    .execute(),
+                await db.schema
+                    .alterTable("boards")
+                    .addColumn("banner", "text")
+                    .execute(),
+                await db.schema
+                    .alterTable("boards")
+                    .addColumn("sourceId", "text")
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.alterTable("boards").dropColumn("picture").execute();
+            await db.schema.alterTable("boards").dropColumn("banner").execute();
+            await db.schema.alterTable("boards").dropColumn("sourceId").execute();
+        }
     }
 } satisfies Migrations;

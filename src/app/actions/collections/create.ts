@@ -41,6 +41,8 @@ export async function createCollection(page: Partial<Collection>) {
         label: data.label,
         slug: data.slug,
         description: data.description ?? 'No description provided.',
+        picture: data.picture,
+        banner: data.banner,
         nodes: JSON.stringify(data.nodes),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()

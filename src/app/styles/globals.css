@@ -3,6 +3,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/**
+--color-catalina-blue-50: #e7f6ff;
+--color-catalina-blue-100: #d4edff;
+--color-catalina-blue-200: #b1ddff;
+--color-catalina-blue-300: #83c5ff;
+--color-catalina-blue-400: #529cff;
+--color-catalina-blue-500: #2b73ff;
+--color-catalina-blue-600: #0845ff;
+--color-catalina-blue-700: #003dff;
+--color-catalina-blue-800: #0337d0;
+--color-catalina-blue-900: #0e37a1;
+--color-catalina-blue-950: #0a2472;
+}**/
+
 :root {
   --background: oklch(0.99 0 0);
   --foreground: oklch(0.15 0 0);
@@ -10,7 +24,7 @@
   --card-foreground: oklch(0.15 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.15 0 0);
+  --primary: oklch(0.5948 0.220568 261.8608);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.96 0 0);
   --secondary-foreground: oklch(0.15 0 0);

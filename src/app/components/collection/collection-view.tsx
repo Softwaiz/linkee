@@ -23,6 +23,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
         readOnly={readOnly}
         collectionId={collection.id}
         collectionSlug={collection.slug}
+        banner={collection.banner}
         title={collection.label} />
 
       <main className="container mx-auto px-4 py-12">

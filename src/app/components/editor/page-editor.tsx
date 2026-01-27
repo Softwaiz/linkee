@@ -45,6 +45,8 @@ function generateId() {
 
 const initialPage: Partial<CollectionInput> = {
   id: generateId(),
+  picture: "/images/collection_600x480.png",
+  banner: "/images/banner_820x630.png",
   label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
   nodes: [],
@@ -509,7 +511,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               />
             </div>
 
-            <div className="relative z-1 w-full min-h-full bg-primary text-neutral-200 px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
+            <div className="relative z-1 w-full min-h-full bg-neutral-50 text-foreground px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
               <div className="space-y-4">
                 <div className='space-y-2'>
                   <Label className='popover-foreground'>Name this collection</Label>
@@ -517,7 +519,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                     value={page.label}
                     onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
                     placeholder="Page Title"
-                    className="bg-white/10 border-0 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
+                    className="bg-white/10 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
                   />
                 </div>
                 <div className='space-y-2'>
@@ -527,7 +529,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                       value={page.slug || ''}
                       onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
                       placeholder="my-awesome-tag"
-                      className={`bg-white/10 border-0 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                      className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
                         }`}
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
@@ -550,9 +552,31 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                       setPage((prev) => ({ ...prev, description: e.target.value }))
                     }
                     placeholder="Add a description for your page..."
-                    className="bg-white/10 border-0 placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                    className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
                     rows={6}
                   />
+                </div>
+                <div className='space-y-2'>
+                  <div className="rounded-lg overflow-hidden border border-white/20">
+                    <img className='w-full aspect-video object-cover object-center' src={page.picture ?? initialPage.picture} alt="Main image" />
+                  </div>
+                  <Label>Collection Picture</Label>
+                  <p className="text-xs text-muted-foreground">
+                    This picture will be displayed on collection cards
+                  </p>
+                  <Button>
+                    Change picture
+                  </Button>
+                </div>
+                <div className='space-y-2'>
+                  <Label>Banner image for this collection</Label>
+                  <img className='w-full aspect-video object-cover object-center' src={page.banner ?? initialPage.banner} alt="Banner image" />
+                  <p className="text-xs text-muted-foreground">
+                    This banner image will be displayed on collection page
+                  </p>
+                  <Button>
+                    Select banner
+                  </Button>
                 </div>
               </div>
               <SortableContext
