@@ -49,7 +49,7 @@
     "react-hook-form": "^7.71.1",
     "react-hot-toast": "^2.6.0",
     "react-server-dom-webpack": "19.3.0-canary-d6cae440-20260106",
-    "rwsdk": "1.0.0-beta.49-test.20260121220325",
+    "rwsdk": "^1.0.0-beta.51",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",

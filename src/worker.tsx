@@ -21,6 +21,7 @@ import mediaResolver from "@/pages/media";
 import PublicProfilePage from "@/pages/@/single";
 import PublicCollectionPage from "@/pages/shared/single";
 import Sitemap from "@/pages/sitemap";
+import Robots from "@/pages/robots";
 export { Database } from "@db/durableObject";
 
 
@@ -66,8 +67,8 @@ export default defineApp([
       route("/signin", LoginPage),
       route("/signup", Signup),
       route("/medias/*", mediaResolver),
-
       route("/sitemap", Sitemap),
+      route("/robots.txt", Robots),
       prefix("/", [
         requireIdentity,
         layout(ProtectedLayout, [
