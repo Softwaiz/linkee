@@ -6,7 +6,8 @@ const LinkSchema = z.object({
     url: z.url(),
     title: z.string(),
     description: z.string().optional().default(""),
-    favicon: z.string().optional()
+    favicon: z.string().optional(),
+    image: z.string().optional()
 });
 export type LinkItem = z.infer<typeof LinkSchema>;
 

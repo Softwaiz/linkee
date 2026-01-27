@@ -5,8 +5,6 @@ import { getRequestInfo } from "rwsdk/worker";
 
 export async function checkSlugAvailability(slug: string = "", currentId?: string) {
     const { ctx } = getRequestInfo();
-    // We might want to allow checking without being logged in? 
-    // For now let's assume you need to be logged in to create/edit collections anyway.
     if (!ctx.user) {
         return {
             available: false,

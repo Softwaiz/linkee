@@ -5,6 +5,7 @@ export type LinkItem = {
   title: string
   description?: string
   favicon?: string
+  image?: string
 }
 
 export type TextItem = {

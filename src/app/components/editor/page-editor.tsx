@@ -93,7 +93,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
   useEffect(() => {
     // Don't validate if slug is empty or hasn't changed from original (if editing)
-    if (!page.slug || (collection && page.slug === collection.slug && page.slug.trim() !== "")) {
+    if (!page.slug || (collection && page.slug === collection.slug)) {
       return;
     }
 
@@ -141,6 +141,10 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     if (!activeSectionId) return null
     return page.nodes!.find((s) => s.id === activeSectionId) || null
   }, [page.nodes, activeSectionId]);
+
+  useEffect(() => {
+    console.log(activeSection);
+  }, [activeSection]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -259,7 +263,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     }
   }
 
-  // Section handlers
   const handleAddSection = () => {
     setEditingSection(null)
     setSectionDialogOpen(true)
@@ -302,7 +305,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     }))
   }
 
-  // Link handlers
   const handleAddLink = (sectionId: string) => {
     setTargetSectionId(sectionId)
     setEditingLink(null)
@@ -315,7 +317,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     setLinkDialogOpen(true)
   }
 
-  const handleSaveLink = (data: { url: string; title: string; description: string }) => {
+  const handleSaveLink = (data: { url: string; title: string; description: string; image?: string; favicon?: string }) => {
     if (!targetSectionId) return
 
     if (editingLink) {
@@ -339,6 +341,8 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         url: data.url,
         title: data.title || data.url,
         description: data.description,
+        image: data.image,
+        favicon: data.favicon,
       }
       setPage((prev) => ({
         ...prev,
@@ -351,7 +355,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     setTargetSectionId(null)
   }
 
-  // Text handlers
+
   const handleAddText = (sectionId: string) => {
     setTargetSectionId(sectionId)
     setEditingText(null)
@@ -495,7 +499,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragEnd={handleDragEnd}
       >
         <div className="container mx-auto grid grid-cols-5 py-4 min-h-[80vh]">
-          <div className="relative col-span-2 bg-neutral-50 shadow-sm rounded-l-lg space-y-4 border border-r border-neutral-200">
+          <div className="relative col-span-5 lg:col-span-2 bg-neutral-50 shadow-sm rounded-l-lg space-y-4 border border-r border-neutral-200">
 
             <div className="w-full h-full absolute top-0 left-0 z-0 rounded-l-lg overflow-hidden hidden">
               <img
@@ -505,7 +509,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               />
             </div>
 
-            <div className="relative z-1 w-full min-h-full bg-neutral-900 text-neutral-200 px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
+            <div className="relative z-1 w-full min-h-full bg-primary text-neutral-200 px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
               <div className="space-y-4">
                 <div className='space-y-2'>
                   <Label className='popover-foreground'>Name this collection</Label>
@@ -558,6 +562,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 <ReorderableSectionList
                   sections={page.nodes!}
                   onSectionSelect={(id) => {
+                    console.log("on select", id);
                     setActiveSectionId(id);
                   }}
                 />
@@ -590,7 +595,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               )}
             </div>
           </div>
-          <div className="col-span-3 bg-white shadow-sm rounded-r-lg min-h-100">
+          <div className="col-span-5 lg:col-span-3 bg-white shadow-sm rounded-r-lg min-h-100">
             {
               activeSection && <SectionBlock
                 key={activeSection.id}
@@ -667,9 +672,13 @@ function ReorderableSectionList({ sections, onSectionSelect }: { sections: Group
 
   return <div className='w-full space-y-2'>
     {sections.map((section) => (
-      <DraggableSectionCard key={section.id} section={section} onClick={() => {
-        onSectionSelect(section.id)
-      }} />
+      <DraggableSectionCard
+        key={section.id}
+        section={section}
+        onClick={() => {
+          console.log("selected section", section.id);
+          onSectionSelect(section.id)
+        }} />
     ))}
   </div>
 }
@@ -698,6 +707,10 @@ function DraggableSectionCard({ section, onClick }: { section: Group, onClick: (
   return <div
     ref={setSortableRef}
     key={section.id}
+    onClick={() => {
+      console.log("selected section card", section.id);
+      onClick()
+    }}
     className="w-full bg-white/10 text-white p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:bg-white/20">
     <button
       {...attributes}
@@ -710,11 +723,5 @@ function DraggableSectionCard({ section, onClick }: { section: Group, onClick: (
       <p className='font-semibold text-sm text-left'>{section.title}</p>
       <p className='text-xs text-left text-white/50'>{section.description}</p>
     </div>
-    <button
-      className="p-2 rounded-full"
-      onClick={onClick}
-    >
-      <ChevronRight size={14} />
-    </button>
   </div>
 }

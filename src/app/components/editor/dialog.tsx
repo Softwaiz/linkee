@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import type { Section, LinkItem, TextItem } from '@/lib/types'
+import { useDebounce } from '@/hooks/useDebounce'
+import { Loader2 } from 'lucide-react'
 
 interface SectionDialogProps {
   open: boolean
@@ -88,7 +90,7 @@ interface LinkDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   link?: LinkItem | null
-  onSave: (data: { url: string; title: string; description: string }) => void
+  onSave: (data: { url: string; title: string; description: string; image?: string; favicon?: string }) => void
 }
 
 export function LinkDialog({
@@ -100,21 +102,59 @@ export function LinkDialog({
   const [url, setUrl] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [image, setImage] = useState('')
+  const [favicon, setFavicon] = useState('')
+  const [loading, setLoading] = useState(false)
+  const debounce = useDebounce(500);
+  const controller = useRef<AbortController | null>(new AbortController());
 
   useEffect(() => {
     if (link) {
       setUrl(link.url)
       setTitle(link.title)
       setDescription(link.description || '')
+      setImage(link.image || '')
+      setFavicon(link.favicon || '')
     } else {
       setUrl('')
       setTitle('')
       setDescription('')
+      setImage('')
+      setFavicon('')
     }
   }, [link, open])
 
+  const fetchMetadata = useCallback(async (targetUrl: string) => {
+    if (!targetUrl || !targetUrl.startsWith('http')) return;
+    if (loading) {
+      controller.current?.abort();
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/metadata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: targetUrl }),
+        signal: controller.current?.signal,
+      })
+      const data = await res.json() as { success: boolean; title?: string; description?: string; image?: string; favicon?: string };
+      if (data.success) {
+        if (!title) setTitle(data.title ?? '');
+        if (!description) setDescription(data.description ?? '');
+        setImage(data.image ?? '');
+        setFavicon(data.favicon ?? '');
+      }
+    } catch (e) {
+      console.error("Failed to fetch metadata", e);
+    } finally {
+      setLoading(false);
+    }
+  }, [loading]);
+
   const handleSave = () => {
-    onSave({ url, title, description })
+    onSave({ url, title, description, image, favicon })
     onOpenChange(false)
   }
 
@@ -127,18 +167,33 @@ export function LinkDialog({
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="link-url">URL</Label>
-            <Input
-              id="link-url"
-              placeholder="https://example.com"
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              autoFocus
-            />
+            <div className="relative">
+              <Input
+                id="link-url"
+                className="pr-8"
+                placeholder="https://example.com"
+                type="url"
+                value={url}
+                onChange={(e) => {
+                  setUrl(e.target.value);
+                  debounce.delay(() => {
+                    fetchMetadata(e.target.value);
+                  })
+                }}
+                autoFocus
+              />
+              {
+                loading && <div className='absolute top-0 right-0 px-2 h-full flex items-center justify-center'>
+                  <Loader2 className="animate-spin size-4 text-muted-foreground" />
+                </div>
+              }
+            </div>
+            {loading && <p className="text-xs text-muted-foreground animate-pulse">Fetching metadata...</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="link-title">Title</Label>
             <Input
+              disabled={loading}
               id="link-title"
               placeholder="Link title"
               value={title}
@@ -148,11 +203,12 @@ export function LinkDialog({
           <div className="space-y-2">
             <Label htmlFor="link-description">Description (optional)</Label>
             <Textarea
+              disabled={loading}
               id="link-description"
               placeholder="A brief description of this link..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows={2}
+              rows={6}
             />
           </div>
         </div>
@@ -160,7 +216,7 @@ export function LinkDialog({
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!url}>
+          <Button onClick={handleSave} disabled={!url || loading}>
             {link ? 'Save' : 'Add Link'}
           </Button>
         </DialogFooter>

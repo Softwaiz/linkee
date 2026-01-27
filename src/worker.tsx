@@ -22,6 +22,7 @@ import PublicProfilePage from "@/pages/@/single";
 import PublicCollectionPage from "@/pages/shared/single";
 import Sitemap from "@/pages/sitemap";
 import Robots from "@/pages/robots";
+import { extractMetadata } from "@/actions/website/extractMetadata";
 export { Database } from "@db/durableObject";
 
 
@@ -69,6 +70,7 @@ export default defineApp([
       route("/medias/*", mediaResolver),
       route("/sitemap", Sitemap),
       route("/robots.txt", Robots),
+      route("/api/metadata", extractMetadata),
       prefix("/", [
         requireIdentity,
         layout(ProtectedLayout, [
