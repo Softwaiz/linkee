@@ -42,7 +42,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <a href={`/collection/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+              <a href={`/collections/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
                 <ExternalLink className="size-4" />
                 Open
               </a>

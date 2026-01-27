@@ -7,7 +7,7 @@
 		"nodejs_compat"
 	],
 	"assets": {
-		"binding": "ASSETS"
+		"binding": "ASSETS",
 	},
 	"observability": {
 		"enabled": true
@@ -33,5 +33,9 @@
 			"bucket_name": "linkee",
 			"binding": "R2"
 		}
-	]
+	],
+	"vars": {
+		"R2_PUBLIC_URL": "/medias",
+		"WORK_FACTOR": "10"
+	}
 }

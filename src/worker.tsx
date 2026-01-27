@@ -1,7 +1,7 @@
 import { layout, prefix, render, route } from "rwsdk/router";
 import { DefaultAppContext, defineApp, RequestInfo } from "rwsdk/worker";
 import { Document } from "@/Document";
-import { NoDefaultSEODocument } from "@/NoDefaultSeoDocument";
+import { PublicDocument } from "@/PublicDocument";
 import { setCommonHeaders } from "@/headers";
 import LoginPage from "@/pages/auth/signin";
 import Home from "@/pages/landing/home";
@@ -24,7 +24,7 @@ import Sitemap from "@/pages/sitemap";
 export { Database } from "@db/durableObject";
 
 
-async function verifyUserFromCookie(request: Request, ctx: DefaultAppContext) {
+async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
     const token = identityCookie.get(request.headers);
     if (!token) {
@@ -45,22 +45,29 @@ async function verifyUserFromCookie(request: Request, ctx: DefaultAppContext) {
   catch (err) {
     console.log("Error verifying user from cookie:", err);
   }
+  finally {
+    console.log(ctx.user?.id);
+  }
 }
 
 export default defineApp([
   setCommonHeaders(),
   async ({ ctx, request, response }) => {
-    await verifyUserFromCookie(request, ctx);
+    return verifyUserFromCookie(request, response, ctx);
   },
+  render(PublicDocument, [
+    route("/@:alias", PublicProfilePage),
+    route("/shared/:id", PublicCollectionPage),
+  ]),
   render(Document, [
     layout(BaseLayout, [
+
       route("/", Home),
       route("/signin", LoginPage),
       route("/signup", Signup),
       route("/medias/*", mediaResolver),
 
       route("/sitemap", Sitemap),
-
       prefix("/", [
         requireIdentity,
         layout(ProtectedLayout, [
@@ -72,9 +79,5 @@ export default defineApp([
         ])
       ]),
     ])
-  ]),
-  render(NoDefaultSEODocument, [
-    route("/@:alias", PublicProfilePage),
-    route("/shared/:id", PublicCollectionPage),
-  ]),
+  ])
 ]);
