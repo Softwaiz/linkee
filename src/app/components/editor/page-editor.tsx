@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -21,7 +21,7 @@ import {
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable'
-import { Plus, Layers, Save, GripVertical, ChevronRight } from 'lucide-react'
+import { Plus, Layers, Save, GripVertical, Pen } from 'lucide-react'
 import { SectionBlock } from './section-block'
 import { SectionDialog, LinkDialog, TextDialog } from './dialog'
 import { EditorHeader } from './header'
@@ -38,6 +38,8 @@ import { Collection } from '@db/index'
 import { updateCollection } from '@/actions/collections/update'
 import { checkSlugAvailability } from '@/actions/collections/check-slug'
 import { Loader2, Check, X } from 'lucide-react'
+import { useFileURL } from '@/hooks/useBrowserFile'
+import { uploadCollectionBanner, uploadCollectionPicture } from '@/actions/upload'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -45,8 +47,8 @@ function generateId() {
 
 const initialPage: Partial<CollectionInput> = {
   id: generateId(),
-  picture: "/images/collection_600x480.png",
-  banner: "/images/banner_820x630.png",
+  picture: "https://placehold.co/120x120/2b73ff/d4edff/png",
+  banner: "https://placehold.co/416x240/0e37a1/d4edff/png",
   label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
   nodes: [],
@@ -92,6 +94,12 @@ export function PageEditor({ collection }: { collection?: Collection }) {
   const [slugMessage, setSlugMessage] = useState<string>("");
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const slugTimerRef = useRef<NodeJS.Timeout>(null);
+
+  const selectedPicture = useFileURL();
+  const selectedBanner = useFileURL();
+
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const pictureInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Don't validate if slug is empty or hasn't changed from original (if editing)
@@ -425,12 +433,53 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
   const [saving, setSaving] = useState(false);
 
-  const handleUpdateCollection = useCallback(() => {
+  const handleUpdateCollection = useCallback(async () => {
     setSaving(true);
     let toastId = `collection.${collection?.id!}.save`;
     toast.loading("Saving", { id: toastId });
+    let pictureUrl = page.picture ?? '';
+    let bannerUrl = page.banner ?? '';
 
-    updateCollection(collection?.id!, page)
+    setSaving(true);
+    toast.loading("Saving", { id: toastId });
+
+    if (selectedPicture.file) {
+
+      toast.loading("Uploading picture", { id: toastId });
+      let data = new FormData();
+      data.set("file", selectedPicture.file);
+
+      await uploadCollectionPicture(data)
+        .then((v) => {
+          if (v.success && v.url) {
+            pictureUrl = v.url
+          }
+        });
+    }
+    if (selectedBanner.file) {
+
+      toast.loading("Uploading banner", { id: toastId });
+      let data = new FormData();
+      data.set("file", selectedBanner.file);
+
+      await uploadCollectionBanner(data)
+        .then((v) => {
+          if (v.success && v.url) {
+            bannerUrl = v.url
+          }
+        });
+    }
+
+    toast.loading("Saving collection", { id: toastId });
+
+    await updateCollection(
+      collection?.id!,
+      {
+        ...page,
+        picture: pictureUrl,
+        banner: bannerUrl
+      }
+    )
       .then((value) => {
         if (value.success && value.updated) {
           toast.success(
@@ -454,16 +503,52 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [page, collection]);
+  }, [page, collection, selectedPicture, selectedBanner]);
 
-  const handleSaveCollection = useCallback(() => {
+  const handleSaveCollection = useCallback(async () => {
     if (collection) {
       return handleUpdateCollection();
     }
 
+    let pictureUrl = '';
+    let bannerUrl = '';
+
     setSaving(true);
     toast.loading("Saving", { id: "collection.save" });
-    createCollection(page)
+
+    if (selectedPicture.file) {
+
+      toast.loading("Uploading picture", { id: "collection.save" });
+      let data = new FormData();
+      data.set("file", selectedPicture.file);
+
+      await uploadCollectionPicture(data)
+        .then((v) => {
+          if (v.success && v.url) {
+            pictureUrl = v.url
+          }
+        });
+    }
+    if (selectedBanner.file) {
+
+      toast.loading("Uploading banner", { id: "collection.save" });
+      let data = new FormData();
+      data.set("file", selectedBanner.file);
+
+      await uploadCollectionBanner(data)
+        .then((v) => {
+          if (v.success && v.url) {
+            bannerUrl = v.url
+          }
+        });
+    }
+
+    toast.loading("Saving collection", { id: "collection.save" });
+    await createCollection({
+      ...page,
+      picture: pictureUrl,
+      banner: bannerUrl
+    })
       .then((value) => {
         if (value.success && value.created) {
           toast.success(
@@ -488,7 +573,22 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [page, collection]);
+  }, [page, collection, selectedPicture, selectedBanner]);
+
+  const handlePictureChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+    const file = ev.currentTarget.files?.item(0);
+    if (file) {
+      selectedPicture.load(file);
+    }
+  }, []);
+
+  const handleBannerChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
+    const file = ev.currentTarget.files?.item(0);
+    if (file) {
+      selectedBanner.load(file);
+    }
+  }, []);
+
 
   return (
     <div className="min-h-dvh bg-neutral-200">
@@ -500,85 +600,112 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="container mx-auto grid grid-cols-5 py-4 min-h-[80vh]">
-          <div className="relative col-span-5 lg:col-span-2 bg-neutral-50 shadow-sm rounded-l-lg space-y-4 border border-r border-neutral-200">
-
-            <div className="w-full h-full absolute top-0 left-0 z-0 rounded-l-lg overflow-hidden hidden">
-              <img
-                src="/images/background-pink.png"
-                alt="background image"
-                className='w-full h-full object-contain object-center'
-              />
-            </div>
-
-            <div className="relative z-1 w-full min-h-full bg-neutral-50 text-foreground px-4 py-8 space-y-4 backdrop-blur-2xl rounded-l-lg">
-              <div className="space-y-4">
-                <div className='space-y-2'>
-                  <Label className='popover-foreground'>Name this collection</Label>
-                  <Input
-                    value={page.label}
-                    onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
-                    placeholder="Page Title"
-                    className="bg-white/10 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
-                  />
-                </div>
-                <div className='space-y-2'>
-                  <Label className='popover-foreground'>Tag (URL slug)</Label>
-                  <div className="relative">
-                    <Input
-                      value={page.slug || ''}
-                      onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
-                      placeholder="my-awesome-tag"
-                      className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
-                        }`}
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                      {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
-                      {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
-                      {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
-                    </div>
-                  </div>
-                  {slugMessage && (
-                    <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
-                      {slugMessage}
-                    </p>
-                  )}
-                </div>
-                <div className='space-y-2'>
-                  <Label>What resources does it contain ?</Label>
-                  <Textarea
-                    value={page.description || ''}
-                    onChange={(e) =>
-                      setPage((prev) => ({ ...prev, description: e.target.value }))
-                    }
-                    placeholder="Add a description for your page..."
-                    className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
-                    rows={6}
-                  />
-                </div>
-                <div className='space-y-2'>
-                  <div className="rounded-lg overflow-hidden border border-white/20">
-                    <img className='w-full aspect-video object-cover object-center' src={page.picture ?? initialPage.picture} alt="Main image" />
-                  </div>
-                  <Label>Collection Picture</Label>
-                  <p className="text-xs text-muted-foreground">
-                    This picture will be displayed on collection cards
-                  </p>
-                  <Button>
-                    Change picture
-                  </Button>
-                </div>
-                <div className='space-y-2'>
-                  <Label>Banner image for this collection</Label>
-                  <img className='w-full aspect-video object-cover object-center' src={page.banner ?? initialPage.banner} alt="Banner image" />
-                  <p className="text-xs text-muted-foreground">
-                    This banner image will be displayed on collection page
-                  </p>
-                  <Button>
-                    Select banner
+        <div className="container mx-auto grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
+          <div className="col-span-4">
+            <div className="w-full relative mb-20">
+              <div className='space-y-2 relative'>
+                <input
+                  hidden
+                  type="file"
+                  name=""
+                  id=""
+                  accept='image/png, image/webp, image/jpeg'
+                  ref={bannerInputRef}
+                  onChange={handleBannerChange} />
+                <img
+                  className='w-full h-60 aspect-video object-cover object-center rounded-md'
+                  src={selectedBanner.url ?? page.banner ?? initialPage.banner}
+                  alt="Banner image" />
+                <Button
+                  size="icon-sm"
+                  className='absolute top-4 right-4 rounded-full'
+                  onClick={() => {
+                    bannerInputRef.current?.click();
+                  }}>
+                  <Pen />
+                </Button>
+              </div>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3">
+                <div className="rounded-lg overflow-hidden border border-white/20 shadow-lg">
+                  <input
+                    hidden
+                    type="file"
+                    name=""
+                    id=""
+                    accept='image/png, image/webp, image/jpeg'
+                    ref={pictureInputRef}
+                    onChange={handlePictureChange} />
+                  <img
+                    className='w-30 aspect-square object-cover object-center rounded-lg'
+                    src={selectedPicture.url ?? page.picture ?? initialPage.picture}
+                    alt="Main image" />
+                  <Button
+                    size="icon-sm"
+                    className=' absolute top-4 right-4 rounded-full'
+                    onClick={() => {
+                      pictureInputRef.current?.click();
+                    }}>
+                    <Pen />
                   </Button>
                 </div>
               </div>
+            </div>
+
+            <div className="relative w-full bg-neutral-50 shadow-sm rounded-lg space-y-4">
+
+              <div className="relative z-1 w-full min-h-full bg-neutral-50 text-foreground px-4 py-8 space-y-4 backdrop-blur-2xl rounded-lg">
+                <div className="space-y-4">
+                  <div className='space-y-2'>
+                    <Label className='popover-foreground'>Name this collection</Label>
+                    <Input
+                      value={page.label}
+                      onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
+                      placeholder="Page Title"
+                      className="bg-white/10 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <Label className='popover-foreground'>Tag (URL slug)</Label>
+                    <div className="relative">
+                      <Input
+                        value={page.slug || ''}
+                        onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
+                        placeholder="my-awesome-tag"
+                        className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                          }`}
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                        {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
+                        {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
+                        {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
+                      </div>
+                    </div>
+                    {slugMessage && (
+                      <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
+                        {slugMessage}
+                      </p>
+                    )}
+                  </div>
+                  <div className='space-y-2'>
+                    <Label>What resources does it contain ?</Label>
+                    <Textarea
+                      value={page.description || ''}
+                      onChange={(e) =>
+                        setPage((prev) => ({ ...prev, description: e.target.value }))
+                      }
+                      placeholder="Add a description for your page..."
+                      className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                      rows={6}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-8 space-y-4">
+            <div className="w-full p-4 bg-white shadow-sm rounded-md space-y-4">
+              <h4>Groups in this collection</h4>
               <SortableContext
                 items={page.nodes!.map((s) => s.id)}
                 strategy={verticalListSortingStrategy}
@@ -586,7 +713,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 <ReorderableSectionList
                   sections={page.nodes!}
                   onSectionSelect={(id) => {
-                    console.log("on select", id);
                     setActiveSectionId(id);
                   }}
                 />
@@ -606,7 +732,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   </div>
                 )}
               </DragOverlay>
-
               {page.nodes!.length > 0 && (
                 <Button
                   onClick={handleAddSection}
@@ -618,39 +743,40 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 </Button>
               )}
             </div>
-          </div>
-          <div className="col-span-5 lg:col-span-3 bg-white shadow-sm rounded-r-lg min-h-100">
-            {
-              activeSection && <SectionBlock
-                key={activeSection.id}
-                section={activeSection}
-                onEditSection={() => handleEditSection(activeSection)}
-                onDeleteSection={() => handleDeleteSection(activeSection.id)}
-                onAddLink={() => handleAddLink(activeSection.id)}
-                onAddText={() => handleAddText(activeSection.id)}
-                onEditItem={(item) => handleEditItem(item, activeSection.id)}
-                onDeleteItem={(itemId) => handleDeleteItem(activeSection.id, itemId)}
-              />
-            }
-            {!activeSection && page.nodes!.length === 0 && (
-              <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary">
-                  <Layers className="size-6 text-muted-foreground" />
+            <div className="w-full bg-white shadow-sm rounded-lg min-h-100">
+
+              {
+                activeSection && <SectionBlock
+                  key={activeSection.id}
+                  section={activeSection}
+                  onEditSection={() => handleEditSection(activeSection)}
+                  onDeleteSection={() => handleDeleteSection(activeSection.id)}
+                  onAddLink={() => handleAddLink(activeSection.id)}
+                  onAddText={() => handleAddText(activeSection.id)}
+                  onEditItem={(item) => handleEditItem(item, activeSection.id)}
+                  onDeleteItem={(itemId) => handleDeleteItem(activeSection.id, itemId)}
+                />
+              }
+              {!activeSection && page.nodes!.length === 0 && (
+                <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary">
+                    <Layers className="size-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="mb-1 text-lg font-medium text-foreground">
+                    No sections yet
+                  </h3>
+                  <p className="mb-6 text-sm text-muted-foreground">
+                    Create your first section to start organizing your links
+                  </p>
+                  <Button onClick={handleAddSection}>
+                    <Plus className="size-4" />
+                    Add Section
+                  </Button>
                 </div>
-                <h3 className="mb-1 text-lg font-medium text-foreground">
-                  No sections yet
-                </h3>
-                <p className="mb-6 text-sm text-muted-foreground">
-                  Create your first section to start organizing your links
-                </p>
-                <Button onClick={handleAddSection}>
-                  <Plus className="size-4" />
-                  Add Section
-                </Button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-          <div className="col-span-5 flex flex-row items-center justify-end my-4">
+          <div className="col-span-12 sticky bottom-0 left-0 p-4 flex flex-row items-center justify-end my-4">
             <Button
               title='Save this collection'
               className='text-sm flex flex-row items-center justify-center gap-2'
@@ -700,7 +826,6 @@ function ReorderableSectionList({ sections, onSectionSelect }: { sections: Group
         key={section.id}
         section={section}
         onClick={() => {
-          console.log("selected section", section.id);
           onSectionSelect(section.id)
         }} />
     ))}
@@ -735,17 +860,17 @@ function DraggableSectionCard({ section, onClick }: { section: Group, onClick: (
       console.log("selected section card", section.id);
       onClick()
     }}
-    className="w-full bg-white/10 text-white p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:bg-white/20">
+    className="w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:bg-primary hover:text-primary-foreground">
     <button
       {...attributes}
       {...listeners}
       className="shrink-0 cursor-grab touch-none text-muted-foreground opacity-100 transition-opacity active:cursor-grabbing"
     >
-      <GripVertical size={14} className='text-white' />
+      <GripVertical size={14} className='text-inherit' />
     </button>
     <div className="grow flex flex-col items-start justify-start gap-1">
       <p className='font-semibold text-sm text-left'>{section.title}</p>
-      <p className='text-xs text-left text-white/50'>{section.description}</p>
+      <p className='text-xs text-left text-inherit/50'>{section.description}</p>
     </div>
   </div>
 }

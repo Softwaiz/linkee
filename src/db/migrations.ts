@@ -63,9 +63,11 @@ export const migrations = {
     },
     "004_add_tags_to_collections": {
         async up(db) {
-            await db.schema.alterTable("boards")
+            return [
+                await db.schema.alterTable("boards")
                 .addColumn("slug", "text")
                 .execute()
+            ]
         },
         async down(db) {
             await db.schema.alterTable("boards").dropColumn("slug").execute()

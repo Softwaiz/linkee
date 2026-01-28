@@ -12,7 +12,7 @@ export function SectionPreview({ section }: SectionPreviewProps) {
   return (
     <section className="space-y-4">
       <div className="space-y-1">
-        <h3 className="text-xl font-semibold text-foreground">
+        <h3 className="text-xl text-foreground">
           {section.title || 'Untitled Section'}
         </h3>
         {section.description && (
