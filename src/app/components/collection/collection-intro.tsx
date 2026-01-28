@@ -36,8 +36,8 @@ export function CollectionIntroduction({ collection, readOnly }: CollectionHeade
           </div>
 
           <div className="container mx-auto relative min-h-50">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 flex flex-col items-center justify-center">
-              <div className="mb-6 inline-flex size-30 lg:size-36 items-center justify-center rounded-2xl border-8 border-white shadow-lg overflow-hidden text-accent">
+            <div className="w-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 flex flex-col items-center justify-center">
+              <div className="mb-6 inline-flex size-30 lg:size-36 items-center justify-center rounded-2xl border-8 border-white bg-white shadow-lg overflow-hidden text-accent">
                 {
                   collection.picture && <img
                     src={collection.picture}
@@ -47,7 +47,7 @@ export function CollectionIntroduction({ collection, readOnly }: CollectionHeade
                 }
               </div>
               <h1 className='text-2xl text-center'>{collection.label}</h1>
-              <p className="mx-auto max-w-2xl text-pretty text-lg text-muted-foreground">{collection.description}</p>
+              <p className="mx-auto text-pretty text-base text-muted-foreground text-center">{collection.description}</p>
               <div className="text-center mt-4">
                 <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
                   <span className="flex items-center gap-2">

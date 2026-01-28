@@ -86,12 +86,13 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
       </div>
 
       <div className="container mx-auto grid grid-cols-12 py-4 gap-4">
-        
+
         <div className="col-span-12 lg:col-span-4">
           <div className="w-full lg:sticky lg:top-20 lg:left-0">
             <CollectionIntroduction
               readOnly={readOnly}
               collection={collection} />
+              
             {collection.nodes.length > 0 && !readOnly && (
               <div className="mt-4 flex justify-center">
                 <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>

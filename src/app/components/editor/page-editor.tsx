@@ -102,8 +102,16 @@ export function PageEditor({ collection }: { collection?: Collection }) {
   const pictureInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (page.slug && collection && page.slug === collection?.slug) {
+      setSlugAvailable(true);
+      if (slugTimerRef.current) {
+        clearTimeout(slugTimerRef.current);
+      }
+      return;
+    }
+
     // Don't validate if slug is empty or hasn't changed from original (if editing)
-    if (!page.slug || (collection && page.slug === collection.slug)) {
+    if (!page.slug) {
       return;
     }
 
@@ -601,7 +609,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragEnd={handleDragEnd}
       >
         <div className="container mx-auto grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
-          <div className="col-span-4">
+          <div className="col-span-12 lg:col-span-4">
             <div className="w-full relative mb-20">
               <div className='space-y-2 relative'>
                 <input
@@ -703,7 +711,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
             </div>
           </div>
 
-          <div className="col-span-8 space-y-4">
+          <div className="col-span-12 lg:col-span-8 space-y-4">
             <div className="w-full p-4 bg-white shadow-sm rounded-md space-y-4">
               <h4>Groups in this collection</h4>
               <SortableContext
