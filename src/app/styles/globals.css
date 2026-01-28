@@ -109,4 +109,8 @@
   h3,h4,h5,h6 {
     @apply font-heading;
   }
+
+  .container {
+    @apply px-2 lg:px-0;
+  }
 }

@@ -1,7 +1,6 @@
 'use client'
-import { ArrowLeft, Layers, Link as LinkIcon, MoreHorizontal, Pencil, Share2, SquareStack } from 'lucide-react'
-import type { Page } from '@/lib/types'
-import { CollectionIntroduction } from './collection-intro'
+import { ArrowLeft, Layers, MoreHorizontal, Pencil, Share2, SquareStack } from 'lucide-react'
+import { CollectionProfile } from './collection-profile'
 import { Button } from '@/components/ui/button'
 import { SectionPreview } from './section-preview'
 import { Collection } from '@db/index'
@@ -88,21 +87,21 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
       <div className="container mx-auto grid grid-cols-12 py-4 gap-4">
 
         <div className="col-span-12 lg:col-span-4">
-          <div className="w-full lg:sticky lg:top-20 lg:left-0">
-            <CollectionIntroduction
+          <div className="w-full lg:sticky lg:top-20 lg:left-0 space-y-4">
+            <CollectionProfile
               readOnly={readOnly}
-              collection={collection} />
-              
-            {collection.nodes.length > 0 && !readOnly && (
-              <div className="mt-4 flex justify-center">
-                <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
-                  <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
-                    <Pencil className="size-4" />
-                    Edit this collection
-                  </a>
-                </Button>
-              </div>
-            )}
+              collection={collection}>
+              {collection.nodes.length > 0 && !readOnly && (
+                <div className="mt-4 flex justify-center">
+                  <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
+                    <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
+                      <Pencil className="size-4" />
+                      Edit this collection
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </CollectionProfile>
           </div>
         </div>
 

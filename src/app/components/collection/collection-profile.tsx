@@ -1,27 +1,24 @@
 'use client'
-
-import { ArrowLeft, Pencil, Share2, MoreHorizontal, SquareStack, LinkIcon, Layers } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { LinkIcon, Layers } from 'lucide-react'
 import { Collection } from '@db/index'
-import { toast } from 'sonner'
+import { ReactNode, useRef } from 'react';
+import { useDimensions } from '@/hooks/useDimensions';
 
 interface CollectionHeaderProps {
   collection: Collection;
-  readOnly?: boolean
+  readOnly?: boolean;
+  children?: ReactNode | ReactNode[];
 }
 
-export function CollectionIntroduction({ collection, readOnly }: CollectionHeaderProps) {
+export function CollectionProfile({ collection, children, readOnly }: CollectionHeaderProps) {
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalSections = collection.nodes.length
+  const totalSections = collection.nodes.length;
+
+  const profileContainer = useRef<HTMLDivElement | null>(null);
+  const {dimensions: containerRect} = useDimensions<HTMLDivElement>(profileContainer);
 
   return (
     <>
@@ -35,8 +32,8 @@ export function CollectionIntroduction({ collection, readOnly }: CollectionHeade
             />
           </div>
 
-          <div className="container mx-auto relative min-h-50">
-            <div className="w-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 flex flex-col items-center justify-center">
+          <div className="container mx-auto relative" style={{ height: `${containerRect?.height??0}px` } as any}>
+            <div ref={profileContainer} className="w-full absolute top-0 left-1/2 -translate-x-1/2 -translate-y-20 flex flex-col items-center justify-center">
               <div className="mb-6 inline-flex size-30 lg:size-36 items-center justify-center rounded-2xl border-8 border-white bg-white shadow-lg overflow-hidden text-accent">
                 {
                   collection.picture && <img
@@ -49,7 +46,7 @@ export function CollectionIntroduction({ collection, readOnly }: CollectionHeade
               <h1 className='text-2xl text-center'>{collection.label}</h1>
               <p className="mx-auto text-pretty text-base text-muted-foreground text-center">{collection.description}</p>
               <div className="text-center mt-4">
-                <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-2">
                     <LinkIcon className="size-4" />
                     {totalLinks} {totalLinks === 1 ? 'link' : 'links'}
@@ -60,6 +57,7 @@ export function CollectionIntroduction({ collection, readOnly }: CollectionHeade
                   </span>
                 </div>
               </div>
+              {children}
             </div>
           </div>
         </>

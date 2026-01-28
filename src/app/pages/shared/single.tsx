@@ -1,5 +1,4 @@
 import { CollectionView } from '@/components/collection/collection-view'
-import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
 import { RequestInfo } from 'rwsdk/worker'
 import { CollectionNotFound } from '../protected/collections/not-found';
@@ -26,7 +25,7 @@ export default async function PublicCollectionPage({ params }: RequestInfo) {
     return <>
         <title>{`${board?.label} - Linkee`}</title>
         <meta name="description" content={board.description} />
-        {selectedImage && <link rel="shortcut icon" href={selectedImage} type="image/x-icon" />}
+        {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
         <Header />
         <CollectionView
             collection={board}
