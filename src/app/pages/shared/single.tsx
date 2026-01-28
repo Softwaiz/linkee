@@ -21,9 +21,12 @@ export default async function PublicCollectionPage({ params }: RequestInfo) {
         return <CollectionNotFound />
     }
 
+    const selectedImage = board.picture;
+
     return <>
         <title>{`${board?.label} - Linkee`}</title>
         <meta name="description" content={board.description} />
+        {selectedImage && <link rel="shortcut icon" href={selectedImage} type="image/x-icon" />}
         <Header />
         <CollectionView
             collection={board}

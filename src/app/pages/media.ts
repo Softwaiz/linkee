@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { RequestInfo } from "rwsdk/worker";
 
 export default async function mediaResolver(params: RequestInfo) {
-    let path = params.params.$0;
+    let path = decodeURI(params.params.$0);
     let file = await env.R2.get(path);
     if (!file || !file.httpMetadata?.contentType) {
         return new Response("Not found", { status: 404 });
