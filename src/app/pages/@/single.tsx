@@ -35,7 +35,7 @@ export default async function PublicProfilePage({ params }: RequestInfo) {
                 <div className="mx-auto max-w-4xl">
                     <div className="flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
                         <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                            <AvatarImage src={user.image || ""} alt={user.firstName} />
+                            <AvatarImage fetchPriority="high" src={user.image || ""} alt={user.firstName} />
                             <AvatarFallback>{user.firstName[0]}{user.lastName[0]}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 space-y-2">

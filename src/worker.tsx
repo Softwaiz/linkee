@@ -23,6 +23,7 @@ import PublicCollectionPage from "@/pages/shared/single";
 import Sitemap from "@/pages/sitemap";
 import Robots from "@/pages/robots";
 import { extractMetadata } from "@/actions/website/extractMetadata";
+import DiscoverPage from "@/pages/protected/discover";
 export { Database } from "@db/durableObject";
 
 
@@ -75,6 +76,7 @@ export default defineApp([
         requireIdentity,
         layout(ProtectedLayout, [
           route("home", [DashboardPage]),
+          route("discover", [DiscoverPage]),
           route("collections/new", [CreateCollectionPage]),
           route("collections/:id", [CollectionPage]),
           route("collections/:id/edit", [(props: RequestInfo) => <EditCollectionPage id={props.params.id} />]),

@@ -9,10 +9,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Page } from '@/lib/types'
+import { Collection } from '@db/index'
 
 interface CollectionCardProps {
-  collection: Page
+  collection: Collection;
   onDelete: (id: string) => void
   onDuplicate: (id: string) => void
 }
@@ -35,8 +35,8 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           />
         </div>
       )}
-      <div className="p-5 flex flex-col flex-1">
-        <div className="mb-4 flex items-start justify-between">
+      <div className="p-3 lg:p-5 flex flex-col flex-1">
+        <div className="mb-2 flex items-start justify-between">
           {!collection.picture && (
             <div className="flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
               <Layers className="size-5" />
@@ -45,9 +45,9 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="ghost"
+                variant="default"
                 size="icon"
-                className="size-8 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute top-4 right-4 size-8 transition-all"
               >
                 <MoreHorizontal className="size-4" />
               </Button>

@@ -10,7 +10,7 @@ import { deleteCollection } from '@/actions/collections/delete'
 import { duplicate } from '@/actions/collections/duplicate'
 
 export function CollectionsGrid({ items }: { items: Collection[] }) {
-  const [collections, setCollections] = useState<Page[]>(items)
+  const [collections, setCollections] = useState<Collection[]>(items)
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredCollections = useMemo(() => {

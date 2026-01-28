@@ -1,5 +1,4 @@
 'use client'
-
 import type { Section } from '@/lib/types'
 import { LinkPreview } from './link-preview'
 import { TextPreview } from './text-preview'
@@ -19,9 +18,8 @@ export function SectionPreview({ section }: SectionPreviewProps) {
           <p className="text-sm text-muted-foreground">{section.description}</p>
         )}
       </div>
-      
       {section.items.length > 0 ? (
-        <div className="grid gap-3">
+        <div className="w-full flex flex-col gap-3">
           {section.items.map((item) =>
             item.type === 'link' ? (
               <LinkPreview key={item.id} link={item} />

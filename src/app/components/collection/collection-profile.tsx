@@ -28,6 +28,7 @@ export function CollectionProfile({ collection, children, readOnly }: Collection
             <img
               src={collection.banner}
               alt={collection.label}
+              fetchPriority='high'
               className="w-full h-full object-cover object-center"
             />
           </div>
@@ -37,6 +38,7 @@ export function CollectionProfile({ collection, children, readOnly }: Collection
               <div className="mb-6 inline-flex size-30 lg:size-36 items-center justify-center rounded-2xl border-8 border-white bg-white shadow-lg overflow-hidden text-accent">
                 {
                   collection.picture && <img
+                  fetchPriority='high'
                     src={collection.picture}
                     alt={collection.label}
                     className="w-full h-full object-cover object-center rounded-md"
