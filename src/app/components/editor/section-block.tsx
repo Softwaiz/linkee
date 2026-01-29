@@ -5,7 +5,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { Plus, Pencil, Trash2, Link2, Type } from 'lucide-react'
+import { Plus, Pencil, Trash2, Link2, Type, Link, Text } from 'lucide-react'
 import { LinkCard } from './links-card'
 import { TextBlock } from './text-block'
 import { cn } from '@/lib/utils'
@@ -54,9 +54,10 @@ export function SectionBlock({
   return (
     <div
       className={cn(
-        'group/section transition-all duration-200 space-y-2',
+        'group/section relative transition-all duration-200 space-y-2',
         isDragging && 'opacity-50 ring-2 ring-accent/50',
-        isOver && 'ring-2 ring-accent/30'
+        isOver && 'ring-2 ring-accent/30',
+        "pb-10"
       )}
     >
       <div className="flex items-start justify-between p-4">
@@ -90,9 +91,6 @@ export function SectionBlock({
           </button>
         </div>
       </div>
-
-      <hr className='w-full bg-neutral-100' />
-
       <div ref={setDroppableRef} className="space-y-2 p-4">
         <SortableContext
           items={section.items.map((item) => item.id)}
@@ -123,28 +121,30 @@ export function SectionBlock({
           </div>
         )}
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-3 w-full"
-            >
-              <Plus className="size-4" />
-              Add Item
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="center">
-            <DropdownMenuItem onClick={onAddLink}>
-              <Link2 className="size-4" />
-              Add Link
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onAddText}>
-              <Type className="size-4" />
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-lg border rounded-lg flex flex-row items-center justify-center shadow-md">
+          <button
+            className='p-2 flex flex-row items-center justify-center gap-2'
+            onClick={() => {
+              onAddLink();
+            }}>
+            <Link size={16} />
+            <span className='text-sm'>
+              Add a link
+            </span>
+          </button>
+
+          <button
+            className='p-2 flex flex-row items-center justify-center gap-2'
+            onClick={() => {
+              onAddText();
+            }}>
+            <Type size={16} />
+            <span className="text-sm">
               Add Text
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </span>
+          </button>
+        </div>
+
       </div>
     </div>
   )

@@ -490,6 +490,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     )
       .then((value) => {
         if (value.success && value.updated) {
+          localStorage.removeItem(storageKey);
           toast.success(
             "Saved !",
             {
@@ -511,7 +512,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [page, collection, selectedPicture, selectedBanner]);
+  }, [storageKey, page, collection, selectedPicture, selectedBanner]);
 
   const handleSaveCollection = useCallback(async () => {
     if (collection) {
@@ -568,7 +569,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 navigate(`/collections/${value.created?.slug ?? value.created?.id}`);
               }}>View</Button>
             })
-          localStorage.removeItem('collection.draft');
+          localStorage.removeItem(storageKey);
         }
         else {
           toast.error("Your collection was not saved.",
@@ -581,7 +582,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [page, collection, selectedPicture, selectedBanner]);
+  }, [page, storageKey, collection, selectedPicture, selectedBanner]);
 
   const handlePictureChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     const file = ev.currentTarget.files?.item(0);
@@ -752,7 +753,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               )}
             </div>
             <div className="w-full bg-white shadow-sm rounded-lg min-h-100">
-
               {
                 activeSection && <SectionBlock
                   key={activeSection.id}
@@ -865,10 +865,9 @@ function DraggableSectionCard({ section, onClick }: { section: Group, onClick: (
     ref={setSortableRef}
     key={section.id}
     onClick={() => {
-      console.log("selected section card", section.id);
       onClick()
     }}
-    className="w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:bg-primary hover:text-primary-foreground">
+    className="w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:border-transparent hover:bg-primary-100 hover:text-primary-700">
     <button
       {...attributes}
       {...listeners}

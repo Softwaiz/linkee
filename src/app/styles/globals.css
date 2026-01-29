@@ -30,21 +30,22 @@
   --secondary-900: #7f190f;
   --secondary-950: #450805;
 
-  --accent-50: #fdfbe9;
-  --accent-100: #fdf7c4;
-  --accent-200: #fbeb8d;
-  --accent-300: #f9dc5c;
-  --accent-400: #f4c31b;
-  --accent-500: #e4ab0e;
-  --accent-600: #c58309;
-  --accent-700: #9d5d0b;
-  --accent-800: #824a11;
-  --accent-900: #6f3d14;
-  --accent-950: #401f08;
+  --accent-50: #edfff5;
+  --accent-100: #d6ffe9;
+  --accent-200: #afffd4;
+  --accent-300: #71ffb5;
+  --accent-400: #2dfb8e;
+  --accent-500: #02e56e;
+  --accent-600: #00bf57;
+  --accent-700: #008c43;
+  --accent-800: #06753c;
+  --accent-900: #085f33;
+  --accent-950: #00361b;
 
   --typeface-display: "Lufga Bold", sans-serif;
   --typeface-heading: "Lufga Bold", sans-serif;
   --typeface-body: "Lufga Regular", sans-serif;
+
   --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
@@ -74,8 +75,8 @@
   --muted: oklch(0.96 0 0);
   --muted-foreground: oklch(0.45 0 0);
 
-  --accent: var(--accent-600);
-  --accent-foreground: var(--accent-200);
+  --accent: var(--accent-700);
+  --accent-foreground: var(--accent-300);
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);

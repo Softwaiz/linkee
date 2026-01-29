@@ -39,12 +39,12 @@ export function LinkCard({ item, onEdit, onDelete }: LinkCardProps) {
       <button
         {...attributes}
         {...listeners}
-        className="flex-shrink-0 cursor-grab touch-none text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+        className="shrink-0 cursor-grab touch-none text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
       >
         <GripVertical className="size-4" />
       </button>
 
-      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-secondary">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary-100">
         {item.favicon ? (
           <img
             src={item.favicon || "/placeholder.svg"}
@@ -53,7 +53,7 @@ export function LinkCard({ item, onEdit, onDelete }: LinkCardProps) {
             crossOrigin="anonymous"
           />
         ) : (
-          <ExternalLink className="size-4 text-muted-foreground" />
+          <ExternalLink className="size-4 text-secondary-500" />
         )}
       </div>
 
