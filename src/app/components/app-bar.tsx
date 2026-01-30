@@ -17,16 +17,17 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack, Menu } from "lucide-react";
+import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack, Menu, Plus } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { handleLogout } from "../actions/auth/logout";
 import { Input } from "./ui/input";
 import { Logo } from "./logo";
 import { useWindowLocation } from "@/hooks/useWindowLocation";
-import { motion, AnimatePresence } from "motion/react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 import { navigate } from "rwsdk/client";
 import { useIdentity } from "@/providers/identity";
+import { Link } from "./link";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface User {
     id: string;
@@ -41,16 +42,18 @@ interface ProtectedHeaderProps {
     user: User;
 }
 
-export function ProtectedHeader({ user }: ProtectedHeaderProps) {
+export function AppBar({ user }: ProtectedHeaderProps) {
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchQueryDraft, setSearchQueryDraft] = useState('');
 
-
     const location = useWindowLocation();
+
+    const debounce = useDebounce(1000);
 
     const handleSearchChange = (query: string) => {
         setSearchQueryDraft(query);
+
     };
 
     const handleSearchSubmit = () => {
@@ -68,15 +71,15 @@ export function ProtectedHeader({ user }: ProtectedHeaderProps) {
         }, 2500);
     }, [searchQueryDraft]);
 
+    const sidebar = useSidebar();
+
     const dicebearUrl = useMemo(() => {
-        return `https://api.dicebear.com/9.x/initials/svg?seed=${user.firstName[0]}${user.lastName[0]}`;
-    }, [user.firstName, user.lastName]);
+        return `https://api.dicebear.com/9.x/initials/svg?seed=${user?.firstName[0]}${user?.lastName[0]}`;
+    }, [user?.firstName, user?.lastName]);
 
     const displayImage = useMemo(() => {
-        return user.image ?? dicebearUrl;
-    }, [user.image, dicebearUrl]);
-
-    const sidebar = useSidebar();
+        return user?.image ?? dicebearUrl;
+    }, [user?.image, dicebearUrl]);
 
     return (
         <section className="w-full flex flex-col items-start justify-start">
@@ -96,28 +99,28 @@ export function ProtectedHeader({ user }: ProtectedHeaderProps) {
                                 placeholder="Search collections..."
                                 value={searchQueryDraft}
                                 onChange={(e) => handleSearchChange(e.target.value)}
-                                className="w-full border-0 bg-muted/10 pl-9 focus:bg-background placeholder:text-inherit"
+                                className="w-full border-0 bg-muted/10 pl-9 focus:bg-background/10 placeholder:text-inherit"
                             />
                         </div>
                     </div>
                     <div className="flex flex-row items-center justify-center gap-2">
                         <Button size="sm" variant="ghost" asChild>
-                            <a title="Go to home" href="/home">
+                            <Link title="Go to home" href="/home">
                                 <Home />
                                 Home
-                            </a>
+                            </Link>
                         </Button>
                         <Button size="sm" variant="ghost" asChild>
-                            <a title="Discover new collections" href="/discover">
+                            <Link title="Discover new collections" href="/discover">
                                 <Lightbulb />
                                 Discover
-                            </a>
+                            </Link>
                         </Button>
                         <Button size="sm" variant="ghost" asChild>
-                            <a title="Create your collection" href="/collections/new">
+                            <Link title="Create your collection" href="/collections/new">
                                 <SquareStack />
                                 Create yours
-                            </a>
+                            </Link>
                         </Button>
                     </div>
 
@@ -138,10 +141,10 @@ export function ProtectedHeader({ user }: ProtectedHeaderProps) {
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem asChild>
-                                    <a title="View my profile" href="/profile" className="flex items-center cursor-pointer">
+                                    <Link title="View my profile" href="/profile" className="flex items-center cursor-pointer">
                                         <UserIcon className="mr-2 h-4 w-4" />
                                         <span>Profile</span>
-                                    </a>
+                                    </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)} className="text-destructive focus:text-destructive">
@@ -151,31 +154,6 @@ export function ProtectedHeader({ user }: ProtectedHeaderProps) {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                </div>
-            </header>
-
-            <header className="sticky top-0 left-0 z-50 w-full min-h-14 border-b bg-primary-900 text-primary-50 backdrop-blur-lg px-2 py-2 flex lg:hidden flex-row items-center justify-start gap-2">
-                <button
-                    onClick={() => {
-                        sidebar.setOpenMobile(true);
-                    }}
-                    className="aspect-square p-1.5 rounded-md flex flex-col items-start justify-center gap-1.5">
-                    <span className="h-0.5 w-6 rounded-lg bg-primary-200"></span>
-                    <span className="h-0.5 w-4 rounded-lg bg-primary-50"></span>
-                    <span className="h-0.5 w-8 rounded-lg bg-neutral-100"></span>
-                </button>
-
-                <div className="grow flex flex-col items-start justify-start gap-1">
-                    <AnimatePresence>
-                        <motion.a
-                            key="header.home"
-                            href="/home"
-                            className="inline-flex flex-row items-center justify-start gap-2">
-                            <span className="text-base font-heading">
-                                Linkee
-                            </span>
-                        </motion.a>
-                    </AnimatePresence>
                 </div>
             </header>
 

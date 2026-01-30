@@ -1,8 +1,9 @@
 import { CollectionView } from '@/components/collection/collection-view'
-import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
 import { RequestInfo } from 'rwsdk/worker'
 import { CollectionNotFound } from './not-found';
+import { Layers } from 'lucide-react';
+import Page from '@/components/page';
 
 export default async function CollectionPage({ params }: RequestInfo) {
     const { id } = params;
@@ -22,8 +23,22 @@ export default async function CollectionPage({ params }: RequestInfo) {
     return <>
         <title>{`${board?.label} - Linkee`}</title>
         <meta name="description" content={board.description} />
-        <CollectionView
-            collection={board}
-        />
+        <Page.Root>
+            <Page.Header.Custom container className="justify-between">
+                <div className="grow flex flex-row items-center justify-start gap-2">
+                    <Page.BackButton />
+                    <span
+                        className="p-4">
+                        <Layers size={32} />
+                    </span>
+                    <Page.Title>Create your collection</Page.Title>
+                </div>
+            </Page.Header.Custom>
+            <Page.Content container>
+                <CollectionView
+                    collection={board}
+                />
+            </Page.Content>
+        </Page.Root>
     </>
 }

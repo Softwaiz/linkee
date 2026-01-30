@@ -23,7 +23,7 @@ export function LinkPreview({ link }: LinkPreviewProps) {
       rel="noopener noreferrer"
       className="group flex items-start gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:border-accent/50 hover:shadow-md hover:shadow-accent/5"
     >
-      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground transition-colors group-hover:bg-accent/10 group-hover:text-accent">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary-100 text-secondary-500 transition-colors group-hover:bg-accent/10 group-hover:text-accent">
         {link.favicon ? (
           <img
             src={link.favicon || "/placeholder.svg"}

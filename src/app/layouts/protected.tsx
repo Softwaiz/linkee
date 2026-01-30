@@ -1,8 +1,9 @@
 import { LayoutProps } from "rwsdk/router";
-import { ProtectedHeader } from "../components/protected-header";
+import { AppBar } from "../components/app-bar";
 import { getRequestInfo } from "rwsdk/worker";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { IdentityProvider } from "@/providers/identity";
+import { BottomBar } from "@/components/bottom-bar";
 
 export default async function ProtectedLayout(props: LayoutProps) {
     const { ctx, request } = getRequestInfo();
@@ -10,10 +11,11 @@ export default async function ProtectedLayout(props: LayoutProps) {
     return <SidebarProvider defaultOpen={false}>
         <IdentityProvider user={ctx.user}>
             <div className="w-full min-h-dvh">
-                <ProtectedHeader user={ctx.user!} />
-                <main>
+                <AppBar user={ctx.user!} />
+                <main className="pb-16">
                     {props.children}
                 </main>
+                <BottomBar/>
             </div>
         </IdentityProvider>
     </SidebarProvider>

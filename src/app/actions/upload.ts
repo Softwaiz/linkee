@@ -44,8 +44,6 @@ export async function uploadProfileImage(formData: FormData) {
             }
         });
 
-        console.log("uploaded ", uploaded);
-
         const publicUrl = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : key;
 
         return {

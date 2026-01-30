@@ -13,19 +13,19 @@ import ProtectedLayout from "@/layouts/protected";
 import { requireIdentity } from "@/middlewares/authentication";
 import { identityCookie } from "./cookies";
 import CreateCollectionPage from "@/pages/protected/collections/new";
-import DashboardPage from "@/pages/protected/app";
+import DashboardPage from "@/pages/protected/home";
 import CollectionPage from "@/pages/protected/collections/single";
 import EditCollectionPage from "@/pages/protected/collections/edit";
 import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
-import PublicProfilePage from "@/pages/@/single";
-import PublicCollectionPage from "@/pages/shared/single";
+import PublicProfilePage from "@/pages/public/user-profile";
+import PublicCollectionPage from "@/pages/public/collection";
 import Sitemap from "@/pages/sitemap";
 import Robots from "@/pages/robots";
 import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
+import SavedCollections from "@/pages/protected/saved";
 export { Database } from "@db/durableObject";
-
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
@@ -49,7 +49,6 @@ async function verifyUserFromCookie(request: Request, response: RequestInfo['res
     console.log("Error verifying user from cookie:", err);
   }
   finally {
-    console.log(ctx.user?.id);
   }
 }
 
@@ -64,7 +63,6 @@ export default defineApp([
   ]),
   render(Document, [
     layout(BaseLayout, [
-
       route("/", Home),
       route("/signin", LoginPage),
       route("/signup", Signup),
@@ -75,12 +73,13 @@ export default defineApp([
       prefix("/", [
         requireIdentity,
         layout(ProtectedLayout, [
-          route("home", [DashboardPage]),
-          route("discover", [DiscoverPage]),
-          route("collections/new", [CreateCollectionPage]),
-          route("collections/:id", [CollectionPage]),
-          route("collections/:id/edit", [(props: RequestInfo) => <EditCollectionPage id={props.params.id} />]),
+          route("home", DashboardPage),
+          route("discover", DiscoverPage),
+          route("collections/new", CreateCollectionPage),
+          route("collections/:id", CollectionPage),
+          route("collections/:id/edit", EditCollectionPage),
           route("profile", ProfilePage),
+          route("saved", SavedCollections)
         ])
       ]),
     ])

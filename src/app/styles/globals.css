@@ -186,6 +186,9 @@
 
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --breakpoint-xs: 480px;
+
 }
 
 @layer base {
@@ -210,7 +213,7 @@
   }
 
   .container {
-    @apply px-2 lg:px-0;
+    @apply px-4 md:px-2 lg:px-0
   }
 }
 

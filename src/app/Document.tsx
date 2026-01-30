@@ -1,4 +1,5 @@
 import styles from "./styles/globals.css?url";
+import rootStyles from "./styles/root.css?url";
 
 export const Document: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -17,6 +18,7 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href="/fonts/lufga/style.css" />
       <link rel="stylesheet" href={styles} />
+      <link rel="stylesheet" href={rootStyles} />
       <link rel="modulepreload" href="/src/client.tsx" />
     </head>
     <body>

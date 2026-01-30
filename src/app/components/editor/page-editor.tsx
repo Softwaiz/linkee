@@ -110,7 +110,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       return;
     }
 
-    // Don't validate if slug is empty or hasn't changed from original (if editing)
     if (!page.slug) {
       return;
     }
@@ -140,7 +139,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     }
   }, [page.slug, collection?.slug, collection?.id]);
 
-  ///auto save to localstorage
   useEffect(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -600,8 +598,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
 
   return (
-    <div className="min-h-dvh bg-neutral-200">
-      <EditorHeader />
+    <div className="min-h-dvh">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -609,7 +606,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="container mx-auto grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
+        <div className="grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
           <div className="col-span-12 lg:col-span-4">
             <div className="w-full relative mb-20">
               <div className='space-y-2 relative'>
@@ -670,7 +667,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                       value={page.label}
                       onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
                       placeholder="Page Title"
-                      className="bg-white/10 text-3xl font-bold placeholder:text-muted-foreground focus-visible:ring-0"
+                      className="bg-white/10 text-lg font-bold placeholder:text-muted-foreground focus-visible:ring-0"
                     />
                   </div>
                   <div className='space-y-2'>
@@ -713,7 +710,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
           </div>
 
           <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="w-full p-4 bg-white shadow-sm rounded-md space-y-4">
+            <div className="w-full p-4 bg-background shadow-sm rounded-md space-y-4">
               <h4>Groups in this collection</h4>
               <SortableContext
                 items={page.nodes!.map((s) => s.id)}
@@ -752,7 +749,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 </Button>
               )}
             </div>
-            <div className="w-full bg-white shadow-sm rounded-lg min-h-100">
+            <div className="w-full bg-background shadow-sm rounded-lg min-h-100">
               {
                 activeSection && <SectionBlock
                   key={activeSection.id}
@@ -782,9 +779,24 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   </Button>
                 </div>
               )}
+              {
+                !activeSection && page.nodes!.length > 0 && (
+                  <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary-100">
+                      <Layers className="size-6 text-secondary-500" />
+                    </div>
+                    <h3 className="mb-1 text-lg font-medium text-center text-foreground">
+                      No section selected.
+                    </h3>
+                    <p className="mb-1 text-sm font-medium text-center text-muted-foreground">
+                      Select or add a section to edit its content.
+                    </p>
+                  </div>
+                )
+              }
             </div>
           </div>
-          <div className="col-span-12 sticky bottom-0 left-0 p-4 flex flex-row items-center justify-end my-4">
+          <div className="col-span-12 flex flex-row items-center justify-end mt-2">
             <Button
               title='Save this collection'
               className='text-sm flex flex-row items-center justify-center gap-2'
