@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Logo } from "./logo";
+import { Link } from "./link";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,28 +11,34 @@ export function Header() {
     return (
         <header className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
             <div className="container mx-auto h-16 flex items-center justify-between">
-                <a href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
+                <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
                     <Logo />
                     Linkee
-                </a>
+                </Link>
 
                 <nav className="hidden md:flex items-center gap-8">
-                    <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         Features
-                    </a>
-                    <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    </Link>
+                    <Link href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         Pricing
-                    </a>
-                    <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    </Link>
+                    <Link href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         About
-                    </a>
+                    </Link>
                 </nav>
 
                 <div className="hidden md:flex items-center gap-4">
-                    <Button variant="ghost" size="sm">
-                        Log in
+                    <Button variant="ghost" size="sm" asChild>
+                        <Link href="/signin">
+                            Log in
+                        </Link>
                     </Button>
-                    <Button size="sm">Get Started</Button>
+                    <Button size="sm" asChild>
+                        <Link href="/signup">
+                            Get Started
+                        </Link>
+                    </Button>
                 </div>
 
                 {/* Mobile menu button */}
@@ -49,20 +56,26 @@ export function Header() {
             {mobileMenuOpen && (
                 <div className="md:hidden border-t border-border bg-background">
                     <nav className="flex flex-col p-6 gap-4">
-                        <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                             Features
-                        </a>
-                        <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        </Link>
+                        <Link href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                             Pricing
-                        </a>
-                        <a href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        </Link>
+                        <Link href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                             About
-                        </a>
+                        </Link>
                         <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                            <Button variant="ghost" size="sm" className="justify-start">
-                                Log in
+                            <Button variant="ghost" size="sm" className="justify-start" asChild>
+                                <Link href="/signin">
+                                    Log in
+                                </Link>
                             </Button>
-                            <Button size="sm">Get Started</Button>
+                            <Button size="sm">
+                                <Link href="/signup">
+                                    Get Started
+                                </Link>
+                            </Button>
                         </div>
                     </nav>
                 </div>
