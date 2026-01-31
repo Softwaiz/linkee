@@ -1,5 +1,6 @@
 "use client";
 import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,7 @@ export default function Signin() {
         setLoading(true);
         handleLogin({ email: data.email, password: data.password })
             .then((res) => {
-                if(res.success) {
+                if (res.success) {
                     toast.success(res.message);
                     navigate(res.redirectTo || "/home");
                 }
@@ -44,23 +45,26 @@ export default function Signin() {
             <div className="container mx-auto">
                 <div className="-mx-4 flex flex-wrap">
                     <div className="w-full px-4">
-                        <Card className="relative mx-auto max-w-131.25 overflow-hidden px-4 py-8 text-center dark:bg-dark-2">
+                        <Card className="sm:mx-auto sm:w-full sm:max-w-md relative overflow-hidden px-4 py-8 text-center dark:bg-dark-2">
                             <CardContent>
-                                <CardHeader className="mb-10 text-center md:mb-16">
+                                <CardHeader className="mb-10 text-center md:mb-8">
                                     <Logo
                                         className="mx-auto h-10 w-10 text-foreground dark:text-foreground"
                                         aria-hidden={true}
                                     />
-                                    <h3 className="mt-2 text-center text-lg font-bold text-foreground dark:text-foreground">
-                                        Connect to your account
-                                    </h3>
+                                    <div className="flex flex-col items-center justify-center gap-2">
+                                        <h1 className="text-lg">Linkee</h1>
+                                        <p className="mt-2 text-center text-sm text-foreground dark:text-foreground opacity-75">
+                                            Connect to your account
+                                        </p>
+                                    </div>
                                 </CardHeader>
                                 <form
-                                className="w-full space-y-4"
-                                 onSubmit={(ev) => {
-                                    ev.preventDefault();
-                                    form.handleSubmit(triggerLogin)(ev);
-                                }}>
+                                    className="w-full space-y-4"
+                                    onSubmit={(ev) => {
+                                        ev.preventDefault();
+                                        form.handleSubmit(triggerLogin)(ev);
+                                    }}>
                                     <Controller
                                         control={form.control}
                                         name="email"
@@ -94,29 +98,30 @@ export default function Signin() {
                                         }} />
 
                                     <div className="mb-10">
-                                        <button
+                                        <Button
                                             type="submit"
+                                            size="lg"
                                             disabled={isLoading}
-                                            className="w-full cursor-pointer rounded-md border border-primary bg-primary px-4 py-2 text-base font-medium text-neutral-600 transition hover:bg-opacity-90 flex flex-row items-center justify-center gap-2"
+                                            className="w-full flex flex-row items-center gap-2"
                                         >
                                             {
                                                 isLoading ? "Signing in..." : "Sign In"
                                             }
-                                            <LogIn size={16}/>
-                                        </button>
+                                            <LogIn size={16} />
+                                        </Button>
                                     </div>
                                 </form>
                             </CardContent>
                         </Card>
                         <p className="mt-6 text-center text-sm text-muted-foreground dark:text-muted-foreground">
-                    Don't have an account?{" "}
-                    <a
-                        href="/signup"
-                        className="font-medium text-primary hover:text-primary/90 dark:text-primary hover:dark:text-primary/90"
-                    >
-                        Sign up
-                    </a>
-                </p>
+                            Don't have an account?{" "}
+                            <a
+                                href="/signup"
+                                className="font-medium text-primary hover:text-primary/90 dark:text-primary hover:dark:text-primary/90"
+                            >
+                                Sign up
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>

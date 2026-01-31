@@ -6,7 +6,7 @@ import { Lightbulb, Plus } from 'lucide-react'
 import Page from '@/components/page'
 
 export default async function DiscoverPage() {
-  
+
   const items = await db.selectFrom("boards").selectAll().orderBy("createdAt", "desc").execute();
 
   return <Page.Root>
@@ -23,9 +23,12 @@ export default async function DiscoverPage() {
       <div>
         <Button
           variant="outline"
-          size="icon-sm" asChild>
+          asChild>
           <Link href="/collections/new">
             <Plus />
+            <span className="hidden md:inline-block">
+              Create yours
+            </span>
           </Link>
         </Button>
       </div>

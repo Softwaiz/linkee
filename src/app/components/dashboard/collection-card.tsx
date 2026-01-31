@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Collection } from '@db/index'
+import { Link } from '../link'
 
 interface CollectionCardProps {
   collection: Collection;
@@ -54,16 +55,16 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <a href={`/collections/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+                <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
                   <ExternalLink className="size-4" />
                   Open
-                </a>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <a href={`/shared/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+                <Link href={`/shared/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
                   <Share className="size-4" />
                   Share
-                </a>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onDuplicate(collection.id)}>
                 Duplicate
@@ -79,7 +80,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           </DropdownMenu>
         </div>
 
-        <a href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
+        <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
           <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {collection.label || 'Untitled Collection'}
           </h3>
@@ -96,7 +97,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
               {totalSections} {totalSections === 1 ? 'section' : 'sections'}
             </span>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   )

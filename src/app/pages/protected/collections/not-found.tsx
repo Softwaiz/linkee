@@ -1,3 +1,4 @@
+import { Link } from "@/components/link";
 import { Button } from "@/components/ui/button";
 
 export function CollectionNotFound() {
@@ -13,14 +14,14 @@ export function CollectionNotFound() {
             </p>
             <div className="flex gap-4">
                 <Button asChild>
-                    <a href="/">
+                    <Link href="/">
                         Go Home
-                    </a>
+                    </Link>
                 </Button>
                 <Button variant="outline" asChild>
-                    <a href="/collections/new">
+                    <Link href="/collections/new">
                         Create yours
-                    </a>
+                    </Link>
                 </Button>
             </div>
         </div>

@@ -25,6 +25,7 @@ import Robots from "@/pages/robots";
 import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
 import SavedCollections from "@/pages/protected/saved";
+import { PublicLayout } from "@/layouts/public";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
@@ -58,8 +59,11 @@ export default defineApp([
     return verifyUserFromCookie(request, response, ctx);
   },
   render(PublicDocument, [
-    route("/@:alias", PublicProfilePage),
-    route("/shared/:id", PublicCollectionPage),
+    layout(
+      PublicLayout, [
+      route("/@:alias", PublicProfilePage),
+      route("/shared/:id", PublicCollectionPage),
+    ])
   ]),
   render(Document, [
     layout(BaseLayout, [

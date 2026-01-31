@@ -5,6 +5,7 @@ import { getRequestInfo } from "rwsdk/worker";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { identityCookie } from "../../../cookies";
+import { redirect } from "../../../utils/sdk";
 
 export const handleSignup = async (data: SignupInput) => {
     try {
@@ -42,7 +43,7 @@ export const handleSignup = async (data: SignupInput) => {
         return {
             success: true,
             message: `You can now access Linkee as ${newUser?.email}.`,
-            redirectTo: "/signin"
+            redirectTo: "/home"
         }
     } catch (err) {
         console.error("Signup error: ", err);

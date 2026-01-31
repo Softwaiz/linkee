@@ -5,7 +5,7 @@ import { useMedia } from "./useMedia"
 
 function Device({ query, defaultMatch = false, children }: PropsWithChildren<{ query: string, defaultMatch?: boolean; }>) {
     const matches = useMedia(query, defaultMatch);
-    return <Activity mode={matches ? "visible" : "hidden"} >
+    return <Activity mode={matches.match ? "visible" : "hidden"} >
         {children}
     </Activity>
 }
@@ -17,19 +17,19 @@ function Exact({ size, defaultMatch = false, children }: PropsWithChildren<{ siz
 }
 
 function MaxWidth({ width, defaultMatch = false, children }: PropsWithChildren<{ width: string, defaultMatch?: boolean; }>) {
-    return <Device query={`(max-width: ${width})`}  defaultMatch={defaultMatch}>
+    return <Device query={`(max-width: ${width})`} defaultMatch={defaultMatch}>
         {children}
     </Device>
 }
 
 function MinWidth({ width, defaultMatch = false, children }: PropsWithChildren<{ width: string, defaultMatch?: boolean; }>) {
-    return <Device query={`(min-width: ${width})`}  defaultMatch={defaultMatch}>
+    return <Device query={`(min-width: ${width})`} defaultMatch={defaultMatch}>
         {children}
     </Device>
 }
 
 function Between({ minWidth, maxWidth, defaultMatch = false, children }: PropsWithChildren<{ minWidth: string, maxWidth: string, defaultMatch?: boolean; }>) {
-    return <Device query={`(min-width: ${minWidth}) and (max-width: ${maxWidth})`}  defaultMatch={defaultMatch}>
+    return <Device query={`(min-width: ${minWidth}) and (max-width: ${maxWidth})`} defaultMatch={defaultMatch}>
         {children}
     </Device>
 }
@@ -64,12 +64,4 @@ function ExtraLarge({ defaultMatch = false, children }: PropsWithChildren<{ defa
     return <MinWidth width="96rem" defaultMatch={defaultMatch}>{children}</MinWidth>
 }
 
-Device.Exact = Exact;
-Device.Between = Between;
-Device.MaxWidth = MaxWidth;
-Device.MinWidth = MinWidth;
-Device.Small = Small;
-Device.Medium = Medium;
-Device.Large = Large;
-Device.Larger = Larger;
-Device.ExtraLarge = ExtraLarge;
+export default { Custom: Device, Exact, Between, MaxWidth, MinWidth, Small, Medium, Large, Larger, ExtraLarge }

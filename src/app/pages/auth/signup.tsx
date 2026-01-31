@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { JSX, SVGProps, useCallback, useState } from "react";
@@ -13,11 +13,15 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { toast } from "sonner";
 import { Logo } from "@/components/logo";
 import { UserPlus } from "lucide-react";
+import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 
 
 export default function SignupPage() {
 
     const [loading, setLoading] = useState(false);
+
+    const passwordVisible = usePasswordVisibility();
+    const confirmPasswordVisible = usePasswordVisibility();
 
     const form = useForm({
         resolver: zodResolver(SignupSchema),
@@ -46,7 +50,7 @@ export default function SignupPage() {
                 }
                 else {
                     toast.error(
-                       "Signup failed. Please try again.",
+                        "Signup failed. Please try again.",
                         {
                             description: value.error
                         }
@@ -61,18 +65,20 @@ export default function SignupPage() {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div className="flex flex-1 flex-col justify-center px-4 py-10 lg:px-6">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                    <Logo
-                        className="mx-auto h-10 w-10 text-foreground dark:text-foreground"
-                        aria-hidden={true}
-                    />
-                    <h3 className="mt-2 text-center text-lg font-bold text-foreground dark:text-foreground">
-                        Create your new account on Linkee
-                    </h3>
-                </div>
-
-                <Card className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
+                <Card className="sm:mx-auto sm:w-full sm:max-w-md">
                     <CardContent>
+                        <CardHeader className="mb-10 text-center md:mb-8">
+                            <Logo
+                                className="mx-auto h-10 w-10 text-foreground dark:text-foreground"
+                                aria-hidden={true}
+                            />
+                            <div className="flex flex-col items-center justify-center">
+                                <h1 className="text-lg">Linkee</h1>
+                                <p className="mt-2 text-center text-sm text-foreground dark:text-foreground opacity-75">
+                                    Create your account
+                                </p>
+                            </div>
+                        </CardHeader>
                         <form onSubmit={(ev) => {
                             ev.preventDefault();
                             form.handleSubmit(onSubmit)(ev);
@@ -209,7 +215,7 @@ export default function SignupPage() {
                                 disabled={loading}
                             >
                                 {loading ? "Creating account..." : "Create my account"}
-                                <UserPlus/>
+                                <UserPlus />
                             </Button>
                         </form>
                     </CardContent>

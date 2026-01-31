@@ -5,7 +5,7 @@ export default function PageTitle({ className, ...props }: PropsWithChildren<HTM
     return <h1
         {...props}
         className={
-            cn("text-lg","page-title", className)
+            cn(" text-base lg:text-lg max-w-[10ch] md:max-w-[30ch] lg:max-w-[40ch] truncate","page-title", className)
         }>
         {props.children}
     </h1>

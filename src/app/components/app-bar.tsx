@@ -83,7 +83,7 @@ export function AppBar({ user }: ProtectedHeaderProps) {
 
     return (
         <section className="w-full flex flex-col items-start justify-start">
-            <header className="hidden lg:flex min-h-20 w-full flex-col items-center justify-center border-b bg-primary-950 text-primary-100 backdrop-blur-lg">
+            <header className="hidden lg:flex min-h-16 w-full flex-col items-center justify-center border-b bg-primary-950 text-primary-100 backdrop-blur-lg">
                 <div className="container mx-auto flex h-14 items-center justify-between gap-2">
                     <div className="mr-4 flex">
                         <a className="mr-6 flex items-center space-x-2" href="/home">
@@ -214,9 +214,9 @@ export function AppBar({ user }: ProtectedHeaderProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-full">
                                 <DropdownMenuItem asChild>
-                                    <a href="/profile">
+                                    <Link href="/profile">
                                         My Profile
-                                    </a>
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

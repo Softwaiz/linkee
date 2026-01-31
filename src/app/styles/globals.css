@@ -57,13 +57,13 @@
 }
 
 :root {
-  --background: oklch(0.9918 0.0134 145.47);
+  --background: oklch(0.9876 0.0095 320.55);
   --foreground: oklch(0.15 0 0);
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0 0);
 
-  --popover: oklch(0.9925 0.0051 67.77);
+  --popover: oklch(0.9876 0.0095 320.55);
   --popover-foreground: oklch(0.15 0 0);
 
   --primary: var(--primary-500);
@@ -187,7 +187,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --breakpoint-xs: 480px;
+  --breakpoint-xs: 620px;
 
 }
 

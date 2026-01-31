@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Page } from '@/lib/types'
 import { Collection } from '@db/index'
+import { Link } from '../link'
 
 interface DiscoverCardProps {
   collection: Collection
@@ -25,13 +25,13 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
       {/* Cover Image */}
       {collection.banner && (
-        <a href={`/collection/${collection.id}`} className="relative aspect-16/10 overflow-hidden">
+        <Link href={`/shared/${collection.slug ?? collection.id}`} className="relative aspect-16/10 overflow-hidden">
           <img
             src={collection.banner || "/placeholder.svg"}
             alt={collection.label}
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
-        </a>
+        </Link>
       )}
 
       {/* Menu Button */}
@@ -56,9 +56,7 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
         </DropdownMenu>
       </div>
 
-      {/* Content */}
-      <a href={`/collection/${collection.id}`} className="flex flex-1 flex-col p-5">
-        {/* Icon (only show if no cover image) */}
+      <Link href={`/collections/${collection.id}`} className="flex flex-1 flex-col p-5">
         {!collection.banner && (
           <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Layers className="size-5" />
@@ -84,7 +82,7 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
             {totalSections} {totalSections === 1 ? 'section' : 'sections'}
           </span>
         </div>
-      </a>
+      </Link>
     </div>
   )
 }

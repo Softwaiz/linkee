@@ -1,11 +1,10 @@
 'use client'
-import { ArrowLeft, Layers, MoreHorizontal, Pencil, Share2, SquareStack } from 'lucide-react'
+import { Layers, Pencil } from 'lucide-react'
 import { CollectionProfile } from './collection-profile'
 import { Button } from '@/components/ui/button'
 import { SectionPreview } from './section-preview'
 import { Collection } from '@db/index'
-import { toast } from 'sonner'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import { Link } from '../link'
 
 interface CollectionViewProps {
   collection: Collection;
@@ -20,92 +19,34 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
 
   return (
     <div className="min-h-screen bg-background">
-
-      <div className="w-full sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-        <header className="container mx-auto flex flex-row items-center justify-between">
-          <div className="flex h-16 items-center justify-center gap-4">
-            <div className="flex items-center gap-3">
-              <a href={readOnly ? "/" : "/home"}>
-                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-                  <ArrowLeft className="size-4" />
-                  <span className="hidden sm:inline">Back to home</span>
-                </Button>
-              </a>
-              <div className="hidden h-6 w-px bg-border sm:block" />
-              <span className="hidden text-sm font-medium sm:block">{collection.label || 'Untitled'}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {!readOnly && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 bg-transparent"
-                  onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.origin}/shared/${collection.slug ?? collection.id}`)
-                      .then(() => {
-                        toast.success("Link copied", { id: `${collection.id}.copy_link` });
-                      });
-                  }}
-                >
-                  <Share2 className="size-4" />
-                  <span className="hidden sm:inline">Share</span>
-                </Button>
-                <Button size="sm" className="gap-2" asChild>
-                  <a href={`/collections/${collection.id}/edit`}>
-                    <Pencil className="size-4" />
-                    Edit
-                  </a>
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="size-8">
-                      <MoreHorizontal className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                    <DropdownMenuItem>Export</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            )}
-            {readOnly && (
-              <Button size="sm" asChild>
-                <a href="/collections/new">
-                  Create Yours
-                  <SquareStack className="size-4" />
-                </a>
-              </Button>
-            )}
-          </div>
-        </header>
-      </div>
-
-      <div className="container mx-auto grid grid-cols-12 py-4 gap-4">
-
+      <div data-has-left={Boolean(collection.banner || collection.picture)} className="w-full max-w-2xl px-4 data-[has-left=true]:px-0 data-[has-left=true]:container mx-auto grid grid-cols-12 py-4 gap-4">
+        { !(collection.banner || collection.picture) && <div className="col-span-12">
+          <h1 className="text-2xl">{collection.label}</h1>
+          <p className='text-base'>
+            {collection.description}
+          </p>
+        </div> }
         <div className="col-span-12 lg:col-span-4">
-          <div className="w-full lg:sticky lg:top-20 lg:left-0 space-y-4">
+          {(collection.banner || collection.picture) && <div className="w-full lg:sticky lg:top-20 lg:left-0 space-y-4">
             <CollectionProfile
               readOnly={readOnly}
               collection={collection}>
               {collection.nodes.length > 0 && !readOnly && (
                 <div className="mt-4 flex justify-center">
                   <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
-                    <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
+                    <Link href={`/collections/${collection.slug ?? collection.id}/edit`}>
                       <Pencil className="size-4" />
                       Edit this collection
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               )}
             </CollectionProfile>
           </div>
+          }
         </div>
 
-        <div className="col-span-12 lg:col-span-8">
+        <div data-has-left={Boolean(collection.banner || collection.picture)} className="col-span-12 lg:col-span-8 lg:data-[has-left=false]:col-span-12">
           {collection.nodes.length > 0 ? (
             <div className="space-y-12">
               {collection.nodes.map((section) => (
@@ -123,17 +64,15 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
               </p>
               {!readOnly && (
                 <Button asChild>
-                  <a href={`/collections/${collection.slug ?? collection.id}/edit`}>
+                  <Link href={`/collections/${collection.slug ?? collection.id}/edit`}>
                     <Pencil className="mr-2 size-4" />
                     Start Editing
-                  </a>
+                  </Link>
                 </Button>
               )}
             </div>
           )}
-
         </div>
-
       </div>
     </div>
   )

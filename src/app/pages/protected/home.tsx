@@ -27,14 +27,17 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
       <div>
         <Button
           variant="outline"
-          size="icon-sm" asChild>
+          asChild>
           <Link href="/collections/new">
             <Plus />
+            <span className="hidden md:inline-block">
+              Create yours
+            </span>
           </Link>
         </Button>
       </div>
     </Page.Header.Custom>
-    
+
     <Page.Content container>
       <CollectionsGrid items={items} />
     </Page.Content>

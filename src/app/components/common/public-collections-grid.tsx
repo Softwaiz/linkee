@@ -5,6 +5,7 @@ import { Collection } from '@db/index'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Layers } from 'lucide-react'
 import { Button } from '../ui/button'
+import { Link } from '../link'
 
 function timeAgo(date: Date | string) {
     const d = new Date(date);
@@ -55,10 +56,10 @@ export function PublicCollectionsGrid({ items }: { items: Collection[] }) {
                             Updated {timeAgo(collection.updatedAt)}
                         </span>
                         <Button size="sm" asChild>
-                            <a href={`/shared/${collection.slug ?? collection.id}`}>
+                            <Link href={`/shared/${collection.slug ?? collection.id}`}>
                                 View
                                 <ArrowRight />
-                            </a>
+                            </Link>
                         </Button>
                     </CardFooter>
                 </Card>

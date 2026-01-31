@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Collection } from '@db/index'
+import { Link } from '../link'
 
 interface CollectionCardProps {
   collection: Collection;
@@ -42,7 +43,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
           )}
         </div>
 
-        <a href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
+        <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
           <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {collection.label || 'Untitled Collection'}
           </h3>
@@ -59,7 +60,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
               {totalSections} {totalSections === 1 ? 'section' : 'sections'}
             </span>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   )
