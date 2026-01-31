@@ -40,6 +40,7 @@ import { checkSlugAvailability } from '@/actions/collections/check-slug'
 import { Loader2, Check, X } from 'lucide-react'
 import { useFileURL } from '@/hooks/useBrowserFile'
 import { uploadCollectionBanner, uploadCollectionPicture } from '@/actions/upload'
+import { cn } from '@/lib/utils'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -57,7 +58,7 @@ const initialPage: Partial<CollectionInput> = {
 
 export function PageEditor({ collection }: { collection?: Collection }) {
 
-  const storageKey = `collection.${collection?.id ?? "new"}.draft`;
+  const storageKey = useMemo(() => `collection.${collection?.id ?? "new"}.draft`, [collection?.id]);
 
   const [page, setPage] = useState<Partial<CollectionInput>>(() => {
     if (collection) {
@@ -97,6 +98,8 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
   const selectedPicture = useFileURL();
   const selectedBanner = useFileURL();
+
+  const [saving, setSaving] = useState(false);
 
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const pictureInputRef = useRef<HTMLInputElement>(null);
@@ -371,7 +374,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     setTargetSectionId(null)
   }
 
-
   const handleAddText = (sectionId: string) => {
     setTargetSectionId(sectionId)
     setEditingText(null)
@@ -436,8 +438,6 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       handleEditText(item, sectionId)
     }
   }
-
-  const [saving, setSaving] = useState(false);
 
   const handleUpdateCollection = useCallback(async () => {
     setSaving(true);
@@ -607,7 +607,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
-          <div className="col-span-12 lg:col-span-4">
+          <div className="col-span-12 lg:col-span-4 bg-card shadow-sm rounded-md">
             <div className="w-full relative mb-20">
               <div className='space-y-2 relative'>
                 <input
@@ -656,28 +656,27 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                 </div>
               </div>
             </div>
-
-            <div className="relative w-full bg-neutral-50 shadow-sm rounded-lg space-y-4">
-
-              <div className="relative z-1 w-full min-h-full bg-neutral-50 text-foreground px-4 py-8 space-y-4 backdrop-blur-2xl rounded-lg">
-                <div className="space-y-4">
+            <div className="relative w-full bg-card text-foreground space-y-4">
+              <div className="relative z-1 w-full min-h-full px-4 py-8 space-y-4">
+                <div className="space-y-8">
                   <div className='space-y-2'>
                     <Label className='popover-foreground'>Name this collection</Label>
                     <Input
                       value={page.label}
                       onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
                       placeholder="Page Title"
-                      className="bg-white/10 text-lg font-bold placeholder:text-muted-foreground focus-visible:ring-0"
+                      className="bg-white/10 text-lg placeholder:text-muted-foreground focus-visible:ring-0"
                     />
                   </div>
                   <div className='space-y-2'>
-                    <Label className='popover-foreground'>Tag (URL slug)</Label>
-                    <div className="relative">
+                    <Label className='popover-foreground'>Customize the link</Label>
+                    <div className="relative flex  flex-row items-center gap-2">
+                      <span className='text-xs text-nowrap opacity-60'>{globalThis.window ? window.location.origin : ""}/shared/</span>
                       <Input
                         value={page.slug || ''}
                         onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
                         placeholder="my-awesome-tag"
-                        className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                        className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 pr-10 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
                           }`}
                       />
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
@@ -710,13 +709,23 @@ export function PageEditor({ collection }: { collection?: Collection }) {
           </div>
 
           <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="w-full p-4 bg-background shadow-sm rounded-md space-y-4">
-              <h4>Groups in this collection</h4>
+            <div className="w-full p-4 bg-card shadow-sm rounded-md space-y-4">
+              <div className="w-full flex flex-row items-center justify-between">
+                <h4>Groups in this collection</h4>
+                <Button
+                  onClick={handleAddSection}
+                  variant="default"
+                >
+                  <Plus className="size-4" />
+                  Add Section
+                </Button>
+              </div>
               <SortableContext
                 items={page.nodes!.map((s) => s.id)}
                 strategy={verticalListSortingStrategy}
               >
                 <ReorderableSectionList
+                  active={activeSectionId ?? ''}
                   sections={page.nodes!}
                   onSectionSelect={(id) => {
                     setActiveSectionId(id);
@@ -726,30 +735,21 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               <DragOverlay>
                 {activeId && activeDragType === 'section' && (
                   <div className="rounded-md border border-accent/50 bg-card/80 p-3 shadow-2xl backdrop-blur space-y-2">
-                    <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-400" />
-                    <div className="h-6 w-full animate-pulse rounded-lg bg-neutral-400" />
+                    <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-400/80" />
+                    <div className="h-6 w-full animate-pulse rounded-lg bg-neutral-400/60" />
                   </div>
                 )}
                 {activeId && activeDragType === 'item' && (
                   <div className="rounded-md border border-accent/50 bg-card p-3 shadow-2xl backdrop-blur space-y-2">
-                    <div className="h-8 w-full animate-pulse rounded bg-neutral-400" />
-                    <div className="h-6 w-full animate-pulse rounded bg-neutral-400" />
-                    <div className="h-4 w-full animate-pulse rounded bg-neutral-400" />
+                    <div className="h-8 w-full animate-pulse rounded bg-neutral-400/80" />
+                    <div className="h-6 w-full animate-pulse rounded bg-neutral-400/60" />
+                    <div className="h-4 w-full animate-pulse rounded bg-neutral-400/40" />
                   </div>
                 )}
               </DragOverlay>
-              {page.nodes!.length > 0 && (
-                <Button
-                  onClick={handleAddSection}
-                  variant="default"
-                  className="mt-4 w-full"
-                >
-                  <Plus className="size-4" />
-                  Add Section
-                </Button>
-              )}
+
             </div>
-            <div className="w-full bg-background shadow-sm rounded-lg min-h-100">
+            <div className="w-full bg-card shadow-sm rounded-lg min-h-100">
               {
                 activeSection && <SectionBlock
                   key={activeSection.id}
@@ -838,21 +838,23 @@ export function PageEditor({ collection }: { collection?: Collection }) {
   )
 }
 
-function ReorderableSectionList({ sections, onSectionSelect }: { sections: Group[], onSectionSelect: (sectionId: string) => void }) {
+function ReorderableSectionList({ sections, onSectionSelect, active }: { active: string; sections: Group[], onSectionSelect: (sectionId: string) => void }) {
 
   return <div className='w-full space-y-2'>
     {sections.map((section) => (
       <DraggableSectionCard
         key={section.id}
         section={section}
+        active={active === section.id}
         onClick={() => {
           onSectionSelect(section.id)
-        }} />
+        }}
+      />
     ))}
   </div>
 }
 
-function DraggableSectionCard({ section, onClick }: { section: Group, onClick: () => void }) {
+function DraggableSectionCard({ active, section, onClick }: { active: boolean; section: Group, onClick: () => void }) {
 
   const {
     attributes,
@@ -879,7 +881,13 @@ function DraggableSectionCard({ section, onClick }: { section: Group, onClick: (
     onClick={() => {
       onClick()
     }}
-    className="w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:border-transparent hover:bg-primary-100 hover:text-primary-700">
+    data-active={active}
+    className={
+      cn(
+        "w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:border-transparent hover:bg-secondary-200 hover:text-secondary-700 cursor-pointer",
+        active && "border bg-secondary-500/10 text-secondary-700 border-transparent"
+      )
+    }>
     <button
       {...attributes}
       {...listeners}

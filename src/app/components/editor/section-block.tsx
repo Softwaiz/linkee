@@ -9,12 +9,6 @@ import { Plus, Pencil, Trash2, Link2, Type, Link, Text } from 'lucide-react'
 import { LinkCard } from './links-card'
 import { TextBlock } from './text-block'
 import { cn } from '@/lib/utils'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Group, GroupItem } from '@/validations/collection/create'
 
