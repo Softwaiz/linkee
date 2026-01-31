@@ -68,21 +68,27 @@ export function SectionBlock({
           </div>
         </div>
 
-        <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover/section:opacity-100">
-          <button
-            title="Edit this collection"
-            onClick={onEditSection}
-            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            <Pencil className="size-4" />
-          </button>
-          <button
-            title="Delete this collection"
-            onClick={onDeleteSection}
-            className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-          >
-            <Trash2 className="size-4" />
-          </button>
+        <div className="flex items-center gap-1">
+          <div className="flex flex-row items-center justify-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              title="Edit this collection"
+              onClick={onEditSection}
+            >
+              <Pencil className="size-4" />
+              Edit
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              title="Delete this collection"
+              onClick={onDeleteSection}
+            >
+              <Trash2 className="size-4" />
+              Delete
+            </Button>
+          </div>
         </div>
       </div>
       <div ref={setDroppableRef} className="space-y-2 p-4">
@@ -108,16 +114,10 @@ export function SectionBlock({
             )
           )}
         </SortableContext>
-
-        {section.items.length === 0 && (
-          <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-border/50 text-sm text-muted-foreground">
-            Drop items here or click Add below
-          </div>
-        )}
-
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-lg border rounded-lg flex flex-row items-center justify-center shadow-md">
-          <button
-            className='p-2 flex flex-row items-center justify-center gap-2'
+        <div className="w-full flex flex-row items-center justify-end gap-1">
+          <Button
+            size="sm"
+            variant="outline"
             onClick={() => {
               onAddLink();
             }}>
@@ -125,10 +125,10 @@ export function SectionBlock({
             <span className='text-sm'>
               Add a link
             </span>
-          </button>
-
-          <button
-            className='p-2 flex flex-row items-center justify-center gap-2'
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
             onClick={() => {
               onAddText();
             }}>
@@ -136,9 +136,14 @@ export function SectionBlock({
             <span className="text-sm">
               Add Text
             </span>
-          </button>
+          </Button>
         </div>
 
+        {section.items.length === 0 && (
+          <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-border/50 text-sm text-muted-foreground">
+            Drop items here or click Add below
+          </div>
+        )}
       </div>
     </div>
   )

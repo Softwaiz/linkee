@@ -41,6 +41,8 @@ import { Loader2, Check, X } from 'lucide-react'
 import { useFileURL } from '@/hooks/useBrowserFile'
 import { uploadCollectionBanner, uploadCollectionPicture } from '@/actions/upload'
 import { cn } from '@/lib/utils'
+import { useDimensions } from '@/hooks/useDimensions'
+import { AnimatePresence, easeIn, easeOut, motion } from 'motion/react'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -596,6 +598,17 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     }
   }, []);
 
+  const slugRef = useRef<HTMLSpanElement | null>(null);
+  const dimensions = useDimensions(slugRef);
+
+  const urlPrefix = useMemo(() => {
+    let origin = globalThis.window ? globalThis.window.origin : "";
+    if (origin.length > 9) {
+      origin = "..." + origin.substring(origin.length - 9, origin.length);
+    }
+    return origin;
+  }, []);
+
 
   return (
     <div className="min-h-dvh">
@@ -670,14 +683,21 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   </div>
                   <div className='space-y-2'>
                     <Label className='popover-foreground'>Customize the link</Label>
-                    <div className="relative flex  flex-row items-center gap-2">
-                      <span className='text-xs text-nowrap opacity-60'>{globalThis.window ? window.location.origin : ""}/shared/</span>
+                    <div className="relative flex  flex-row items-center gap-2 border border-input shadow-md rounded-md">
+                      <span ref={slugRef} className='text-sm text-nowrap opacity-60 absolute top-0 left-0 bottom-0 px-2 flex flex-row items-center justify-start'>{urlPrefix}/shared/</span>
                       <Input
                         value={page.slug || ''}
                         onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
                         placeholder="my-awesome-tag"
-                        className={`bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 pr-10 ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
-                          }`}
+                        style={{
+                          paddingLeft: `${dimensions.dimensions?.width}px`
+                        }}
+                        className={
+                          cn(
+                            "bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 pr-10 border-0",
+                            slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                          )
+                        }
                       />
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
                         {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
@@ -749,19 +769,46 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               </DragOverlay>
 
             </div>
-            <div className="w-full bg-card shadow-sm rounded-lg min-h-100">
-              {
-                activeSection && <SectionBlock
-                  key={activeSection.id}
-                  section={activeSection}
-                  onEditSection={() => handleEditSection(activeSection)}
-                  onDeleteSection={() => handleDeleteSection(activeSection.id)}
-                  onAddLink={() => handleAddLink(activeSection.id)}
-                  onAddText={() => handleAddText(activeSection.id)}
-                  onEditItem={(item) => handleEditItem(item, activeSection.id)}
-                  onDeleteItem={(itemId) => handleDeleteItem(activeSection.id, itemId)}
-                />
-              }
+            <div className="w-full bg-card shadow-sm rounded-lg min-h-100 relative overflow-hidden">
+              <AnimatePresence>
+                {
+                  activeSection && <motion.section
+                    key={activeSection.id}
+                    initial={{
+                      x: '100%',
+                      opacity: 0,
+                      position: 'absolute'
+                    }}
+                    animate={{
+                      x: '0%',
+                      opacity: 1,
+                      position: "relative",
+                      transition: {
+                        duration: .25,
+                        ease: easeIn
+                      }
+                    }}
+                    exit={{
+                      x: '-100%',
+                      opacity: 0,
+                      position: 'absolute',
+                      transition: {
+                        duration: .1,
+                        ease: easeOut
+                      }
+                    }}>
+                    <SectionBlock
+                      section={activeSection}
+                      onEditSection={() => handleEditSection(activeSection)}
+                      onDeleteSection={() => handleDeleteSection(activeSection.id)}
+                      onAddLink={() => handleAddLink(activeSection.id)}
+                      onAddText={() => handleAddText(activeSection.id)}
+                      onEditItem={(item) => handleEditItem(item, activeSection.id)}
+                      onDeleteItem={(itemId) => handleDeleteItem(activeSection.id, itemId)}
+                    />
+                  </motion.section>
+                }
+              </AnimatePresence>
               {!activeSection && page.nodes!.length === 0 && (
                 <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
                   <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary">

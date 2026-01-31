@@ -59,8 +59,7 @@ export default defineApp([
     return verifyUserFromCookie(request, response, ctx);
   },
   render(PublicDocument, [
-    layout(
-      PublicLayout, [
+    layout(PublicLayout, [
       route("/@:alias", PublicProfilePage),
       route("/shared/:id", PublicCollectionPage),
     ])

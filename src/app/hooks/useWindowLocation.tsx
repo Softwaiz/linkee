@@ -5,11 +5,9 @@ export function useWindowLocation() {
 
     useEffect(() => {
         const handlePopstate = (ev: PopStateEvent) => {
-            console.log("popping state !");
             setLocation(window.location);
         }
          const handleHashChange = (ev: HashChangeEvent) => {
-            console.log("hash changed state !");
             setLocation(window.location);
         }
         window.addEventListener("popstate", handlePopstate);

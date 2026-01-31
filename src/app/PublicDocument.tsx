@@ -1,4 +1,5 @@
 import styles from "./styles/globals.css?url";
+import customStyles from "../app/layouts/theme.css?url";
 
 export const PublicDocument: React.FC<{ children: React.ReactNode }> = ({
     children,
@@ -15,6 +16,7 @@ export const PublicDocument: React.FC<{ children: React.ReactNode }> = ({
 
             <link rel="stylesheet" href="/fonts/lufga/style.css" />
             <link rel="stylesheet" href={styles} />
+            <link rel="stylesheet" href={customStyles} />
 
             <link rel="modulepreload" href="/src/client.tsx" />
         </head>
