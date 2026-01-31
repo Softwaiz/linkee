@@ -7,8 +7,8 @@ export function Footer() {
                         <a href="/" className="text-xl font-bold tracking-tight">
                             Linkee
                         </a>
-                        <p className="mt-4 text-sm text-muted-foreground">
-                            Transform the beautiful mess of the internet into high-fidelity knowledge assets.
+                        <p className="text-sm text-gray-500">
+                            Organize your links into smart collections.
                         </p>
                     </div>
 
@@ -76,7 +76,7 @@ export function Footer() {
                         &copy; {new Date().getFullYear()} Linkee. All rights reserved.
                     </p>
                     <p className="text-sm text-muted-foreground">
-                        Built on the Edge with zero latency.
+                        Built on the edge.
                     </p>
                 </div>
             </div>
