@@ -1,13 +1,8 @@
 import { DefaultAppContext } from "rwsdk/worker";
 import ProfileForm from "./profile-form";
 import Page from "@/components/page";
-import PageHeader from "@/components/page/page-header";
 import BackButton from "@/components/page/actions/back-button";
-import PageTitle from "@/components/page/title";
-import { Plus, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/components/link";
-import Device from "@/components/device";
+import { User } from "lucide-react";
 
 export default async function ProfilePage({ ctx }: { ctx: DefaultAppContext }) {
     const user = ctx?.user;
@@ -23,15 +18,6 @@ export default async function ProfilePage({ ctx }: { ctx: DefaultAppContext }) {
                     </span>
                     My profile
                 </Page.Title>
-            </div>
-            <div>
-                <Button
-                    variant="outline"
-                    size="icon-sm" asChild>
-                    <Link href="/collections/new">
-                        <Plus />
-                    </Link>
-                </Button>
             </div>
         </Page.Header.Custom>
         <Page.Content>

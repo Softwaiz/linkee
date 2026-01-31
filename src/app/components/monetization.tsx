@@ -57,16 +57,16 @@ export function Monetization() {
                                     <span className="text-muted-foreground">You</span>
                                     <span className="font-semibold text-accent">65%</span>
                                 </div>
-                                <div className="h-3 rounded-full bg-secondary overflow-hidden">
-                                    <div className="h-full w-[65%] bg-accent rounded-full" />
+                                <div className="h-3 rounded-full bg-secondary/20 overflow-hidden">
+                                    <div className="h-full w-[65%] bg-secondary rounded-full" />
                                 </div>
 
                                 <div className="flex justify-between items-center pt-4">
                                     <span className="text-muted-foreground">Platform</span>
                                     <span className="font-semibold">35%</span>
                                 </div>
-                                <div className="h-3 rounded-full bg-secondary overflow-hidden">
-                                    <div className="h-full w-[35%] bg-foreground/30 rounded-full" />
+                                <div className="h-3 rounded-full bg-secondary/20 overflow-hidden">
+                                    <div className="h-full w-[35%] bg-secondary rounded-full" />
                                 </div>
                             </div>
 

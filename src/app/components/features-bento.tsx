@@ -60,7 +60,7 @@ export function FeaturesBento() {
                             <Sparkles className="w-6 h-6 text-accent" />
                         </div>
                         <h3 className="text-2xl font-semibold mb-3">The Digital Garden for Your Interests</h3>
-                        <p className="text-muted-foreground leading-relaxed">The era of mindless consumption is over. Today, curation is about cultivating taste and uncovering unexpected connections. Stop dropping your audience into \"soulless\" vertical lists.</p>
+                        <p className="text-muted-foreground leading-relaxed">The era of mindless consumption is over. Today, curation is about cultivating taste and uncovering unexpected connections. Stop dropping your audience into "soulless" vertical lists.</p>
                         <p className="mt-4 text-foreground">
                             Linkee gives your interests a home that feels like a creative studio for your mind—designed to turn fragmented scraps of knowledge into meaningful insight.
                         </p>
@@ -72,7 +72,7 @@ export function FeaturesBento() {
                             <Zap className="w-6 h-6 text-accent" />
                         </div>
                         <h3 className="text-xl font-semibold mb-3">Curation at the Speed of Thought</h3>
-                        <p className="text-muted-foreground leading-relaxed text-sm">Built on the RedwoodSDK and Cloudflare Workers, Linkee delivers sub-second page loads globally. Whether it's a list of 50 Daily Podcasts or 100 African Entrepreneurs, your content reaches your audience without the \"lag\" that kills emotional momentum.</p>
+                        <p className="text-muted-foreground leading-relaxed text-sm">Built on the RedwoodSDK and Cloudflare Workers, Linkee delivers sub-second page loads globally. Whether it's a list of 50 Daily Podcasts or 100 African Entrepreneurs, your content reaches your audience without the "lag" that kills emotional momentum.</p>
 
                         <div className="mt-8 space-y-4">
                             <div className="flex items-baseline gap-2">

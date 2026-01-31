@@ -71,7 +71,7 @@ export function Header() {
                                     Log in
                                 </Link>
                             </Button>
-                            <Button size="sm">
+                            <Button size="sm" asChild>
                                 <Link href="/signup">
                                     Get Started
                                 </Link>

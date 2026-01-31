@@ -15,7 +15,7 @@ export function Hero() {
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance mb-6">
                     <span className="text-foreground">Your Taste is the</span>
                     <br />
-                    <span className="text-accent">Ultimate Filter.</span>
+                    <span className="text-secondary-500">Ultimate Filter.</span>
                 </h1>
 
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 text-pretty">

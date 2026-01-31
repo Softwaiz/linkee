@@ -26,6 +26,7 @@ import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
 import SavedCollections from "@/pages/protected/saved";
 import { PublicLayout } from "@/layouts/public";
+import { string } from "zod";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
@@ -57,6 +58,12 @@ export default defineApp([
   setCommonHeaders(),
   async ({ ctx, request, response }) => {
     return verifyUserFromCookie(request, response, ctx);
+  },
+  async ({ ctx, request, response }) => {
+    ctx.redirect = (path: string, statusCode: number) => {
+      response.status = statusCode;
+      response.headers.set('Location', path);
+    }
   },
   render(PublicDocument, [
     layout(PublicLayout, [
