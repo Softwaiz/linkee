@@ -3,11 +3,12 @@ import { db } from "@db/index";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { getRequestInfo } from "rwsdk/worker";
-import { identityCookie } from "../../../cookies";
+import { identityCookie } from "@cookies/index";
 
 interface LoginData {
     email: string;
     password: string;
+    redirectUrl?: string;
 }
 
 export async function handleLogin(data: LoginData) {
@@ -42,11 +43,17 @@ export async function handleLogin(data: LoginData) {
     });
 
     info.response.headers.set("Set-Cookie", serialized);
-    info.ctx.redirect("/home", 302);
+
+    if (data.redirectUrl) {
+        info.ctx.redirect(data.redirectUrl);
+    }
+    else {
+        info.ctx.redirect("/home");
+    }
 
     return {
         success: true,
         message: `Connected as ${user?.email}.`,
-        redirectTo: "/home"
+        redirectTo: data.redirectUrl
     }
 }

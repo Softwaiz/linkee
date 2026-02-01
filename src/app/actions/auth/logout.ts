@@ -1,6 +1,6 @@
 "use server";
 import { getRequestInfo } from "rwsdk/worker";
-import { identityCookie } from "../../../cookies";
+import { identityCookie } from "@cookies/index";
 
 export async function handleLogout() {
     const { response, request, ctx } = getRequestInfo();

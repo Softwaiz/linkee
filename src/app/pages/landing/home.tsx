@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowRight, Sparkles, Bookmark, FolderOpen, Share2, Lock, Zap, ExternalLink, BookOpen, Users, Briefcase, Lightbulb, GraduationCap, TrendingUp } from 'lucide-react';
 import { RequestInfo } from 'rwsdk/worker';
 import { HomeDiscover } from './home-discover';
-import Features from './features';
+import WhatYouCanDo from './features';
 import { Link } from '@/components/link';
 import { Logo } from '@/components/logo';
 import { Footer } from '@/components/footer';
@@ -93,9 +93,8 @@ export default function Home(props: RequestInfo) {
         </div>
       </section>
 
-      <Features />
+      <WhatYouCanDo />
 
-      {/* How People Use Linkee */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">

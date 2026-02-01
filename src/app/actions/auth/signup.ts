@@ -4,7 +4,7 @@ import { db } from "@db/index";
 import { getRequestInfo } from "rwsdk/worker";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { identityCookie } from "../../../cookies";
+import { identityCookie } from "@cookies/index";
 
 export const handleSignup = async (data: SignupInput) => {
     try {

@@ -39,6 +39,9 @@
       "@layouts/*": [
         "./src/app/layouts/*"
       ],
+      "@cookies/*": [
+        "./src/cookies/*",
+      ],
       "@db/*": [
         "./src/db/*"
       ]

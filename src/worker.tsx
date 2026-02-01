@@ -10,7 +10,6 @@ import BaseLayout from "@/layouts/base";
 import { db } from "@db/index";
 import jwt from "jsonwebtoken";
 import ProtectedLayout from "@/layouts/protected";
-import { requireIdentity } from "@/middlewares/authentication";
 import { identityCookie } from "./cookies";
 import CreateCollectionPage from "@/pages/protected/collections/new";
 import DashboardPage from "@/pages/protected/home";
@@ -26,6 +25,7 @@ import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
 import SavedCollections from "@/pages/protected/saved";
 import { PublicLayout } from "@/layouts/public";
+import PreventReauthentication from "@/layouts/prevent-reauth";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
@@ -73,14 +73,15 @@ export default defineApp([
   render(Document, [
     layout(BaseLayout, [
       route("/", Home),
-      route("/signin", LoginPage),
-      route("/signup", Signup),
+      layout(PreventReauthentication, [
+        route("/signin", LoginPage),
+        route("/signup", Signup),
+      ]),
       route("/medias/*", mediaResolver),
       route("/sitemap", Sitemap),
       route("/robots.txt", Robots),
       route("/api/metadata", extractMetadata),
       prefix("/", [
-        requireIdentity,
         layout(ProtectedLayout, [
           route("home", DashboardPage),
           route("discover", DiscoverPage),

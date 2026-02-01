@@ -10,10 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { navigate } from "rwsdk/client";
 import { toast } from "sonner";
 
-export default function SigninContent() {
+export default function SigninContent(props: { redirect: string }) {
+
     const [isLoading, setLoading] = useState(false);
     const form = useForm<SigninInput>({
         resolver: zodResolver(SigninSchema),
@@ -24,8 +24,10 @@ export default function SigninContent() {
     });
 
     const triggerLogin = useCallback((data: SigninInput) => {
+        console.log("redirect url: ", props.redirect);
+
         setLoading(true);
-        handleLogin({ email: data.email, password: data.password })
+        handleLogin({ email: data.email, password: data.password, redirectUrl: props.redirect })
             .then((res) => {
                 if (res.success) {
                     toast.success(res.message);
@@ -37,7 +39,7 @@ export default function SigninContent() {
             .finally(() => {
                 setLoading(false)
             });
-    }, []);
+    }, [props.redirect]);
 
     return (
         <section className="bg-gray-1 py-10 dark:bg-dark lg:py-10">
