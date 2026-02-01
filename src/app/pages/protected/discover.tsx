@@ -39,7 +39,7 @@ export default async function DiscoverPage() {
           Explore curated collections from creators around the world.
         </p>
       </div>
-      <div className="columns-2 gap-5 xs:columns-2 sm:columns-2 lg:columns-3">
+      <div className="columns-1 @[20rem]:columns-2 md:columns-3 gap-5 lg:columns-4 xl:columns-5">
         {items.map((collection) => (
           <div key={collection.id} className="mb-5 break-inside-avoid">
             <DiscoverCard collection={collection as unknown as Collection} />

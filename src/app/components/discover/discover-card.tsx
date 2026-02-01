@@ -23,7 +23,6 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
-      {/* Cover Image */}
       {collection.banner && (
         <Link href={`/collections/${collection.slug ?? collection.id}`} className="relative aspect-16/10 overflow-hidden">
           <img
@@ -33,8 +32,6 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
           />
         </Link>
       )}
-
-      {/* Menu Button */}
       <div className="absolute right-3 top-3 z-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
