@@ -31,7 +31,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
           <Link href="/collections/new">
             <Plus />
             <span className="hidden md:inline-block">
-              Create yours
+              Create a collection
             </span>
           </Link>
         </Button>

@@ -48,15 +48,22 @@ function generateId() {
   return Math.random().toString(36).substring(2, 15)
 }
 
-const initialPage: Partial<CollectionInput> = {
+const initialPage: () => Partial<CollectionInput> = () => ({
   id: generateId(),
   picture: "https://placehold.co/120x120/2b73ff/d4edff/png",
   banner: "https://placehold.co/416x240/0e37a1/d4edff/png",
   label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
-  nodes: [],
+  nodes: [
+    {
+      id: generateId(),
+      title: "Default group",
+      description: "This is the default group. your can change the name",
+      items: []
+    }
+  ],
   slug: '',
-}
+})
 
 export function PageEditor({ collection }: { collection?: Collection }) {
 
@@ -64,16 +71,15 @@ export function PageEditor({ collection }: { collection?: Collection }) {
 
   const [page, setPage] = useState<Partial<CollectionInput>>(() => {
     if (collection) {
-      return collection;
+      return collection as CollectionInput;
     }
-
     if (globalThis.localStorage) {
       let previous = localStorage.getItem(storageKey);
       if (previous) {
-        return JSON.parse(previous);
+        return JSON.parse(previous) as Partial<CollectionInput>;
       }
     }
-    return initialPage;
+    return initialPage();
   });
 
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -633,7 +639,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   onChange={handleBannerChange} />
                 <img
                   className='w-full h-60 aspect-video object-cover object-center rounded-md'
-                  src={selectedBanner.url ?? page.banner ?? initialPage.banner}
+                  src={selectedBanner.url ?? page.banner ?? initialPage().banner}
                   alt="Banner image" />
                 <Button
                   size="icon-sm"
@@ -656,7 +662,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                     onChange={handlePictureChange} />
                   <img
                     className='w-30 aspect-square object-cover object-center rounded-lg'
-                    src={selectedPicture.url ?? page.picture ?? initialPage.picture}
+                    src={selectedPicture.url ?? page.picture ?? initialPage().picture}
                     alt="Main image" />
                   <Button
                     size="icon-sm"
@@ -729,7 +735,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
           </div>
 
           <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="w-full p-4 bg-card shadow-sm rounded-md space-y-4">
+            <div className="w-full space-y-4 bg-card p-4 rounded-md shadow-md border border-input">
               <div className="w-full flex flex-row items-center justify-between">
                 <h4>Groups in this collection</h4>
                 <Button
@@ -737,7 +743,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   variant="default"
                 >
                   <Plus className="size-4" />
-                  Add Section
+                  Add a group
                 </Button>
               </div>
               <SortableContext
@@ -767,20 +773,19 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   </div>
                 )}
               </DragOverlay>
-
             </div>
-            <div className="w-full bg-card shadow-sm rounded-lg min-h-100 relative overflow-hidden">
+            <div className="w-full bg-card rounded-md shadow-md border border-input min-h-100 relative overflow-hidden">
               <AnimatePresence>
                 {
                   activeSection && <motion.section
                     key={activeSection.id}
                     initial={{
-                      x: '100%',
+                      y: -10,
                       opacity: 0,
                       position: 'absolute'
                     }}
                     animate={{
-                      x: '0%',
+                      y: 0,
                       opacity: 1,
                       position: "relative",
                       transition: {
@@ -789,7 +794,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                       }
                     }}
                     exit={{
-                      x: '-100%',
+                      y: -10,
                       opacity: 0,
                       position: 'absolute',
                       transition: {
@@ -811,18 +816,18 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               </AnimatePresence>
               {!activeSection && page.nodes!.length === 0 && (
                 <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary">
-                    <Layers className="size-6 text-muted-foreground" />
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary-100">
+                    <Layers className="size-6 text-secondary-500" />
                   </div>
                   <h3 className="mb-1 text-lg font-medium text-foreground">
-                    No sections yet
+                    No groups yet.
                   </h3>
                   <p className="mb-6 text-sm text-muted-foreground">
-                    Create your first section to start organizing your links
+                    Create your first group to start organizing your links.
                   </p>
                   <Button onClick={handleAddSection}>
                     <Plus className="size-4" />
-                    Add Section
+                    Add group
                   </Button>
                 </div>
               )}
@@ -833,17 +838,17 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                       <Layers className="size-6 text-secondary-500" />
                     </div>
                     <h3 className="mb-1 text-lg font-medium text-center text-foreground">
-                      No section selected.
+                      No group selected.
                     </h3>
                     <p className="mb-1 text-sm font-medium text-center text-muted-foreground">
-                      Select or add a section to edit its content.
+                      Select or add a group to edit its content.
                     </p>
                   </div>
                 )
               }
             </div>
           </div>
-          <div className="col-span-12 flex flex-row items-center justify-end mt-2">
+          <div className="col-span-12 sticky bottom-20 z-2 flex flex-row items-center justify-end mt-2">
             <Button
               title='Save this collection'
               className='text-sm flex flex-row items-center justify-center gap-2'

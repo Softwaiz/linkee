@@ -141,8 +141,8 @@ export function LinkDialog({
       })
       const data = await res.json() as { success: boolean; title?: string; description?: string; image?: string; favicon?: string };
       if (data.success) {
-        if (!title) setTitle(data.title ?? '');
-        if (!description) setDescription(data.description ?? '');
+        setTitle(data.title ?? '');
+        setDescription(data.description ?? '');
         setImage(data.image ?? '');
         setFavicon(data.favicon ?? '');
       }

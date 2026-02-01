@@ -1,11 +1,9 @@
 "use server";
-
 import { getRequestInfo } from "rwsdk/worker";
 import { identityCookie } from "../../../cookies";
-import { redirect } from "../../../utils/sdk";
 
 export async function handleLogout() {
-    const { response, request } = getRequestInfo();
+    const { response, request, ctx } = getRequestInfo();
 
     // Clear the cookie by setting it with maxAge 0
     const serialized = identityCookie.set("", {
@@ -15,5 +13,9 @@ export async function handleLogout() {
 
     response.headers.set("Set-Cookie", serialized);
 
-    return redirect(request.url, "/signin");
+    ctx.redirect("/signin", 302);
+
+    return {
+        success: true
+    }
 }

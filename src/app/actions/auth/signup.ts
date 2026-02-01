@@ -5,7 +5,6 @@ import { getRequestInfo } from "rwsdk/worker";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { identityCookie } from "../../../cookies";
-import { redirect } from "../../../utils/sdk";
 
 export const handleSignup = async (data: SignupInput) => {
     try {
@@ -39,6 +38,7 @@ export const handleSignup = async (data: SignupInput) => {
         });
 
         getRequestInfo().response.headers.set("Set-Cookie", serialized);
+        getRequestInfo().ctx.redirect("/home",302);
 
         return {
             success: true,

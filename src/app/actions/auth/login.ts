@@ -2,7 +2,6 @@
 import { db } from "@db/index";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import * as cookie from "cookie";
 import { getRequestInfo } from "rwsdk/worker";
 import { identityCookie } from "../../../cookies";
 
@@ -12,6 +11,8 @@ interface LoginData {
 }
 
 export async function handleLogin(data: LoginData) {
+    let info = getRequestInfo();
+
     const user = await db
         .selectFrom("users")
         .selectAll()
@@ -40,7 +41,8 @@ export async function handleLogin(data: LoginData) {
         maxAge: 60 * 60 * 24 * 7,
     });
 
-    getRequestInfo().response.headers.set("Set-Cookie", serialized);
+    info.response.headers.set("Set-Cookie", serialized);
+    info.ctx.redirect("/home", 302);
 
     return {
         success: true,
