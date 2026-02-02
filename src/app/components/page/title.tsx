@@ -3,7 +3,7 @@ import { useDimensions } from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
 import { HTMLAttributes, PropsWithChildren, useRef } from "react";
 
-export default function PageTitle({ className, ...props }: PropsWithChildren<HTMLAttributes<HTMLHeadingElement>>) {
+export default function PageTitle({ className, children, ...props }: PropsWithChildren<HTMLAttributes<HTMLHeadingElement>>) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const wrapperRect = useDimensions(wrapperRef);
 
@@ -31,7 +31,7 @@ export default function PageTitle({ className, ...props }: PropsWithChildren<HTM
                     className
                 )
             }>
-            {props.children}
+            {children}
         </h1>
     </div>
 }
