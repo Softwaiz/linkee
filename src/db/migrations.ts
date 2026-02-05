@@ -65,8 +65,8 @@ export const migrations = {
         async up(db) {
             return [
                 await db.schema.alterTable("boards")
-                .addColumn("slug", "text")
-                .execute()
+                    .addColumn("slug", "text")
+                    .execute()
             ]
         },
         async down(db) {
@@ -94,6 +94,28 @@ export const migrations = {
             await db.schema.alterTable("boards").dropColumn("picture").execute();
             await db.schema.alterTable("boards").dropColumn("banner").execute();
             await db.schema.alterTable("boards").dropColumn("sourceId").execute();
+        }
+    },
+    "006_add_social_accounts": {
+        async up(db) {
+            return [
+                await db.schema
+                    .createTable("socialAccounts")
+                    .ifNotExists()
+                    .addColumn("id", "text", (col) => col.primaryKey())
+                    .addColumn("type", "text", (col) => col.notNull().defaultTo("google"))
+                    .addColumn("fullName", "text", (col) => col.notNull().defaultTo(""))
+                    .addColumn("firstName", "text", (col) => col.notNull().defaultTo(""))
+                    .addColumn("lastName", "text", (col) => col.notNull().defaultTo(""))
+                    .addColumn("email", "text", (col) => col.notNull().unique())
+                    .addColumn("userId", "text", (col) => col.references("users.id"))
+                    .addColumn("createdAt", "text", (col) => col.notNull())
+                    .addColumn("updatedAt", "text", (col) => col.notNull())
+                    .execute(),
+            ];
+        },
+        async down(db) {
+            await db.schema.dropTable("socialAccounts").ifExists().execute();
         }
     }
 } satisfies Migrations;

@@ -24,8 +24,6 @@ export default function SigninContent(props: { redirect: string }) {
     });
 
     const triggerLogin = useCallback((data: SigninInput) => {
-        console.log("redirect url: ", props.redirect);
-
         setLoading(true);
         handleLogin({ email: data.email, password: data.password, redirectUrl: props.redirect })
             .then((res) => {

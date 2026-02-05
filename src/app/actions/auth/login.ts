@@ -45,10 +45,10 @@ export async function handleLogin(data: LoginData) {
     info.response.headers.set("Set-Cookie", serialized);
 
     if (data.redirectUrl) {
-        info.ctx.redirect(data.redirectUrl);
+        info.ctx.redirect(data.redirectUrl, 302);
     }
     else {
-        info.ctx.redirect("/home");
+        info.ctx.redirect("/home", 302);
     }
 
     return {

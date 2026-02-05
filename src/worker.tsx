@@ -26,16 +26,21 @@ import DiscoverPage from "@/pages/protected/discover";
 import SavedCollections from "@/pages/protected/saved";
 import { PublicLayout } from "@/layouts/public";
 import PreventReauthentication from "@/layouts/prevent-reauth";
+import { LinkSocialAccount } from "@/pages/protected/profile/social-accounts/link";
+import { HandleGoogleLoginReturn } from "@/pages/auth/google-return";
+import { SocialSignin } from "@/pages/auth/social-signin";
+import { AfterLogin } from "@/pages/auth/after-login";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
     const token = identityCookie.get(request.headers);
+    console.log( request.url, "TOKEN: ", token);
+
     if (!token) {
       return;
     }
     let parsed = jwt.verify(token, process.env.SIGNING_KEY!) as { id: string; name: string; email: string; };
-
     const user = await db
       .selectFrom("users")
       .selectAll()
@@ -60,7 +65,7 @@ export default defineApp([
   },
   async ({ ctx, request, response }) => {
     ctx.redirect = (path: string, statusCode: number = 302) => {
-      response.status = statusCode;
+      response.status = statusCode ?? 302;
       response.headers.set('Location', path);
     }
   },
@@ -73,10 +78,12 @@ export default defineApp([
   render(Document, [
     layout(BaseLayout, [
       route("/", Home),
-      layout(PreventReauthentication, [
-        route("/signin", LoginPage),
-        route("/signup", Signup),
-      ]),
+
+      route("/signin", LoginPage),
+      route("/signup", Signup),
+      route("/signin/with/:social", SocialSignin),
+      route("/signin/after/google", HandleGoogleLoginReturn),
+      route("/after-login", AfterLogin),
       route("/medias/*", mediaResolver),
       route("/sitemap", Sitemap),
       route("/robots.txt", Robots),
@@ -88,6 +95,7 @@ export default defineApp([
           route("collections/new", CreateCollectionPage),
           route("collections/:id", CollectionPage),
           route("collections/:id/edit", EditCollectionPage),
+          route("profile/connect/:social", LinkSocialAccount),
           route("profile", ProfilePage),
           route("saved", SavedCollections)
         ])
