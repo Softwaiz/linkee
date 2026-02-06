@@ -1,4 +1,5 @@
 "use client";
+import { Link } from "@/components/link";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -23,15 +24,17 @@ export default function SigninContent(props: { redirect: string }) {
         }
     });
 
-    const triggerLogin = useCallback((data: SigninInput) => {
+    const triggerLogin = useCallback(async (data: SigninInput) => {
         setLoading(true);
         handleLogin({ email: data.email, password: data.password, redirectUrl: props.redirect })
             .then((res) => {
-                if (res.success) {
-                    toast.success(res.message);
-                }
-                else {
-                    toast.error(res.message || "Login failed. Please try again.");
+                if (!(res instanceof Response)) {
+                    if (res.loggedIn) {
+                        toast.success(res.message);
+                    }
+                    else {
+                        toast.error(res.message || "Login failed. Please try again.");
+                    }
                 }
             })
             .finally(() => {
@@ -95,21 +98,29 @@ export default function SigninContent(props: { redirect: string }) {
                                                 />
                                             </Field>
                                         }} />
-
-                                    <div className="mb-10">
-                                        <Button
-                                            type="submit"
-                                            size="lg"
-                                            disabled={isLoading}
-                                            className="w-full flex flex-row items-center gap-2"
-                                        >
-                                            {
-                                                isLoading ? "Signing in..." : "Sign In"
-                                            }
-                                            <LogIn size={16} />
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        disabled={isLoading}
+                                        className="w-full flex flex-row items-center gap-2"
+                                    >
+                                        {
+                                            isLoading ? "Signing in..." : "Sign In"
+                                        }
+                                        <LogIn size={16} />
+                                    </Button>
                                 </form>
+                                <div className="flex flex-row items-center justify-center gap-2 my-4">
+                                    <hr className="grow" />
+                                    <span className="opacity-75 text-sm">OR</span>
+                                    <hr className="grow" />
+                                </div>
+                                <Button className="w-full" asChild variant="outline">
+                                    <Link href="/signin/with/google" className="flex flex-row items-center justify-center gap-4">
+                                        <img className="size-5" src="/icons/google.svg" alt="Google Icon" />
+                                        <span>Login with Google</span>
+                                    </Link>
+                                </Button>
                             </CardContent>
                         </Card>
                         <p className="mt-6 text-center text-sm text-muted-foreground dark:text-muted-foreground">

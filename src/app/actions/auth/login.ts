@@ -11,7 +11,15 @@ interface LoginData {
     redirectUrl?: string;
 }
 
-export async function handleLogin(data: LoginData) {
+export type SigninResponse = {
+    loggedIn: false,
+    message: "Wrong email or password."
+} | {
+    loggedIn: false,
+    message: "Wrong email or password."
+};
+
+export async function handleLogin(data: LoginData): Promise<Response | SigninResponse> {
     let info = getRequestInfo();
 
     const user = await db
@@ -27,9 +35,7 @@ export async function handleLogin(data: LoginData) {
         }
     }
 
-    let isEqual = bcrypt.compareSync(data.password, user?.passwordHash || "");
-
-    if (!isEqual) {
+    if (!bcrypt.compareSync(data.password, user?.passwordHash || "")) {
         return {
             loggedIn: false,
             message: "Wrong email or password."
@@ -38,22 +44,13 @@ export async function handleLogin(data: LoginData) {
 
     let signed = jwt.sign({ id: user!.id, name: `${user?.firstName} ${user?.lastName}` }, process.env.SIGNING_KEY!, { expiresIn: '7d' });
 
-    const serialized = identityCookie.set(signed, {
-        maxAge: 60 * 60 * 24 * 7,
-    });
+    const serialized = identityCookie.set(signed);
 
     info.response.headers.set("Set-Cookie", serialized);
 
     if (data.redirectUrl) {
-        info.ctx.redirect(data.redirectUrl, 302);
-    }
-    else {
-        info.ctx.redirect("/home", 302);
+        return info.ctx.hardRedirect({path: data.redirectUrl});
     }
 
-    return {
-        success: true,
-        message: `Connected as ${user?.email}.`,
-        redirectTo: data.redirectUrl
-    }
+    return info.ctx.hardRedirect({path: "/home"});
 }

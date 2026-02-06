@@ -5,6 +5,7 @@ declare module "rwsdk/worker" {
   interface DefaultAppContext extends AppContext {
     user?: User;
     redirect(path: string, status?: number): void;
+    hardRedirect(args: { path: string, body?: BodyInit, init?: ResponseInit}): Response;
   }
   export type App = typeof import("../src/worker").default;
 }

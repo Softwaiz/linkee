@@ -33,18 +33,18 @@ export const handleSignup = async (data: SignupInput) => {
 
         let signed = jwt.sign({ id: newUser!.id, name: `${newUser?.firstName} ${newUser?.lastName}` }, process.env.SIGNING_KEY!, { expiresIn: '7d' });
 
-        const serialized = identityCookie.set(signed, {
-            maxAge: 60 * 60 * 24 * 7,
+        const serialized = identityCookie.set(signed);
+
+        return getRequestInfo().ctx.hardRedirect({
+            path: '/home',
+            init: {
+                status: 302,
+                headers: {
+                    'Set-Cookie': serialized,
+                }
+            }
         });
-
-        getRequestInfo().response.headers.set("Set-Cookie", serialized);
-        getRequestInfo().ctx.redirect("/home",302);
-
-        return {
-            success: true,
-            message: `You can now access Linkee as ${newUser?.email}.`,
-            redirectTo: "/home"
-        }
+        
     } catch (err) {
         console.error("Signup error: ", err);
         return {

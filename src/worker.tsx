@@ -25,17 +25,18 @@ import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
 import SavedCollections from "@/pages/protected/saved";
 import { PublicLayout } from "@/layouts/public";
-import PreventReauthentication from "@/layouts/prevent-reauth";
 import { LinkSocialAccount } from "@/pages/protected/profile/social-accounts/link";
 import { HandleGoogleLoginReturn } from "@/pages/auth/google-return";
 import { SocialSignin } from "@/pages/auth/social-signin";
-import { AfterLogin } from "@/pages/auth/after-login";
+import PreventReauthentication from "@/layouts/prevent-reauth";
+import { handleLogout } from "@/pages/auth/logout";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
     const token = identityCookie.get(request.headers);
-    console.log( request.url, "TOKEN: ", token);
+
+    console.log(token);
 
     if (!token) {
       return;
@@ -68,6 +69,18 @@ export default defineApp([
       response.status = statusCode ?? 302;
       response.headers.set('Location', path);
     }
+
+    ctx.hardRedirect = ({ path, body, init }) => {
+      const next = new Response(body ?? null, {
+        ...init,
+        status: 302,
+        headers: {
+          ...init?.headers,
+          'Location': path
+        }
+      });
+      return next;
+    }
   },
   render(PublicDocument, [
     layout(PublicLayout, [
@@ -78,12 +91,11 @@ export default defineApp([
   render(Document, [
     layout(BaseLayout, [
       route("/", Home),
-
       route("/signin", LoginPage),
       route("/signup", Signup),
       route("/signin/with/:social", SocialSignin),
       route("/signin/after/google", HandleGoogleLoginReturn),
-      route("/after-login", AfterLogin),
+      route("/logout", handleLogout),
       route("/medias/*", mediaResolver),
       route("/sitemap", Sitemap),
       route("/robots.txt", Robots),

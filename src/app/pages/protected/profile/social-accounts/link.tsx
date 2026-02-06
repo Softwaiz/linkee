@@ -15,6 +15,12 @@ export async function handleGoogleConnectionWithAlreadyConnectedProfile(args: Re
 
     let accountType = SocialAccountType.GOOGLE;
 
+    if (!args.ctx.user) {
+        return args.ctx.hardRedirect({
+            path: "/signin"
+        })
+    }
+
     if (code) {
         let url = process.env.GOOGLE_AUTH_RETURN_URL || "/oauth/google";
         const data = await GoogleAuth.exchangeCodeForToken(url, code);
@@ -29,14 +35,10 @@ export async function handleGoogleConnectionWithAlreadyConnectedProfile(args: Re
                 .executeTakeFirst();
 
             if (socialAccount) {
-                return redirect(args.request.url, "/home");
+                return args.ctx.hardRedirect({ path: "/profile" });
             }
 
             let userAccount: User | undefined = args.ctx.user;
-
-            if (!args.ctx.user) {
-                return redirect(args.request.url, "/signin");
-            }
 
             socialAccount = await db
                 .insertInto("socialAccounts")
@@ -54,33 +56,15 @@ export async function handleGoogleConnectionWithAlreadyConnectedProfile(args: Re
                 .returningAll()
                 .execute() as any;
 
-            if (args.ctx.user) {
-                return redirect(args.request.url, "/profile");
-            }
-
-            let signed = jwt.sign(
-                {
-                    id: userAccount?.id,
-                    name: `${userAccount?.firstName} ${userAccount?.lastName}`
-                },
-                process.env.SIGNING_KEY!,
-                {
-                    expiresIn: '7d'
-                }
-            );
-
-            const serialized = identityCookie.set(signed, {
-                maxAge: 60 * 60 * 24 * 7,
+            return args.ctx.hardRedirect({
+                path: "/profile"
             });
-
-            let response = redirect(args.request.url, "/profile")
-            response.headers.set('Set-Cookie', serialized);
-
-            return response;
         }
     }
 
-    return redirect(args.request.url, "/home");
+    return args.ctx.hardRedirect({
+        path: "/home",
+    });
 };
 
 export async function LinkSocialAccount(props: RequestInfo) {
@@ -107,9 +91,5 @@ export async function LinkSocialAccount(props: RequestInfo) {
         return Response.redirect(googleLoginUrl, 302);
     }
 
-    await handleGoogleConnectionWithAlreadyConnectedProfile(props);
-
-    return <>
-
-    </>
+    return await handleGoogleConnectionWithAlreadyConnectedProfile(props);
 }

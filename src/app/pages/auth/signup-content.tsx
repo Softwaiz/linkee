@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Logo } from "@/components/logo";
 import { UserPlus } from "lucide-react";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
+import { Link } from "@/components/link";
 
 
 export default function SignupContent() {
@@ -39,21 +40,23 @@ export default function SignupContent() {
         setLoading(true);
         handleSignup(data)
             .then((value) => {
-                if (value.success) {
-                    toast.success(
-                        "Signup successful",
-                        {
-                            description: "You can now sign in with your new account."
-                        }
-                    );
-                }
-                else {
-                    toast.error(
-                        "Signup failed. Please try again.",
-                        {
-                            description: value.error
-                        }
-                    );
+                if (!(value instanceof Response)) {
+                    if (value.success) {
+                        toast.success(
+                            "Signup successful",
+                            {
+                                description: "You can now sign in with your new account."
+                            }
+                        );
+                    }
+                    else {
+                        toast.error(
+                            "Signup failed. Please try again.",
+                            {
+                                description: value.error
+                            }
+                        );
+                    }
                 }
             })
             .finally(() => {
@@ -81,7 +84,7 @@ export default function SignupContent() {
                         <form onSubmit={(ev) => {
                             ev.preventDefault();
                             form.handleSubmit(onSubmit)(ev);
-                        }} className="space-y-4 w-full flex flex-col">
+                        }} className="space-y-2 w-full flex flex-col">
                             <FieldGroup className="flex flex-row gap-4">
                                 <Controller
                                     control={form.control}
@@ -217,6 +220,17 @@ export default function SignupContent() {
                                 <UserPlus />
                             </Button>
                         </form>
+                        <div className="flex flex-row items-center justify-center gap-2 my-4">
+                            <hr className="grow" />
+                            <span className="opacity-75 text-sm">OR</span>
+                            <hr className="grow" />
+                        </div>
+                        <Button className="w-full" asChild variant="outline">
+                            <Link href="/signin/with/google" className="flex flex-row items-center justify-center gap-4">
+                                <img className="size-5" src="/icons/google.svg" alt="Google Icon" />
+                                <span>Signup with Google</span>
+                            </Link>
+                        </Button>
                     </CardContent>
                 </Card>
 

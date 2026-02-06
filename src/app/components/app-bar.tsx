@@ -17,15 +17,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack, Menu, Plus } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { handleLogout } from "../actions/auth/logout";
+import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { Logo } from "./logo";
 import { useWindowLocation } from "@/hooks/useWindowLocation";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 import { navigate } from "rwsdk/client";
-import { useIdentity } from "@/providers/identity";
 import { Link } from "./link";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -228,13 +226,13 @@ export function AppBar({ user }: ProtectedHeaderProps) {
 }
 
 function LogoutDialog({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-    const [isPending, startTransition] = useTransition();
 
-    const onConfirm = () => {
-        startTransition(async () => {
-            await handleLogout();
-        });
-    };
+    const [isPending, setPending] = useState(false);
+
+    const onConfirm = useCallback(() => {
+        setPending(true);
+        navigate("/logout");
+    }, []);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

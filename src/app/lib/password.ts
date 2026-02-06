@@ -1,3 +1,5 @@
+import  bcrypt from "bcryptjs";
+import { env } from "cloudflare:workers";
 
 export const PasswordModule = {
 
@@ -11,6 +13,10 @@ export const PasswordModule = {
         }
 
         return output;
-    }
+    },
+
+    hash(password: string) {
+        return bcrypt.hash(password, parseInt(env.WORK_FACTOR));
+    },
 
 }
