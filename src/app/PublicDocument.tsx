@@ -1,9 +1,13 @@
 import styles from "./styles/globals.css?url";
 import customStyles from "../app/layouts/theme.css?url";
+import { PropsWithChildren } from "react";
+import { env } from "cloudflare:workers";
+import { RequestInfo } from "rwsdk/worker";
 
-export const PublicDocument: React.FC<{ children: React.ReactNode }> = ({
+export const PublicDocument = ({
     children,
-}) => (
+    rw
+}: PropsWithChildren<RequestInfo>) => (
     <html lang="en">
         <head>
             <meta charSet="utf-8" />
@@ -19,6 +23,13 @@ export const PublicDocument: React.FC<{ children: React.ReactNode }> = ({
             <link rel="stylesheet" href={customStyles} />
 
             <link rel="modulepreload" href="/src/client.tsx" />
+
+            <script nonce={rw.nonce} type="text/javascript" dangerouslySetInnerHTML={{
+                __html: `
+                    window.posthogApiKey = "${env.POSTHOG_PUBLIC_KEY}";\n
+                    window.posthogApiHost = "${env.POSTHOG_PUBLIC_HOST}";
+                    `
+            }} />
         </head>
         <body>
             <div id="root">{children}</div>

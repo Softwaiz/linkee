@@ -2,7 +2,8 @@ import type { PostHog } from '@posthog/types'
 
 declare global {
     interface Window {
-        posthog?: PostHog
+       posthogApiKey: string;
+       posthogApiHost: string;
     }
 }
 
