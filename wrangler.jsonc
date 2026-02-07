@@ -38,7 +38,6 @@
 		"R2_PUBLIC_URL": "/medias",
 		"WORK_FACTOR": "10",
 		"GOOGLE_AUTH_CLIENT_ID": "691675121368-bpu4l2vbpilh3hvgdcbffjudkulh44oj.apps.googleusercontent.com",
-		"GOOGLE_AUTH_CLIENT_SECRET": "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",
 		"GOOGLE_AUTH_RETURN_URL": "https://linkee.maxcm.workers.dev/signin/after/google",
 		"GOOGLE_CONNECT_RETURN_URL": "https://linkee.maxcm.workers.dev/profile/connect/google"
 	}
