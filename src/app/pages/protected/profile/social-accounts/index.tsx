@@ -30,7 +30,7 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
                     <Button
                         size="sm"
                         onClick={() => {
-                            navigate(`/profile/social/link?preferred=${SocialAccountType.GOOGLE}`)
+                            navigate(`/profile/connect/${SocialAccountType.GOOGLE}`)
                         }}>
                         Connect
                         <ArrowRight />

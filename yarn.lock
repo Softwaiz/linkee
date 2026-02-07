@@ -1448,6 +1448,11 @@
   resolved "https://registry.yarnpkg.com/@poppinss/exception/-/exception-1.2.3.tgz#b713855e6c9fe2110fea0949455c50828145e64a"
   integrity sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==
 
+"@posthog/types@^1.342.1":
+  version "1.342.1"
+  resolved "https://registry.yarnpkg.com/@posthog/types/-/types-1.342.1.tgz#a4d5f7b44539641e910f36818fd4b6aa41022a2f"
+  integrity sha512-bcyBdO88FWTkd5AVTa4Nu8T7RfY0WJrG7WMCXum/rcvNjYhS3DmOfKf8o/Bt56vA3J3yeU0vbgrmltYVoTAfaA==
+
 "@puppeteer/browsers@2.10.10":
   version "2.10.10"
   resolved "https://registry.yarnpkg.com/@puppeteer/browsers/-/browsers-2.10.10.tgz#f806f92d966918c931fb9c48052eba2db848beaa"

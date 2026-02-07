@@ -63,6 +63,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.23.1",
     "@cloudflare/workers-types": "^4.20260206.0",
+    "@posthog/types": "^1.342.1",
     "@types/bcrypt": "^6.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "~24.10.0",
