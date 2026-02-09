@@ -4,26 +4,38 @@ import { CollectionNotFound } from './not-found';
 import { RequestInfo } from 'rwsdk/worker';
 import { LayersPlus } from 'lucide-react';
 import Page from '@/components/page';
+import { jsonObjectFrom } from "kysely/helpers/sqlite";
 
-export default async function EditCollectionPage({ params }: RequestInfo) {
+export default async function EditCollectionPage({ ctx, params, request }: RequestInfo) {
     const id = params.id;
 
     const collection = await db
         .selectFrom("boards")
         .selectAll()
+        .select(({ eb }) => {
+            return jsonObjectFrom(
+                eb.selectFrom("boardSettings")
+                    .select(['visibility'])
+                    .whereRef("boardSettings.boardId", "=", "boards.id")
+                    .limit(1)
+            ).as("settings")
+        })
         .where((eb) => eb.or([
-            eb("id", "=", id),
-            eb("slug", "=", id)
+            eb("boards.id", "=", id),
+            eb("boards.slug", "=", id)
         ]))
-        .executeTakeFirst() as unknown as Collection;
-
-    const settings = await db.selectFrom("boardSettings")
-        .selectAll()
-        .where("boardId", "=", collection?.id)
         .executeTakeFirst();
 
     if (!collection) {
         return <CollectionNotFound />
+    }
+
+    if (ctx.user?.id !== collection.userId) {
+        return new Response("Not allowed", {
+            headers: {
+                'Location': new URL(request.url).origin + `/collections/${collection.slug ?? collection.id}`
+            }
+        })
     }
 
     return <>
@@ -42,10 +54,10 @@ export default async function EditCollectionPage({ params }: RequestInfo) {
                             <Page.Title>Editing {collection.label}</Page.Title>
                         </div>
                     }
-                    collection={collection}
+                    collection={collection as unknown as Collection}
                     settings={{
                         boardId: collection.id,
-                        ...settings
+                        ...collection.settings
                     } as any} />
             </Page.Content>
         </Page.Root>

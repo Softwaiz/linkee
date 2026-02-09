@@ -5,20 +5,26 @@ import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
 import Page from '@/components/page'
 import { RequestInfo } from 'rwsdk/worker'
+import { jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export default async function DiscoverPage(props: RequestInfo) {
 
   const items = await db
     .selectFrom("boards")
-    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
     .selectAll()
-    .where((eb) => (
-      eb.and([
-        eb("boardSettings.visibility", "=", "public"),
-        ...(props.ctx.user ? [eb("boards.userId", "!=", props.ctx.user.id)] : []),
-      ])
-    ))
-    .orderBy("createdAt", "desc")
+    .select(({ eb }) => {
+      return jsonObjectFrom(
+        eb.selectFrom("boardSettings")
+          .select(['visibility'])
+          .whereRef("boardSettings.boardId", "=", "boards.id")
+          .where((eb) => {
+            return eb.and([
+              eb("visibility", "=", "public")
+            ])
+          })
+          .limit(1)
+      ).as("settings")
+    })
     .execute();
 
   return <Page.Root>

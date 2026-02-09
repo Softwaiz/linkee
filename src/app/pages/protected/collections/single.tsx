@@ -4,25 +4,34 @@ import { RequestInfo } from 'rwsdk/worker'
 import { CollectionNotFound } from './not-found';
 import Page from '@/components/page';
 import { SingleCollectionHeader } from './single-header';
+import { jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export default async function CollectionPage({ params, ctx }: RequestInfo) {
     const { id } = params;
     const board = await db
         .selectFrom("boards")
-        .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
         .selectAll()
+        .select(({ eb }) => {
+            return jsonObjectFrom(
+                eb.selectFrom("boardSettings")
+                    .select(['visibility'])
+                    .whereRef("boardSettings.boardId", "=", "boards.id")
+                    .limit(1)
+            ).as("settings")
+        })
         .where((eb) => eb.or([
             eb("boards.id", "=", id),
             eb("boards.slug", "=", id)
         ]))
-        .executeTakeFirst();
+        .executeTakeFirst()
 
     if (!board) {
         return <CollectionNotFound />
     }
 
     const readOnly = ctx?.user?.id !== board.userId;
-    if (readOnly && !["public", "unlisted"].includes(board?.visibility ?? "public")) {
+
+    if (!["public", "unlisted"].includes(board?.settings?.visibility ?? "public")) {
         return <CollectionNotFound />
     }
 
