@@ -49,6 +49,7 @@
     "motion": "^12.29.2",
     "next-themes": "^0.4.6",
     "posthog-js": "^1.342.1",
+    "radix-ui": "^1.4.3",
     "react": "^19.3.0-canary-da641178-20260129",
     "react-dom": "^19.3.0-canary-da641178-20260129",
     "react-hook-form": "^7.71.1",

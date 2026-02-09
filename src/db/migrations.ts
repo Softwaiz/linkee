@@ -117,5 +117,23 @@ export const migrations = {
         async down(db) {
             await db.schema.dropTable("socialAccounts").ifExists().execute();
         }
+    },
+    "007_add_board_settings_table": {
+        async up(db) {
+            return [
+                await db.schema
+                    .createTable("boardSettings")
+                    .ifNotExists()
+                    .addColumn("id", "text", (col) => col.primaryKey())
+                    .addColumn("boardId", "text", (col) => col.notNull().unique().references("boards.id").onDelete("cascade"))
+                    .addColumn("visibility", "text", (col) => col.notNull().defaultTo("public")) // public, private, unlisted
+                    .addColumn("createdAt", "text", (col) => col.notNull())
+                    .addColumn("updatedAt", "text", (col) => col.notNull())
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.dropTable("boardSettings").ifExists().execute();
+        }
     }
 } satisfies Migrations;

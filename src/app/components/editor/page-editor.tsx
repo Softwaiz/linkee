@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -33,7 +33,8 @@ import { CSS } from '@dnd-kit/utilities'
 import { createCollection } from '@/actions/collections/create'
 import { toast } from 'sonner'
 import { navigate } from 'rwsdk/client'
-import { CollectionInput, Group, GroupItem, LinkItem, TextItem } from '@/validations/collection/create'
+import { CollectionInput, CollectionSettingsInput, CollectionSettingsSchema, Group, GroupItem, LinkItem, TextItem } from "@/validations/collection/create"
+import { SettingsArea } from "../collection/settings-dialog"
 import { Collection } from '@db/index'
 import { updateCollection } from '@/actions/collections/update'
 import { checkSlugAvailability } from '@/actions/collections/check-slug'
@@ -43,6 +44,7 @@ import { uploadCollectionBanner, uploadCollectionPicture } from '@/actions/uploa
 import { cn } from '@/lib/utils'
 import { useDimensions } from '@/hooks/useDimensions'
 import { AnimatePresence, easeIn, easeOut, motion } from 'motion/react'
+import { CollectionSettings } from '@db/index'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -65,9 +67,19 @@ const initialPage: () => Partial<CollectionInput> = () => ({
   slug: '',
 })
 
-export function PageEditor({ collection }: { collection?: Collection }) {
+export function PageEditor({ header, collection, settings: initialSettings }: {
+  header?: ReactNode,
+  collection?: Collection,
+  settings?: Partial<CollectionSettings>
+}) {
 
   const storageKey = useMemo(() => `collection.${collection?.id ?? "new"}.draft`, [collection?.id]);
+
+  const [settings, setSettings] = useState<Partial<CollectionSettings>>(() => {
+    return initialSettings ?? {
+      visibility: 'public',
+    }
+  });
 
   const [page, setPage] = useState<Partial<CollectionInput>>(() => {
     if (collection) {
@@ -491,7 +503,8 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       {
         ...page,
         picture: pictureUrl,
-        banner: bannerUrl
+        banner: bannerUrl,
+        settings: settings as any
       }
     )
       .then((value) => {
@@ -518,7 +531,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [storageKey, page, collection, selectedPicture, selectedBanner]);
+  }, [storageKey, page, collection, selectedPicture, selectedBanner, settings]);
 
   const handleSaveCollection = useCallback(async () => {
     if (collection) {
@@ -562,7 +575,8 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     await createCollection({
       ...page,
       picture: pictureUrl,
-      banner: bannerUrl
+      banner: bannerUrl,
+      settings: settings as any
     })
       .then((value) => {
         if (value.success && value.created) {
@@ -588,7 +602,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
       .finally(() => {
         setSaving(false);
       })
-  }, [page, storageKey, collection, selectedPicture, selectedBanner]);
+  }, [page, storageKey, collection, selectedPicture, selectedBanner, settings]);
 
   const handlePictureChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     const file = ev.currentTarget.files?.item(0);
@@ -615,6 +629,9 @@ export function PageEditor({ collection }: { collection?: Collection }) {
     return origin;
   }, []);
 
+  const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
+    setSettings(newSettings);
+  }, []);
 
   return (
     <div className="min-h-dvh">
@@ -625,9 +642,30 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid grid-cols-12 gap-4 py-4 min-h-[80vh]">
+        <div className="grid grid-cols-12 gap-4 min-h-[80vh]">
+          <div className="col-span-12 sticky top-4 z-2 flex flex-row items-center justify-end gap-2 rounded-md border border-input bg-white/40 backdrop-blur-lg px-2 py-1">
+            <div className="grow">
+              {header}
+            </div>
+            <Button
+              title='Save this collection'
+              className='text-sm flex flex-row items-center justify-center gap-2'
+              disabled={saving || slugAvailable === false}
+              onClick={() => {
+                handleSaveCollection();
+              }}>
+              {
+                saving ? <>
+                  Save this collection
+                </> : <>
+                  Save this collection
+                  <Save className="size-4" /></>
+              }
+            </Button>
+          </div>
           <div className="col-span-12 lg:col-span-4 bg-card shadow-sm rounded-md">
             <div className="w-full relative mb-20">
+
               <div className='space-y-2 relative'>
                 <input
                   hidden
@@ -689,7 +727,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                   </div>
                   <div className='space-y-2'>
                     <Label className='popover-foreground'>Customize the link</Label>
-                    <div className="relative flex  flex-row items-center gap-2 border border-input shadow-md rounded-md">
+                    <div className="relative flex flex-row items-center gap-2 border border-input shadow-sm rounded-md">
                       <span ref={slugRef} className='text-sm text-nowrap opacity-60 absolute top-0 left-0 bottom-0 px-2 flex flex-row items-center justify-start'>{urlPrefix}/shared/</span>
                       <Input
                         value={page.slug || ''}
@@ -700,6 +738,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
                         }}
                         className={
                           cn(
+                            "shadow-none",
                             "bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 pr-10 border-0",
                             slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
                           )
@@ -848,25 +887,19 @@ export function PageEditor({ collection }: { collection?: Collection }) {
               }
             </div>
           </div>
-          <div className="col-span-12 sticky bottom-20 z-2 flex flex-row items-center justify-end mt-2">
-            <Button
-              title='Save this collection'
-              className='text-sm flex flex-row items-center justify-center gap-2'
-              disabled={saving || slugAvailable === false}
-              onClick={() => {
-                handleSaveCollection();
-              }}>
-              {
-                saving ? <>
-                  Save this collection
-                </> : <>
-                  Save this collection
-                  <Save className="size-4" /></>
-              }
-            </Button>
+
+          {settings && <div className="col-span-12">
+            <SettingsArea
+              collection={collection}
+              settings={settings as any}
+              hasDangerZone={Boolean(collection)}
+              onSettingsUpdate={handleSettingsUpdate}
+            />
           </div>
+          }
+
         </div>
-      </DndContext>
+      </DndContext >
 
       <SectionDialog
         open={sectionDialogOpen}
@@ -886,7 +919,7 @@ export function PageEditor({ collection }: { collection?: Collection }) {
         text={editingText}
         onSave={handleSaveText}
       />
-    </div>
+    </div >
   )
 }
 

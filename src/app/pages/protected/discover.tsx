@@ -4,10 +4,22 @@ import { Button } from '@/components/ui/button'
 import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
 import Page from '@/components/page'
+import { RequestInfo } from 'rwsdk/worker'
 
-export default async function DiscoverPage() {
+export default async function DiscoverPage(props: RequestInfo) {
 
-  const items = await db.selectFrom("boards").selectAll().orderBy("createdAt", "desc").execute();
+  const items = await db
+    .selectFrom("boards")
+    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
+    .selectAll()
+    .where((eb) => (
+      eb.and([
+        eb("boardSettings.visibility", "=", "public"),
+        ...(props.ctx.user ? [eb("boards.userId", "!=", props.ctx.user.id)] : []),
+      ])
+    ))
+    .orderBy("createdAt", "desc")
+    .execute();
 
   return <Page.Root>
     <Page.Header.Custom container className="justify-between">

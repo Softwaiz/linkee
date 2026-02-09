@@ -17,6 +17,11 @@ export default async function EditCollectionPage({ params }: RequestInfo) {
         ]))
         .executeTakeFirst() as unknown as Collection;
 
+    const settings = await db.selectFrom("boardSettings")
+        .selectAll()
+        .where("boardId", "=", collection?.id)
+        .executeTakeFirst();
+
     if (!collection) {
         return <CollectionNotFound />
     }
@@ -25,18 +30,23 @@ export default async function EditCollectionPage({ params }: RequestInfo) {
         <title>{`${collection?.label} - Linkee`}</title>
         <meta name="description" content={collection?.description} />
         <Page.Root>
-            <Page.Header.Custom container className="justify-between">
-                <div className="grow flex flex-row items-center justify-start gap-2">
-                    <Page.BackButton />
-                    <span
-                        className="p-4">
-                        <LayersPlus size={32} />
-                    </span>
-                    <Page.Title>Editing {collection.label}</Page.Title>
-                </div>
-            </Page.Header.Custom>
             <Page.Content container>
-                <PageEditor collection={collection} />
+                <PageEditor
+                    header={
+                        <div className="grow flex flex-row items-center justify-start gap-2">
+                            <Page.BackButton />
+                            <span
+                                className="p-4">
+                                <LayersPlus size={32} />
+                            </span>
+                            <Page.Title>Editing {collection.label}</Page.Title>
+                        </div>
+                    }
+                    collection={collection}
+                    settings={{
+                        boardId: collection.id,
+                        ...settings
+                    } as any} />
             </Page.Content>
         </Page.Root>
     </>

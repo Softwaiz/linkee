@@ -9,14 +9,19 @@ export default async function PublicCollectionPage({ params }: RequestInfo) {
     const { id } = params;
     const board = await db
         .selectFrom("boards")
+        .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
         .selectAll()
         .where((eb) => eb.or([
             eb("id", "=", id),
             eb("slug", "=", id)
         ]))
-        .executeTakeFirst() as unknown as Collection;
+        .executeTakeFirst();
 
     if (!board) {
+        return <CollectionNotFound />
+    }
+
+    if (!["public", "unlisted"].includes(board.visibility ?? "public")) {
         return <CollectionNotFound />
     }
 
@@ -28,7 +33,7 @@ export default async function PublicCollectionPage({ params }: RequestInfo) {
         {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
         <Header />
         <CollectionView
-            collection={board}
+            collection={board as unknown as Collection}
             readOnly={true}
         />
         <Footer />
