@@ -30,8 +30,7 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
     }
 
     const readOnly = ctx?.user?.id !== board.userId;
-
-    if (!["public", "unlisted"].includes(board?.settings?.visibility ?? "public")) {
+    if (readOnly && !["public", "unlisted"].includes(board?.settings?.visibility ?? "public")) {
         return <CollectionNotFound />
     }
 
