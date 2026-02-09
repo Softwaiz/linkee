@@ -12,8 +12,8 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
         .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
         .selectAll()
         .where((eb) => eb.or([
-            eb("id", "=", id),
-            eb("slug", "=", id)
+            eb("boards.id", "=", id),
+            eb("boards.slug", "=", id)
         ]))
         .executeTakeFirst();
 
