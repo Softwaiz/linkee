@@ -5,16 +5,20 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { IdentityProvider } from "@/providers/identity";
 import { BottomBar } from "@/components/bottom-bar";
 import styles from "./theme.css?url";
+import { SearchQuery } from "@/components/search/query";
+import { SearchLayout } from "@/components/search/layout";
 
 export default async function ProtectedLayout(props: LayoutProps) {
     const { ctx, request } = getRequestInfo();
+    const url = new URL(request.url);
 
     if (!ctx.user) {
-        const url = new URL(request.url);
         let nextPath = `${url.pathname}${url.search ?? ''}${url.hash ?? ''}`;
         ctx.redirect(`/signin?redirect=${encodeURIComponent(nextPath)}`, 302);
         return <div className="w-full min-h-dvh">{props.children}</div>
     }
+
+    const searchQuery = url.searchParams.get("q") ?? '';
 
     return <SidebarProvider defaultOpen={false}>
 
@@ -25,12 +29,20 @@ export default async function ProtectedLayout(props: LayoutProps) {
 
         <IdentityProvider user={ctx.user}>
             <div className="w-full min-h-dvh">
-                <AppBar user={ctx.user!} />
+                <AppBar
+                    initialQuery={searchQuery}
+                    user={ctx.user!}
+                    search={
+                        <SearchLayout initialQuery={searchQuery}>
+                            <SearchQuery query={searchQuery} />
+                        </SearchLayout>
+                    }
+                />
                 <main className="pb-16">
                     {props.children}
                 </main>
                 <BottomBar />
             </div>
         </IdentityProvider>
-    </SidebarProvider>
+    </SidebarProvider >
 }

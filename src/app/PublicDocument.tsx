@@ -30,6 +30,8 @@ export const PublicDocument = ({
                     window.posthogApiHost = "${env.POSTHOG_PUBLIC_HOST}";
                     `
             }} />
+
+            <meta name="google-site-verification" content="JfgS7XxfGg7Reb3pb4S7aBrAdHQSHkgvRw4RceSPJrw" />
         </head>
         <body>
             <div id="root">{children}</div>

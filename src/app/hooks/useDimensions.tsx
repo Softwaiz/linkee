@@ -7,8 +7,7 @@ export function useDimensions<D extends HTMLElement>(ref: RefObject<D | null>) {
         if (ref.current) {
 
             const observer = new IntersectionObserver(([entry]) => {
-                console.log("entry changed");
-                setRect(entry.target.getBoundingClientRect());
+                setRect(entry.boundingClientRect);
             });
 
             const resizeListener = (ev: UIEvent) => {
