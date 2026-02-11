@@ -14,8 +14,10 @@ export default async function SavedCollections(props: RequestInfo) {
 
     const collections = await db
         .selectFrom("boards")
-        .selectAll()
-        .where("userId", "=", props.ctx.user!.id)
+        .innerJoin("boardReactions", "boards.id", "boardReactions.boardId")
+        .selectAll("boards")
+        .where("boardReactions.userId", "=", props.ctx.user!.id)
+        .where("boardReactions.type", "=", "save")
         .execute();
 
     return <Page.Root>

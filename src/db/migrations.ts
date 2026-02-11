@@ -135,5 +135,24 @@ export const migrations = {
         async down(db) {
             await db.schema.dropTable("boardSettings").ifExists().execute();
         }
-    }
+    },
+    "008_add_board_reactions": {
+        async up(db) {
+            return [
+                await db.schema
+                    .createTable("boardReactions")
+                    .ifNotExists()
+                    .addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+                    .addColumn("boardId", "text", (col) => col.notNull().references("boards.id").onDelete("cascade"))
+                    .addColumn("userId", "text", (col) => col.notNull().references("users.id").onDelete("cascade"))
+                    .addColumn("type", "text", (col) => col.notNull()) // 'like' | 'save'
+                    .addColumn("createdAt", "text", (col) => col.notNull())
+                    .addUniqueConstraint("unique_reaction", ["boardId", "userId", "type"])
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.dropTable("boardReactions").ifExists().execute();
+        }
+    },
 } satisfies Migrations;

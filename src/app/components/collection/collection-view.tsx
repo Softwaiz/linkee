@@ -1,31 +1,40 @@
-'use client'
-import { Layers, Pencil } from 'lucide-react'
-import { CollectionProfile } from './collection-profile'
-import { Button } from '@/components/ui/button'
-import { SectionPreview } from './section-preview'
-import { Collection } from '@db/index'
-import { Link } from '../link'
+import { CollectionActions } from './collection-actions'
 
 interface CollectionViewProps {
   collection: Collection;
+  likesCount?: number;
+  savesCount?: number;
+  isLiked?: boolean;
+  isSaved?: boolean;
 }
 
-export function CollectionView({ collection, readOnly }: CollectionViewProps & { readOnly?: boolean }) {
+export function CollectionView({ collection, readOnly, likesCount = 0, savesCount = 0, isLiked = false, isSaved = false }: CollectionViewProps & { readOnly?: boolean }) {
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
   const totalSections = collection.nodes.length
 
+  const actions = (
+    <CollectionActions
+      collectionId={collection.id}
+      initialLikes={likesCount}
+      initialSaves={savesCount}
+      initialIsLiked={isLiked}
+      initialIsSaved={isSaved}
+    />
+  )
+
   return (
     <div className="w-full px-4 lg:px-0 min-h-screen  bg-background">
       <div data-has-left={Boolean(collection.banner || collection.picture)} className="w-full max-w-2xl px-4 data-[has-left=true]:px-0 data-[has-left=true]:container mx-auto grid grid-cols-12 py-4 gap-4">
-        { !(collection.banner || collection.picture) && <div className="col-span-12">
+        {!(collection.banner || collection.picture) && <div className="col-span-12">
           <h1 className="text-2xl">{collection.label}</h1>
           <p className='text-base'>
             {collection.description}
           </p>
-        </div> }
+          {readOnly && actions}
+        </div>}
         <div className="col-span-12 lg:col-span-4">
           {(collection.banner || collection.picture) && <div className="w-full lg:sticky lg:top-20 lg:left-0 space-y-4">
             <CollectionProfile
@@ -41,6 +50,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
                   </Button>
                 </div>
               )}
+              {readOnly && actions}
             </CollectionProfile>
           </div>
           }
