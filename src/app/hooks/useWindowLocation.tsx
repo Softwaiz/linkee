@@ -7,11 +7,12 @@ export function useWindowLocation() {
         const handlePopstate = (ev: PopStateEvent) => {
             setLocation(window.location);
         }
-         const handleHashChange = (ev: HashChangeEvent) => {
+        const handleHashChange = (ev: HashChangeEvent) => {
             setLocation(window.location);
         }
         window.addEventListener("popstate", handlePopstate);
         window.addEventListener("hashchange", handleHashChange);
+        setLocation(window.location);
         return () => {
             window.removeEventListener("popstate", handlePopstate);
             window.removeEventListener("hashchange", handleHashChange);

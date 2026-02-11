@@ -106,7 +106,6 @@ export function LinkDialog({
   const [favicon, setFavicon] = useState('')
   const [loading, setLoading] = useState(false)
   const debounce = useDebounce(500);
-  const controller = useRef<AbortController | null>(new AbortController());
 
   useEffect(() => {
     if (link) {
@@ -126,9 +125,6 @@ export function LinkDialog({
 
   const fetchMetadata = useCallback(async (targetUrl: string) => {
     if (!targetUrl || !targetUrl.startsWith('http')) return;
-    if (loading) {
-      controller.current?.abort();
-    }
     setLoading(true);
     try {
       const res = await fetch('/api/metadata', {
@@ -137,7 +133,6 @@ export function LinkDialog({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ url: targetUrl }),
-        signal: controller.current?.signal,
       })
       const data = await res.json() as { success: boolean; title?: string; description?: string; image?: string; favicon?: string };
       if (data.success) {

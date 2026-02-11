@@ -4,19 +4,32 @@ import { RequestInfo } from 'rwsdk/worker'
 import { CollectionNotFound } from '../protected/collections/not-found';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export default async function PublicCollectionPage({ params }: RequestInfo) {
     const { id } = params;
     const board = await db
         .selectFrom("boards")
         .selectAll()
+        .select(({ eb }) => {
+            return jsonObjectFrom(
+                eb.selectFrom("boardSettings")
+                    .select(['visibility'])
+                    .whereRef("boardSettings.boardId", "=", "boards.id")
+                    .limit(1)
+            ).as("settings")
+        })
         .where((eb) => eb.or([
-            eb("id", "=", id),
-            eb("slug", "=", id)
+            eb("boards.id", "=", id),
+            eb("boards.slug", "=", id)
         ]))
-        .executeTakeFirst() as unknown as Collection;
+        .executeTakeFirst();
 
     if (!board) {
+        return <CollectionNotFound />
+    }
+
+    if (!["public", "unlisted"].includes(board.settings?.visibility ?? "public")) {
         return <CollectionNotFound />
     }
 
@@ -28,7 +41,7 @@ export default async function PublicCollectionPage({ params }: RequestInfo) {
         {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
         <Header />
         <CollectionView
-            collection={board}
+            collection={board as unknown as Collection}
             readOnly={true}
         />
         <Footer />

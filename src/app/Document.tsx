@@ -1,10 +1,14 @@
+import { env } from "cloudflare:workers";
 import styles from "./styles/globals.css?url";
 import rootStyles from "./styles/root.css?url";
+import { RequestInfo } from "rwsdk/worker";
+import { PropsWithChildren } from "react";
 
-export const Document: React.FC<{ children: React.ReactNode }> = ({
+export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
   children,
-}) => (
-  <html lang="en">
+  rw,
+}: PropsWithChildren<RequestInfo>) => {
+  return <html lang="en">
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,10 +24,19 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
       <link rel="stylesheet" href={styles} />
       <link rel="stylesheet" href={rootStyles} />
       <link rel="modulepreload" href="/src/client.tsx" />
+      <script nonce={rw.nonce} type="text/javascript" dangerouslySetInnerHTML={{
+        __html: `
+        window.posthogApiKey = "${env.POSTHOG_PUBLIC_KEY}";\n
+        window.posthogApiHost = "${env.POSTHOG_PUBLIC_HOST}";
+        `
+      }}>
+
+      </script>
+      <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
     </head>
     <body>
       <div id="root">{children}</div>
       <script>import("/src/client.tsx")</script>
     </body>
   </html>
-);
+}

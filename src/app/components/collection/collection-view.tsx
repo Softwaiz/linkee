@@ -18,7 +18,7 @@ export function CollectionView({ collection, readOnly }: CollectionViewProps & {
   const totalSections = collection.nodes.length
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full px-4 lg:px-0 min-h-screen  bg-background">
       <div data-has-left={Boolean(collection.banner || collection.picture)} className="w-full max-w-2xl px-4 data-[has-left=true]:px-0 data-[has-left=true]:container mx-auto grid grid-cols-12 py-4 gap-4">
         { !(collection.banner || collection.picture) && <div className="col-span-12">
           <h1 className="text-2xl">{collection.label}</h1>

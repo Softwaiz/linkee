@@ -11,6 +11,9 @@ export default defineConfig({
     redwood(),
     tailwindcss(),
   ],
+  ssr: {
+    noExternal: ['posthog-js', '@posthog/react'],
+  },
   build: {
   }
 });

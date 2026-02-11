@@ -36,6 +36,7 @@
 	],
 	"vars": {
 		"R2_PUBLIC_URL": "/medias",
-		"WORK_FACTOR": "10"
+		"GOOGLE_AUTH_RETURN_URL": "https://linkee.maxcm.workers.dev/signin/after/google",
+		"GOOGLE_CONNECT_RETURN_URL": "https://linkee.maxcm.workers.dev/profile/connect/google"
 	}
 }

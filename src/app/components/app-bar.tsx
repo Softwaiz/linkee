@@ -18,7 +18,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import { Input } from "./ui/input";
 import { Logo } from "./logo";
 import { useWindowLocation } from "@/hooks/useWindowLocation";
@@ -38,36 +38,12 @@ interface User {
 
 interface ProtectedHeaderProps {
     user: User;
+    initialQuery?: string;
+    search?: React.ReactNode;
 }
 
-export function AppBar({ user }: ProtectedHeaderProps) {
+export function AppBar({ initialQuery, user, search }: ProtectedHeaderProps) {
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchQueryDraft, setSearchQueryDraft] = useState('');
-
-    const location = useWindowLocation();
-
-    const debounce = useDebounce(1000);
-
-    const handleSearchChange = (query: string) => {
-        setSearchQueryDraft(query);
-
-    };
-
-    const handleSearchSubmit = () => {
-        setSearchQuery(searchQueryDraft);
-    };
-
-    const timerRef = useRef<NodeJS.Timeout>(null);
-
-    useEffect(() => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-        }
-        timerRef.current = setTimeout(() => {
-            handleSearchSubmit();
-        }, 2500);
-    }, [searchQueryDraft]);
 
     const sidebar = useSidebar();
 
@@ -89,17 +65,8 @@ export function AppBar({ user }: ProtectedHeaderProps) {
                             <span className="font-bold inline-block">Linkee</span>
                         </a>
                     </div>
-                    <div className="flex items-center justify-center gap-3 grow">
-                        <div className="relative w-full max-w-2/3 text-muted">
-                            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2" />
-                            <Input
-                                type="text"
-                                placeholder="Search collections..."
-                                value={searchQueryDraft}
-                                onChange={(e) => handleSearchChange(e.target.value)}
-                                className="w-full border-0 bg-muted/10 pl-9 focus:bg-background/10 placeholder:text-inherit"
-                            />
-                        </div>
+                    <div id="home-search-container" className="h-full grow flex flex-col items-center justify-center">
+                        {search}
                     </div>
                     <div className="flex flex-row items-center justify-center gap-2">
                         <Button size="sm" variant="ghost" asChild>

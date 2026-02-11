@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { ArrowRight, Sparkles, Bookmark, FolderOpen, Share2, Lock, Zap, ExternalLink, BookOpen, Users, Briefcase, Lightbulb, GraduationCap, TrendingUp } from 'lucide-react';
+import { ArrowRight, Bookmark, Zap, Users, Briefcase, Lightbulb, GraduationCap } from 'lucide-react';
 import { RequestInfo } from 'rwsdk/worker';
 import { HomeDiscover } from './home-discover';
 import WhatYouCanDo from './features';

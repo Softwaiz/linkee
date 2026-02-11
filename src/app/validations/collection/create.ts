@@ -29,6 +29,13 @@ const GroupSchema = z.object({
 })
 export type Group = z.infer<typeof GroupSchema>;
 
+export const CollectionSettingsSchema = z.object({
+    visibility: z.enum(['public', 'private', 'unlisted']).default('public'),
+});
+
+export type CollectionSettingsInput = z.infer<typeof CollectionSettingsSchema>;
+export type CollectionVisibility = CollectionSettingsInput['visibility'];
+
 export const CreateCollectionSchema = z.object({
     id: z.string().optional(),
     label: z.string(),
@@ -37,6 +44,7 @@ export const CreateCollectionSchema = z.object({
     picture: z.string().optional(),
     banner: z.string().optional(),
     nodes: z.array(GroupSchema),
+    settings: CollectionSettingsSchema.optional(),
 });
 
 export type CollectionInput = z.infer<typeof CreateCollectionSchema>;

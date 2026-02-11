@@ -1,10 +1,10 @@
 "use server";
-import { CreateCollectionSchema } from "@/validations/collection/create";
+import { CreateCollectionSchema, CollectionSettingsInput, CollectionSettingsSchema } from "@/validations/collection/create";
 import { Collection, db } from "@db/index";
 import { getRequestInfo } from "rwsdk/worker";
 import z from "zod";
 
-export async function createCollection(page: Partial<Collection>) {
+export async function createCollection(page: Partial<Collection> & { settings?: CollectionSettingsInput }) {
     const { ctx } = getRequestInfo();
     if (!ctx.user) {
         return {
@@ -23,7 +23,7 @@ export async function createCollection(page: Partial<Collection>) {
         }
     }
 
-    let data = validated.data;
+    let { settings, ...data } = validated.data;
 
     if (data.slug) {
         const existing = await db.selectFrom("boards").select("id").where("slug", "=", data.slug).executeTakeFirst();
@@ -49,6 +49,16 @@ export async function createCollection(page: Partial<Collection>) {
     })
         .returningAll()
         .executeTakeFirst();
+
+    if (createdItem) {
+        await db.insertInto("boardSettings").values({
+            ...settings as any,
+            id: crypto.randomUUID(),
+            boardId: createdItem.id,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        }).execute();
+    }
 
     return {
         success: true,

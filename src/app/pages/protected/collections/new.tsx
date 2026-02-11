@@ -6,20 +6,24 @@ import { LayersPlus } from 'lucide-react'
 export default function CreateCollectionPage() {
 
   return <Page.Root>
-    <Page.Header.Custom container className="justify-between">
-      <div className="grow flex flex-row items-center justify-start gap-1">
-        <Page.BackButton />
-        <div className="flex flex-row items-center justify-start gap-1">
-          <span
-            className="p-4">
-            <LayersPlus size={21} />
-          </span>
-          <Page.Title>Create your collection</Page.Title>
-        </div>
-      </div>
-    </Page.Header.Custom>
     <Page.Content container>
-      <PageEditor />
+      <PageEditor
+        header={
+          <div className="w-full flex flex-row items-center justify-start gap-1">
+            <Page.BackButton />
+            <div className="flex flex-row items-center justify-start gap-1 text-foreground">
+              <span
+                className="p-4">
+                <LayersPlus size={21} />
+              </span>
+              <span className="text-lg">Create your collection</span>
+            </div>
+          </div>
+        }
+        settings={{
+          visibility: 'public',
+        }}
+      />
     </Page.Content>
   </Page.Root>
 }

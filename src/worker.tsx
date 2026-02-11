@@ -28,15 +28,12 @@ import { PublicLayout } from "@/layouts/public";
 import { LinkSocialAccount } from "@/pages/protected/profile/social-accounts/link";
 import { HandleGoogleLoginReturn } from "@/pages/auth/google-return";
 import { SocialSignin } from "@/pages/auth/social-signin";
-import PreventReauthentication from "@/layouts/prevent-reauth";
 import { handleLogout } from "@/pages/auth/logout";
 export { Database } from "@db/durableObject";
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
     const token = identityCookie.get(request.headers);
-
-    console.log(token);
 
     if (!token) {
       return;
