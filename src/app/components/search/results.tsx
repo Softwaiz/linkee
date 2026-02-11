@@ -1,6 +1,6 @@
-import { Collection, db } from "@db/index"
+import { Collection } from "@db/index"
 import { Link } from "../link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export async function SearchResults({ count, items, query }: { count: number, items: Collection[], query: string }) {
     return <div className="w-full flex flex-col gap-2 text-card-foreground">

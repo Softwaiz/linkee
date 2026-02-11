@@ -17,11 +17,7 @@ export default async function DiscoverPage(props: RequestInfo) {
         eb.selectFrom("boardSettings")
           .select(['visibility'])
           .whereRef("boardSettings.boardId", "=", "boards.id")
-          .where((eb) => {
-            return eb.and([
-              eb("visibility", "=", "public")
-            ])
-          })
+          .where("visibility", "=", "public")
           .limit(1)
       ).as("settings")
     })
