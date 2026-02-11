@@ -18,7 +18,7 @@ export async function SearchQuery({ query }: { query: string }) {
             ]))
             .executeTakeFirst(),
         db.selectFrom("boards")
-            .select(["id", "label", "description", "createdAt", "updatedAt"])
+            .select(["id", "slug", "label", "description", "createdAt", "updatedAt"])
             .where((eb) => eb.or([
                 eb("label", "like", `%${query}%`),
                 eb("description", "like", `%${query.toLowerCase()}%`)

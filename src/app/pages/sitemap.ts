@@ -3,23 +3,22 @@ import { RequestInfo } from "rwsdk/worker";
 
 export default async function Sitemap(params: RequestInfo) {
     const collections = await db.selectFrom("boards")
-        .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
+        .innerJoin("boardSettings", "boards.id", "boardSettings.boardId")
         .where("boardSettings.visibility", "=", "public")
-        .select(["id", "slug"])
+        .select(["boards.id as id", "slug"])
         .execute();
 
     const baseUrl = new URL(params.request.url).origin;
     const urls = collections.map(c =>
-        `
-<url>
+        `<url>
     <loc>${baseUrl}/shared/${c.slug ?? c.id}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
 </url>
     `).join("\n");
 
-    const xml = `
-<?xml version="1.0" encoding="UTF-8"?>
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>${baseUrl}/</loc>
@@ -36,8 +35,9 @@ export default async function Sitemap(params: RequestInfo) {
 `;
 
     return new Response(xml, {
+        status: 200,
         headers: {
-            "Content-Type": "application/xml",
+            "Content-Type": "application/xml;charset=utf-8",
         }
     });
 }

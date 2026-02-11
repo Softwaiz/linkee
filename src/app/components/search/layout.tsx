@@ -7,16 +7,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { navigate } from "rwsdk/client";
 import { Portal } from "../portal";
 import { useDimensions } from "@/hooks/useDimensions";
+import { AnimatePresence, motion } from "motion/react";
 
 export function SearchLayout({ initialQuery, children, queryKey = "q" }: PropsWithChildren<{ queryKey?: string; initialQuery?: string }>) {
-
     const [searchAreaOpen, setSearchAreaOpen] = useState(false);
-
     const [searchQueryDraft, setSearchQueryDraft] = useState(() => {
         return initialQuery ?? '';
     });
     const [pending, startTransition] = useTransition();
-
     const location = useWindowLocation();
     const debounce = useDebounce(1000);
 
@@ -30,12 +28,10 @@ export function SearchLayout({ initialQuery, children, queryKey = "q" }: PropsWi
             }
         }
         window.addEventListener("click", outsideClickHandler);
-
         return () => {
             window.removeEventListener("click", outsideClickHandler);
         }
     }, []);
-
 
     const [currentStyle, setCurrentStyle] = useState<{ x: string, y: string }>(() => {
         if (globalThis.window) {
@@ -84,27 +80,31 @@ export function SearchLayout({ initialQuery, children, queryKey = "q" }: PropsWi
                         });
                     })
                 }}
-                className="w-full h-10 rounded-full border-0 bg-muted/10 pl-16 focus:bg-background/10 placeholder:text-inherit"
+                className="w-full h-10 rounded-full border-0 bg-muted/10 pl-16 focus:bg-background/10 placeholder:text-white/60"
             />
         </div>
         {
-            searchAreaOpen && globalThis.document && inputContainerSize && <>
-                <Portal container={globalThis.document.querySelector("#root") ?? globalThis.document.body}>
-                    <div
+            globalThis.document && inputContainerSize && <Portal container={globalThis.document.querySelector("#root") ?? globalThis.document.body}>
+                <AnimatePresence>
+                    {searchAreaOpen && <motion.div
+                        key="search-results"
                         className="fixed top-0 z-99 max-h-96 overflow-y-auto"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.2 }}
                         style={{
                             top: `${(inputContainerSize?.top ?? 0) + (inputContainerSize?.height ?? 0) + 8}px`,
                             left: `${inputContainerSize?.left ?? 0}px`,
                             width: `${inputContainerSize?.width ?? 0}px`,
                         }}
                     >
-                        <div className="container mx-auto bg-background text-foreground flex flex-col gap-2 min-h-20 border border-input rounded-md p-4">
+                        <div className="container mx-auto bg-white/30 text-card-foreground backdrop-blur-lg flex flex-col gap-2 min-h-20 border border-input rounded-md p-2 lg:p-4">
                             {children}
                         </div>
-
-                    </div>
-                </Portal>
-            </>
+                    </motion.div>}
+                </AnimatePresence>
+            </Portal>
         }
-    </div>
+    </div >
 }

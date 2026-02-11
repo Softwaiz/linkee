@@ -32,7 +32,7 @@ export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
       }}>
 
       </script>
-      <meta name="google-site-verification" content="JfgS7XxfGg7Reb3pb4S7aBrAdHQSHkgvRw4RceSPJrw" />
+      <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
     </head>
     <body>
       <div id="root">{children}</div>
