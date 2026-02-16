@@ -5,8 +5,8 @@ import { toggleReaction } from '@/actions/collections/react'
 import { useOptimistic, useTransition, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
-import { useUser } from '@/providers/user'
-import { useRouter } from 'rwsdk/router'
+import { navigate } from 'rwsdk/client'
+import { useIdentity } from '@/providers/identity'
 
 interface CollectionActionsProps {
     collectionId: string
@@ -23,19 +23,18 @@ export function CollectionActions({
     initialIsLiked,
     initialIsSaved
 }: CollectionActionsProps) {
-    const { user } = useUser()
+    const { user } = useIdentity()
     const [likes, setLikes] = useState(initialLikes)
     const [saves, setSaves] = useState(initialSaves)
     const [isLiked, setIsLiked] = useState(initialIsLiked)
     const [isSaved, setIsSaved] = useState(initialIsSaved)
-    const router = useRouter();
 
     const [_, startTransition] = useTransition()
 
     const handleAction = async (type: 'like' | 'save') => {
         if (!user) {
             toast.error('Please login to react to collections')
-            router.navigate('/signin')
+            navigate('/signin')
             return;
         }
 
