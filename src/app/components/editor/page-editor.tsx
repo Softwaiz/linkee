@@ -618,15 +618,12 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
     }
   }, []);
 
-  const slugRef = useRef<HTMLSpanElement | null>(null);
+  const slugRef = useRef<HTMLDivElement | null>(null);
   const dimensions = useDimensions(slugRef);
 
   const urlPrefix = useMemo(() => {
     let origin = globalThis.window ? globalThis.window.origin : "";
-    if (origin.length > 9) {
-      origin = "..." + origin.substring(origin.length - 9, origin.length);
-    }
-    return origin;
+    return origin + "/shared";
   }, []);
 
   const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
@@ -644,7 +641,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
       >
         <div className="grid grid-cols-12 gap-4 min-h-[80vh]">
           <div className="col-span-12 sticky top-4 z-2 flex flex-row items-center justify-end gap-2 rounded-md border border-input bg-white/40 backdrop-blur-lg px-2 py-1">
-            <div className="grow">
+            <div className="grow overflow-hidden">
               {header}
             </div>
             <Button
@@ -656,9 +653,10 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
               }}>
               {
                 saving ? <>
-                  Save this collection
+                  Saving
+                  <Loader2 className="size-4 animate-spin" />
                 </> : <>
-                  Save this collection
+                  Save
                   <Save className="size-4" /></>
               }
             </Button>
@@ -726,37 +724,6 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                     />
                   </div>
                   <div className='space-y-2'>
-                    <Label className='popover-foreground'>Customize the link</Label>
-                    <div className="relative flex flex-row items-center gap-2 border border-input shadow-sm rounded-md">
-                      <span ref={slugRef} className='text-sm text-nowrap opacity-60 absolute top-0 left-0 bottom-0 px-2 flex flex-row items-center justify-start'>{urlPrefix}/shared/</span>
-                      <Input
-                        value={page.slug || ''}
-                        onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
-                        placeholder="my-awesome-tag"
-                        style={{
-                          paddingLeft: `${dimensions.dimensions?.width}px`
-                        }}
-                        className={
-                          cn(
-                            "shadow-none",
-                            "bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0 pr-10 border-0",
-                            slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
-                          )
-                        }
-                      />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                        {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
-                        {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
-                        {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
-                      </div>
-                    </div>
-                    {slugMessage && (
-                      <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
-                        {slugMessage}
-                      </p>
-                    )}
-                  </div>
-                  <div className='space-y-2'>
                     <Label>What resources does it contain ?</Label>
                     <Textarea
                       value={page.description || ''}
@@ -772,7 +739,6 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
               </div>
             </div>
           </div>
-
           <div className="col-span-12 lg:col-span-8 space-y-4">
             <div className="w-full space-y-4 bg-card p-4 rounded-md shadow-md border border-input">
               <div className="w-full flex flex-row items-center justify-between">
@@ -888,6 +854,52 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
             </div>
           </div>
 
+          <div className="col-span-12">
+            <div className='space-y-2'>
+              <Label className='popover-foreground'>Customize the link</Label>
+              <div className="relative flex flex-row items-center gap-2 border border-input rounded-md">
+                <div
+                  ref={slugRef}
+                  className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start'>
+                  <span
+                    className='text-sm md:text-base text-nowrap truncate opacity-60'
+                    style={{ direction: "rtl" }}>
+                    {urlPrefix}
+                  </span>
+                  <span className='text-sm md:text-base text-nowrap truncate opacity-60'>/</span>
+                </div>
+                <Input
+                  value={page.slug || ''}
+                  onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
+                  placeholder="my-awesome-tag"
+                  style={{
+                    paddingLeft: `${dimensions.dimensions?.width}px`
+                  }}
+                  className={
+                    cn(
+                      "shadow-none",
+                      "md:text-base bg-white/10 placeholder:text-neutral-400 focus-visible:ring-0 pr-10 border-0",
+                      slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                    )
+                  }
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                  {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
+                  {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
+                  {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
+                </div>
+              </div>
+              {slugMessage && (
+                <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
+                  {slugMessage}
+                </p>
+              )}
+              <p className="text-sm text-muted-foreground">
+                Your collection will be accessible at <a href={`${urlPrefix}/${page.slug}`} target="_blank" className="underline text-blue-500">{urlPrefix}/{page.slug}</a>
+              </p>
+            </div>
+          </div>
+
           {settings && <div className="col-span-12">
             <SettingsArea
               collection={collection}
@@ -897,7 +909,6 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
             />
           </div>
           }
-
         </div>
       </DndContext >
 
