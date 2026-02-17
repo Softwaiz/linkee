@@ -11,12 +11,12 @@ export default function CreateCollectionPage() {
         header={
           <div className="w-full flex flex-row items-center justify-start gap-1">
             <Page.BackButton />
-            <div className="flex flex-row items-center justify-start gap-1 text-foreground">
+            <div className="grow overflow-hidden flex flex-row items-center justify-start gap-1 text-foreground">
               <span
-                className="p-4">
+                className="p-4 hidden md:block">
                 <LayersPlus size={21} />
               </span>
-              <span className="text-lg">Create your collection</span>
+              <span className="text-base md:text-lg truncate text-nowrap">Create your collection</span>
             </div>
           </div>
         }
