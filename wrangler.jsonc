@@ -42,7 +42,7 @@
 	},
 	"r2_buckets": [
 		{
-			"bucket_name": "Linkits",
+			"bucket_name": "linkee",
 			"binding": "R2"
 		}
 	],
