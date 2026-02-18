@@ -28,7 +28,7 @@ export default function Home(props: RequestInfo) {
           <div className="flex items-center gap-2">
             <Logo className='text-primary-500' />
             <span className="text-2xl font-bold bg-linear-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-              Linkee
+              Linkits
             </span>
           </div>
           <Link href='/signin' className="px-6 py-2 bg-primary-500 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all duration-200">
@@ -98,7 +98,7 @@ export default function Home(props: RequestInfo) {
         <div className="text-center mb-12">
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">
             <span className="bg-linear-to-r from-blue-600 to-primary-600 bg-clip-text text-transparent">
-              How People Use Linkee
+              How People Use Linkits
             </span>
           </h2>
         </div>

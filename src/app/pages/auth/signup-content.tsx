@@ -75,7 +75,7 @@ export default function SignupContent() {
                                 aria-hidden={true}
                             />
                             <div className="flex flex-col items-center justify-center">
-                                <h1 className="text-lg">Linkee</h1>
+                                <h1 className="text-lg">Linkits</h1>
                                 <p className="mt-2 text-center text-sm text-foreground dark:text-foreground opacity-75">
                                     Create your account
                                 </p>

@@ -18,7 +18,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
 
   return <Page.Root>
     <Page.Header.Custom container className="justify-between">
-      <div className="grow flex flex-row items-center justify-start gap-2">
+      <div className="grow flex flex-row items-center justify-start gap-2 overflow-hidden">
         <div className="p-4">
           <Home size={21} />
         </div>

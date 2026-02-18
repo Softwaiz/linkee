@@ -25,9 +25,9 @@ export default async function DiscoverPage(props: RequestInfo) {
 
   return <Page.Root>
     <Page.Header.Custom container className="justify-between">
-      <div className="grow flex flex-row items-center justify-start gap-2">
+      <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
         <Page.BackButton />
-        <div className="grow flex flex-row items-center justify-start gap-1">
+        <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
           <div className="p-2">
             <Lightbulb size={21} />
           </div>

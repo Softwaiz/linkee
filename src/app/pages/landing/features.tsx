@@ -10,7 +10,7 @@ export default function WhatYouCanDo() {
         <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 <span className="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Why Linkee?
+                    Why Linkits?
                 </span>
             </h2>
         </div>
@@ -32,7 +32,7 @@ export default function WhatYouCanDo() {
                 {
                     icon: Share2,
                     title: "Share Instantly",
-                    description: "Send a single Linkee URL instead of a dozen messages.",
+                    description: "Send a single Linkits URL instead of a dozen messages.",
                     gradient: "from-green-500 to-emerald-500"
                 },
                 {

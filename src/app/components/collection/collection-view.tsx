@@ -1,4 +1,10 @@
+import { Collection } from '@db/index';
 import { CollectionActions } from './collection-actions'
+import { SectionPreview } from './section-preview';
+import { CollectionProfile } from './collection-profile';
+import { Button } from '../ui/button';
+import { Link } from '../link';
+import { Layers, Pencil } from 'lucide-react';
 
 interface CollectionViewProps {
   collection: Collection;

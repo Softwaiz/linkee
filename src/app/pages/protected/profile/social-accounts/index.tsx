@@ -17,7 +17,7 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
                 Social accounts
             </h6>
             <p className="text-sm">
-                Connect to your linkee account with your other social profiles.
+                Connect to your Linkits account with your other social profiles.
             </p>
         </div>
         <div className="w-full">
@@ -25,7 +25,7 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
                 !googleAccount ? <div className="w-full flex flex-row items-center justify-start gap-2">
                     <div className="grow flex flex-col items-start justify-center">
                         <p className="font-bold">Google</p>
-                        <p className="text-sm opacity-75">Connect your Google account with Linkee.</p>
+                        <p className="text-sm opacity-75">Connect your Google account with Linkits.</p>
                     </div>
                     <Button
                         size="sm"
@@ -36,11 +36,14 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
                         <ArrowRight />
                     </Button>
                 </div> : <div className="w-full flex flex-row items-center justify-start gap-2">
-                    <div className="grow flex flex-col items-start justify-center">
-                        <p className="font-bold">Google <span className="bg-green-500 text-green-100 p-0.5 rounded-full inline-flex">
-                            <Check className="size-4 text-inherit" />
-                        </span> </p>
-                        <p className="text-sm opacity-75">Connected as <span className="text-xs border border-input px-1 py-0.5 rounded-sm">{googleAccount.email}</span></p>
+                    <div className="grow overflow-hidden flex flex-col items-start justify-center">
+                        <p className="font-bold">
+                            Google
+                            <span className="bg-green-500 text-green-100 p-0.5 rounded-full inline-flex">
+                                <Check className="size-4 text-inherit" />
+                            </span>
+                        </p>
+                        <p className="text-sm opacity-75 text-nowrap truncate"><span className="text-xs border border-input px-1 py-0.5 rounded-sm">{googleAccount.email}</span></p>
                     </div>
                 </div>
             }

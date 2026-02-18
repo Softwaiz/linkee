@@ -39,7 +39,7 @@ export default async function EditCollectionPage({ ctx, params, request }: Reque
     }
 
     return <>
-        <title>{`${collection?.label} - Linkee`}</title>
+        <title>{`${collection?.label} - Linkits`}</title>
         <meta name="description" content={collection?.description} />
         <Page.Root>
             <Page.Content container>

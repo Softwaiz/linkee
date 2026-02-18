@@ -18,14 +18,16 @@ export default async function ProfilePage({ ctx }: { ctx: DefaultAppContext }) {
 
     return <Page.Root>
         <Page.Header.Custom container className="justify-between">
-            <div className="grow flex flex-row items-center justify-start gap-2">
+            <div className="grow flex flex-row items-center justify-start gap-2 overflow-hidden">
                 <BackButton />
-                <Page.Title className="flex flex-row items-center justify-start gap-4">
+                <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
                     <span className="inline">
                         <User size={21} />
                     </span>
-                    My profile
-                </Page.Title>
+                    <Page.Title>
+                        My profile
+                    </Page.Title>
+                </div>
             </div>
         </Page.Header.Custom>
         <Page.Content container className="space-y-4">

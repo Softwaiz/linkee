@@ -1,10 +1,22 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "linkee",
+	"name": "linkits",
 	"main": "src/worker.tsx",
 	"compatibility_date": "2025-08-21",
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"routes": [
+		{
+			"pattern": "linkits.xyz/*",
+			"zone_name": "linkits.xyz",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.linkits.xyz/*",
+			"zone_name": "www.linkits.xyz",
+			"custom_domain": true
+		}
 	],
 	"assets": {
 		"binding": "ASSETS",
@@ -36,7 +48,7 @@
 	],
 	"vars": {
 		"R2_PUBLIC_URL": "/medias",
-		"GOOGLE_AUTH_RETURN_URL": "https://linkee.maxcm.workers.dev/signin/after/google",
-		"GOOGLE_CONNECT_RETURN_URL": "https://linkee.maxcm.workers.dev/profile/connect/google"
+		"GOOGLE_AUTH_RETURN_URL": "https://linkits.maxcm.workers.dev/signin/after/google",
+		"GOOGLE_CONNECT_RETURN_URL": "https://linkits.maxcm.workers.dev/profile/connect/google"
 	}
 }

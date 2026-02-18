@@ -69,7 +69,7 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
     const selectedImage = board.picture;
 
     return <>
-        <title>{`${board?.label} - Linkee`}</title>
+        <title>{`${board?.label} - Linkits`}</title>
         <meta name="description" content={board.description} />
         {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
         <Header />

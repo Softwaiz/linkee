@@ -10,6 +10,7 @@ function Custom({ container, children, className, ...props }: PropsWithChildren<
         <div className={cn(
             "page-header",
             container ? "container mx-auto" : "px-4",
+            "overflow-hidden",
             "w-full min-h-14 flex flex-row items-center justify-start gap-2 bg-background/50 sticky z-50 top-0 left-0 backdrop-blur-lg",
             className
         )}
@@ -26,7 +27,7 @@ interface DefaultHeaderProps {
 
 function Default({ title, hasBackAction = true, children }: PropsWithChildren<DefaultHeaderProps>) {
     return <Custom container className="justify-between">
-        <div className="grow flex flex-row items-center justify-start gap-1">
+        <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
             {
                 hasBackAction && <Button
                     size="icon-sm"
