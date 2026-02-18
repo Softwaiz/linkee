@@ -8,16 +8,18 @@
 	],
 	"routes": [
 		{
-			"pattern": "linkits.xyz/*",
+			"pattern": "linkits.xyz",
 			"zone_name": "linkits.xyz",
 			"custom_domain": true
 		},
 		{
-			"pattern": "www.linkits.xyz/*",
+			"pattern": "www.linkits.xyz",
 			"zone_name": "www.linkits.xyz",
 			"custom_domain": true
 		}
 	],
+	"workers_dev": true,
+	"preview_urls": false,
 	"assets": {
 		"binding": "ASSETS",
 	},
@@ -48,7 +50,7 @@
 	],
 	"vars": {
 		"R2_PUBLIC_URL": "/medias",
-		"GOOGLE_AUTH_RETURN_URL": "https://linkits.maxcm.workers.dev/signin/after/google",
-		"GOOGLE_CONNECT_RETURN_URL": "https://linkits.maxcm.workers.dev/profile/connect/google"
+		"GOOGLE_AUTH_RETURN_URL": "https://linkits.xyz/signin/after/google",
+		"GOOGLE_CONNECT_RETURN_URL": "https://linkits.xyz/profile/connect/google"
 	}
 }
