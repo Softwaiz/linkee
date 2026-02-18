@@ -14,7 +14,7 @@
 		},
 		{
 			"pattern": "www.linkits.xyz",
-			"zone_name": "www.linkits.xyz",
+			"zone_name": "linkits.xyz",
 			"custom_domain": true
 		}
 	],
