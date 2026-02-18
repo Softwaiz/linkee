@@ -628,11 +628,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
 
   const urlPrefix = useMemo(() => {
     let origin = globalThis.window ? globalThis.window.origin : "";
-<<<<<<< dev
     return origin + "/shared/";
-=======
-    return origin + "/shared";
->>>>>>> main
   }, []);
 
   const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
@@ -649,11 +645,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-12 gap-4 min-h-[80vh]">
-<<<<<<< dev
           <div className="col-span-12 sticky top-0 z-2 border-b border-input flex flex-row items-center justify-end gap-2 bg-white/40 backdrop-blur-lg px-1 py-0.5">
-=======
-          <div className="col-span-12 sticky top-4 z-2 flex flex-row items-center justify-end gap-2 rounded-md border border-input bg-white/40 backdrop-blur-lg px-2 py-1">
->>>>>>> main
             <div className="grow overflow-hidden">
               {header}
             </div>
@@ -754,43 +746,10 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                 </div>
               </div>
             </div>
-<<<<<<< dev
           </div>
 
           <div className="col-span-12 lg:col-span-4 space-y-4 bg-card p-4 rounded-md border border-input">
             <div className="w-full space-y-4">
-=======
-            <div className="relative w-full bg-card text-foreground space-y-4">
-              <div className="relative z-1 w-full min-h-full px-4 py-8 space-y-4">
-                <div className="space-y-8">
-                  <div className='space-y-2'>
-                    <Label className='popover-foreground'>Name this collection</Label>
-                    <Input
-                      value={page.label}
-                      onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
-                      placeholder="Page Title"
-                      className="bg-white/10 text-lg placeholder:text-muted-foreground focus-visible:ring-0"
-                    />
-                  </div>
-                  <div className='space-y-2'>
-                    <Label>What resources does it contain ?</Label>
-                    <Textarea
-                      value={page.description || ''}
-                      onChange={(e) =>
-                        setPage((prev) => ({ ...prev, description: e.target.value }))
-                      }
-                      placeholder="Add a description for your page..."
-                      className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
-                      rows={6}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-span-12 lg:col-span-8 space-y-4">
-            <div className="w-full space-y-4 bg-card p-4 rounded-md shadow-md border border-input">
->>>>>>> main
               <div className="w-full flex flex-row items-center justify-between">
                 <h4>Groups in this collection</h4>
                 <Button
