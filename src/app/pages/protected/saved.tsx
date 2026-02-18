@@ -22,14 +22,16 @@ export default async function SavedCollections(props: RequestInfo) {
 
     return <Page.Root>
         <Page.Header.Custom container className="justify-between">
-            <div className="grow flex flex-row items-center justify-start gap-2">
+            <div className="grow flex flex-row items-center justify-start gap-2 overflow-hidden">
                 <BackButton />
-                <PageTitle className="flex flex-row items-center justify-start gap-4">
+                <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
                     <span className="inline">
                         <Heart size={21} />
                     </span>
-                    Collections you saved
-                </PageTitle>
+                    <PageTitle>
+                        Collections you saved
+                    </PageTitle>
+                </div>
             </div>
             <div>
                 <Button

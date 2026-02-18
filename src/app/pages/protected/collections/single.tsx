@@ -35,7 +35,7 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
     }
 
     return <>
-        <title>{`${board?.label} - Linkee`}</title>
+        <title>{`${board?.label} - Linkits`}</title>
         <meta name="description" content={board.description} />
         <Page.Root>
             <Page.Header.Custom container className="justify-between">

@@ -12,10 +12,10 @@ export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Linkee - AI-Powered Curation with Soul, Speed, and an Edge</title>
-      <meta name="description" content="Linkee is the AI curation agent that organizes the internet with sub-second speed. Curate podcasts, articles, and resources with creative intelligence." />
+      <title>Linkits - AI-Powered Curation with Soul, Speed, and an Edge</title>
+      <meta name="description" content="Linkits is the AI curation agent that organizes the internet with sub-second speed. Curate podcasts, articles, and resources with creative intelligence." />
       <meta property="og:type" content="website" />
-      <meta property="og:title" content="Linkee - AI-Powered Curation Agent" />
+      <meta property="og:title" content="Linkits - AI-Powered Curation Agent" />
       <meta property="og:description" content="Curation with Soul, Speed, and an Edge. Organize the internet in milliseconds." />
       <meta name="twitter:card" content="summary_large_image" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />

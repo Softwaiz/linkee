@@ -26,8 +26,8 @@ export default async function PublicProfilePage({ params }: RequestInfo) {
         .execute() as unknown as Collection[];
 
     return <div className="min-h-screen bg-background pb-20">
-        <title>{`${user.firstName} ${user.lastName}} - Linkee`}</title>
-        <meta name="description" content={`${user.alias} is on Linkee. Look at one of its ${collections.length} collections, or follow him for more !`} />
+        <title>{`${user.firstName} ${user.lastName}} - Linkits`}</title>
+        <meta name="description" content={`${user.alias} is on Linkits. Look at one of its ${collections.length} collections, or follow him for more !`} />
         {user.image && <link rel="icon" href={user.image} type="image/x-icon" />}
         <Header />
         <div className="w-full py-16">

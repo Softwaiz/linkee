@@ -20,7 +20,7 @@ export function EditorHeader() {
           </Button>
           <div className="h-5 w-px bg-border" />
           <span className="text-sm font-medium text-foreground">
-            Linkee
+            Linkits
           </span>
         </div>
         <div className="flex items-center gap-2">

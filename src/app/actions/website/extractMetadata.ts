@@ -12,7 +12,7 @@ export async function extractMetadata(info: RequestInfo) {
 
         const response = await fetch(body.url, {
             headers: {
-                "User-Agent": "Linkee-Metadata-Fetcher/1.0"
+                "User-Agent": "Linkits-Metadata-Fetcher/1.0"
             }
         });
 

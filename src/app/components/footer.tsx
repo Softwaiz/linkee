@@ -5,7 +5,7 @@ export function Footer() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
                     <div className="col-span-2 md:col-span-1">
                         <a href="/" className="text-xl font-bold tracking-tight">
-                            Linkee
+                            Linkits
                         </a>
                         <p className="text-sm text-gray-500">
                             Organize your links into smart collections.
@@ -73,7 +73,7 @@ export function Footer() {
 
                 <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-sm text-muted-foreground">
-                        &copy; {new Date().getFullYear()} Linkee. All rights reserved.
+                        &copy; {new Date().getFullYear()} Linkits. All rights reserved.
                     </p>
                     <p className="text-sm text-muted-foreground">
                         Built on the edge.

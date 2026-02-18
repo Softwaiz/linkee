@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { useState, useEffect } from "react"
+import { useState, useEffect, PropsWithChildren } from "react"
 import { CollectionSettingsInput } from "@/validations/collection/create"
 import { Collection } from "@db/index"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
+import { Eye } from "lucide-react"
 
 interface SettingsAreaProps {
     collection?: Collection
@@ -13,7 +14,7 @@ interface SettingsAreaProps {
     onDeleteCollection?(): void;
 }
 
-export function SettingsArea({ hasDangerZone, collection, settings: initialSettings, onSettingsUpdate, onDeleteCollection }: SettingsAreaProps) {
+export function SettingsArea({ children, hasDangerZone, collection, settings: initialSettings, onSettingsUpdate, onDeleteCollection }: PropsWithChildren<SettingsAreaProps>) {
     const [settings, setSettings] = useState<CollectionSettingsInput>(initialSettings)
 
     useEffect(() => {
@@ -31,14 +32,17 @@ export function SettingsArea({ hasDangerZone, collection, settings: initialSetti
     }
 
     return (
-        <div className="w-full">
-            <div className="flex-1 overflow-y-auto space-y-4">
+        <div className="w-full bg-card border p-4 rounded-md">
+            <div className="flex-1 space-y-4">
                 <div className="space-y-4">
                     <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Visibility & Access</h4>
 
-                    <div className="flex flex-col items-start justify-start gap-4 rounded-lg border p-4">
+                    <div className="flex flex-col items-start justify-start gap-4 rounded-lg">
                         <div className="space-y-0.5">
-                            <Label>Visibility</Label>
+                            <div className="flex flex-row items-center justify-start gap-1">
+                                <Eye className="size-4" />
+                                <Label>Visibility</Label>
+                            </div>
                             <div className="text-sm text-muted-foreground">
                                 Who can see this collection?
                             </div>
@@ -85,6 +89,7 @@ export function SettingsArea({ hasDangerZone, collection, settings: initialSetti
                         </RadioGroup>
                     </div>
                 </div>
+                {children}
                 {hasDangerZone && onDeleteCollection && <div className="rounded-lg border border-destructive/50 bg-destructive/5 p-4">
                     <h4 className="font-medium text-destructive mb-4">Danger Zone</h4>
                     <div className="space-y-4">

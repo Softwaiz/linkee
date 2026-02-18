@@ -13,7 +13,7 @@ export function Header() {
             <div className="container mx-auto h-16 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
                     <Logo />
-                    Linkee
+                    Linkits
                 </Link>
 
                 <nav className="hidden md:flex items-center gap-8">

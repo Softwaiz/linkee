@@ -62,7 +62,7 @@ export function AppBar({ initialQuery, user, search }: ProtectedHeaderProps) {
                     <div className="mr-4 flex">
                         <a className="mr-6 flex items-center space-x-2" href="/home">
                             <Logo />
-                            <span className="font-bold inline-block">Linkee</span>
+                            <span className="font-bold inline-block">Linkits</span>
                         </a>
                     </div>
                     <div id="home-search-container" className="h-full grow flex flex-col items-center justify-center">
@@ -128,7 +128,7 @@ export function AppBar({ initialQuery, user, search }: ProtectedHeaderProps) {
                 <SidebarHeader>
                     <div className="flex flex-row items-center justify-start gap-2">
                         <Logo />
-                        <span>Linkee</span>
+                        <span>Linkits</span>
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
