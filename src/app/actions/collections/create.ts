@@ -63,6 +63,7 @@ export async function createCollection(page: Partial<Collection> & { settings?: 
     return {
         success: true,
         message: `Collection ${createdItem?.label} created !`,
+        path: `/collections/${createdItem?.slug || createdItem?.id}`,
         created: createdItem
     }
 

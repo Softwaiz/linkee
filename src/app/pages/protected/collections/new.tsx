@@ -2,8 +2,27 @@
 import { PageEditor } from '@/components/editor/page-editor'
 import Page from '@/components/page'
 import { LayersPlus } from 'lucide-react'
+import { useMemo } from 'react'
 
 export default function CreateCollectionPage() {
+
+  const prefillLink = useMemo(() => {
+    if (!globalThis.window) return undefined
+    const params = new URLSearchParams(window.location.search)
+    const prefill = params.get('prefill')
+    if (!prefill) return undefined
+    try {
+      return JSON.parse(decodeURIComponent(prefill)) as {
+        url: string
+        title: string
+        description?: string
+        image?: string
+        favicon?: string
+      }
+    } catch {
+      return undefined
+    }
+  }, [])
 
   return <Page.Root>
     <Page.Content container>
@@ -23,6 +42,7 @@ export default function CreateCollectionPage() {
         settings={{
           visibility: 'public',
         }}
+        prefillLink={prefillLink}
       />
     </Page.Content>
   </Page.Root>

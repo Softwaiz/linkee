@@ -12,12 +12,30 @@ export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
     <head>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Linkits - AI-Powered Curation with Soul, Speed, and an Edge</title>
-      <meta name="description" content="Linkits is the AI curation agent that organizes the internet with sub-second speed. Curate podcasts, articles, and resources with creative intelligence." />
+
+      {/* Primary SEO */}
+      <title>Linkits — Curate, Organize & Share Link Collections</title>
+      <meta name="description" content="Build beautiful link kits. Organize links by topic, keep private notes, or publish curated pages that get indexed by search engines. Your links, your way." />
+      <meta name="keywords" content="link curation, link collection, bookmark organizer, curated links, link sharing, resource hub, link kit, link page, personal links, topic links" />
+      <link rel="canonical" href="https://linkits.xyz" />
+
+      {/* OpenGraph */}
       <meta property="og:type" content="website" />
-      <meta property="og:title" content="Linkits - AI-Powered Curation Agent" />
-      <meta property="og:description" content="Curation with Soul, Speed, and an Edge. Organize the internet in milliseconds." />
+      <meta property="og:site_name" content="Linkits" />
+      <meta property="og:title" content="Linkits — Curate, Organize & Share Link Collections" />
+      <meta property="og:description" content="Build beautiful link kits. Organize links by topic, keep private notes, or publish curated pages that get indexed by search engines." />
+      <meta property="og:url" content="https://linkits.xyz" />
+      <meta property="og:image" content="https://linkits.xyz/og-image.png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Linkits — Curate, Organize & Share Link Collections" />
+
+      {/* Twitter / X */}
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@linkits" />
+      <meta name="twitter:title" content="Linkits — Curate, Organize & Share Link Collections" />
+      <meta name="twitter:description" content="Build beautiful link kits. Organize links by topic, keep private notes, or publish curated pages that get indexed by search engines." />
+      <meta name="twitter:image" content="https://linkits.xyz/og-image.png" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href="/fonts/lufga/style.css" />

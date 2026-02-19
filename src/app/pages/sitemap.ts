@@ -11,7 +11,7 @@ export default async function Sitemap(params: RequestInfo) {
     const baseUrl = new URL(params.request.url).origin;
     const urls = collections.map(c =>
         `<url>
-    <loc>${baseUrl}/shared/${c.slug ?? c.id}</loc>
+    <loc>${baseUrl}/shared/${c.slug || c.id}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
 </url>

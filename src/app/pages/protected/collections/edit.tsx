@@ -33,7 +33,7 @@ export default async function EditCollectionPage({ ctx, params, request }: Reque
     if (ctx.user?.id !== collection.userId) {
         return new Response("Not allowed", {
             headers: {
-                'Location': new URL(request.url).origin + `/collections/${collection.slug ?? collection.id}`
+                'Location': new URL(request.url).origin + `/collections/${collection.slug || collection.id}`
             }
         })
     }

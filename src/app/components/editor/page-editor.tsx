@@ -87,10 +87,19 @@ const initialPage: () => Partial<CollectionInput> = () => ({
   slug: '',
 })
 
-export function PageEditor({ header, collection, settings: initialSettings }: {
+export type PrefillLink = {
+  url: string
+  title: string
+  description?: string
+  image?: string
+  favicon?: string
+}
+
+export function PageEditor({ header, collection, settings: initialSettings, prefillLink }: {
   header?: ReactNode,
   collection?: Collection,
-  settings?: Partial<CollectionSettings>
+  settings?: Partial<CollectionSettings>,
+  prefillLink?: PrefillLink
 }) {
 
   const cachedPage = useMemo(() => {
@@ -107,11 +116,34 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
     if (collection) {
       return collection as CollectionInput;
     }
-    if (globalThis.localStorage) {
+    if (!prefillLink && globalThis.localStorage) {
       let previous = cachedPage.get();
       if (previous) {
         return JSON.parse(previous) as Partial<CollectionInput>;
       }
+    }
+    if (prefillLink) {
+      return {
+        ...initialPage(),
+        nodes: [
+          {
+            id: generateId(),
+            title: 'Links',
+            description: 'Your curated links',
+            items: [
+              {
+                id: generateId(),
+                type: 'link' as const,
+                url: prefillLink.url,
+                title: prefillLink.title || prefillLink.url,
+                description: prefillLink.description || '',
+                image: prefillLink.image,
+                favicon: prefillLink.favicon,
+              },
+            ],
+          },
+        ],
+      };
     }
     return initialPage();
   });
@@ -521,7 +553,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
               id: toastId,
               description: value.message,
               action: <Button onClick={() => {
-                navigate(`/collections/${value.updated?.slug ?? value.updated?.id}`);
+                navigate(value.path!);
               }}>View</Button>
             });
         }
@@ -584,17 +616,18 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
       settings: settings as any
     })
       .then((value) => {
+        console.log("post create:", value);
         if (value.success && value.created) {
+          cachedPage.clear()
           toast.success(
             "Saved !",
             {
               id: "collection.save",
               description: value.message,
               action: <Button onClick={() => {
-                navigate(`/collections/${value.created?.slug ?? value.created?.id}`);
+                navigate(value.path!);
               }}>View</Button>
             })
-          cachedPage.clear()
         }
         else {
           toast.error("Your collection was not saved.",

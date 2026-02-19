@@ -43,7 +43,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
           )}
         </div>
 
-        <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
+        <Link href={`/collections/${collection.slug || collection.id}`} className="flex flex-1 flex-col">
           <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {collection.label || 'Untitled Collection'}
           </h3>

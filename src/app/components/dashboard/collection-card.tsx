@@ -27,10 +27,10 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
 
   return (
     <div className="group relative flex flex-col rounded-xl border border-border bg-card overflow-hidden transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
-      {collection.picture && (
+      {collection.banner && (
         <div className="w-full aspect-video overflow-hidden">
           <img
-            src={collection.picture}
+            src={collection.banner}
             alt={collection.label}
             className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           />
@@ -55,13 +55,13 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+                <Link href={`/collections/${collection.slug || collection.id}`} className="flex items-center gap-2">
                   <ExternalLink className="size-4" />
                   Open
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/shared/${collection.slug ?? collection.id}`} className="flex items-center gap-2">
+                <Link href={`/shared/${collection.slug || collection.id}`} className="flex items-center gap-2">
                   <Share className="size-4" />
                   Share
                 </Link>
@@ -80,7 +80,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           </DropdownMenu>
         </div>
 
-        <Link href={`/collections/${collection.slug ?? collection.id}`} className="flex flex-1 flex-col">
+        <Link href={`/collections/${collection.slug || collection.id}`} className="flex flex-1 flex-col">
           <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
             {collection.label || 'Untitled Collection'}
           </h3>

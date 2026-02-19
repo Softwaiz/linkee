@@ -1,4 +1,5 @@
 import { CollectionsGrid } from '@/components/dashboard/collections-grid';
+import { LinkDropZone } from '@/components/dashboard/link-drop-zone';
 import { Link } from '@/components/link';
 import Page from '@/components/page';
 import { Button } from '@/components/ui/button';
@@ -39,11 +40,8 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
     </Page.Header.Custom>
 
     <Page.Content container>
+      <LinkDropZone collections={items} />
       <CollectionsGrid items={items} />
     </Page.Content>
   </Page.Root>
 }
-
-/*
-
-    */
