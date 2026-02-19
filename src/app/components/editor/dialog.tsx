@@ -51,7 +51,7 @@ export function SectionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{section ? 'Edit Section' : 'Add Section'}</DialogTitle>
+          <DialogTitle>{section ? 'Edit Topic' : 'Add Topic'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
@@ -68,7 +68,7 @@ export function SectionDialog({
             <Label htmlFor="section-description">Description (optional)</Label>
             <Textarea
               id="section-description"
-              placeholder="A brief description of this section..."
+              placeholder="A brief description of this topic..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
@@ -79,7 +79,7 @@ export function SectionDialog({
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>{section ? 'Save' : 'Add Section'}</Button>
+          <Button onClick={handleSave}>{section ? 'Save' : 'Add Topic'}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
