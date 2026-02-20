@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
 import { Home, Plus } from 'lucide-react';
 import { DefaultAppContext } from 'rwsdk/worker';
+import { motion } from "motion/react";
 
 export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext }) {
   const user = ctx.user!;
@@ -38,6 +39,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
         </Button>
       </div>
     </Page.Header.Custom>
+
 
     <Page.Content container>
       <LinkDropZone collections={items} />

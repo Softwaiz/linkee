@@ -7,6 +7,7 @@ import { Collection } from '@db/index'
 import { LinkDropDialog } from './link-drop-dialog'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
+import { AnimatePresence, motion } from 'motion/react'
 
 export interface ExtractedMetadata {
     url: string
@@ -174,71 +175,88 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
     }, [])
 
     return (
-        <div className='w-full space-y-4'>
-            <div className="w-full flex flex-col items-center justify-center py-10">
-                <div className="w-full max-w-lg flex flex-col items-center justify-center gap-8">
-                    <h1 className='font-display font-extrabold text-2xl text-center'>What did you find ?<br /> Collect it now.</h1>
-                    <div className="w-full flex items-center gap-2">
-                        <Input
-                            className='rounded-full h-16'
+        <motion.div
+            className='w-full space-y-4'
+            initial={{
+                opacity: 0,
+                y: 10
+            }}
+            animate={{
+                opacity: 1,
+                y: 0
+            }}>
+            <div className="w-full relative overflow-hidden flex flex-col items-center justify-center p-3 md:p-4 lg:p-12 rounded-md">
+                <div className="w-full absolute top-0 left-0">
+                    <div className="min-h-screen w-full relative bg-black">
+                        <div
+                            className="absolute inset-0 z-0"
+                            style={{
+                                background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249, 115, 22, 0.25), transparent 70%), #000000",
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className="relative w-full flex flex-col items-start justify-center gap-4">
+                    <div className="flex flex-col items-start justify-start gap-0.5">
+                        <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-white'>Save your inspiration now.</h1>
+                        <p className='text-white/80 text-xs md:text-sm lg:text-base opacity-75'>Don't let it fade away. Quickly save your links and access them from any device, where you need them.</p>
+                    </div>
+                    <div className="mt-4 w-full flex flex-col md:flex-row items-center bg-background/20 rounded-md md:rounded-full focus-within:ring-ring/50 focus-within:ring-[3px]">
+                        <input
+                            type="url"
+                            className='w-full px-4 placeholder:text-white/60 text-white/80 border-0 h-10 lg:h-12 shadow-sm focus:outline-none focus:ring-0 text-xs md:text-sm'
                             placeholder="Copy paste your new link here."
                             value={draftUrl}
                             onChange={(ev) => {
                                 setDraftUrl(ev.currentTarget.value);
+                            }}
+                            onKeyDown={(ev) => {
+                                if (ev.key === 'Enter') {
+                                    handleCollectDraft()
+                                }
                             }} />
-                        <Button
-                            className='rounded-full h-full'
-                            onClick={handleCollectDraft}>
-                            Save
-                            <ArrowRight />
-                        </Button>
+                        <motion.button
+                            layout
+                            onClick={handleCollectDraft}
+                            className={cn(
+                                'w-full md:w-auto rounded-b-md md:rounded-bl-none md:rounded-r-full bg-primary text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                !draftUrl && 'cursor-not-allowed',
+                                "h-10 lg:h-12 shadow-sm",
+                                "px-8 gap-2",
+                                "text-xs md:text-sm font-semibold"
+                            )}>
+                            <AnimatePresence>
+                                {isLoading ? (
+                                    <motion.div
+                                        key="resolving"
+                                        className='flex flex-row items-center justify-center gap-2'
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <span className='uppercase leading-relaxed'>Resolving</span>
+                                        <Loader2 className="size-6 lg:size-8 animate-spin" />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="stale"
+                                        className='flex flex-row items-center justify-center gap-2'
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <span className='uppercase leading-relaxed'>Save</span>
+                                        <ArrowRight className="size-4 lg:size-8" />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.button>
                     </div>
                 </div>
-            </div>
-            <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                className={cn(
-                    'relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-8 transition-all duration-300 cursor-default select-none',
-                    isDragOver
-                        ? 'border-accent bg-accent/10 scale-[1.01] shadow-lg shadow-accent/10'
-                        : 'border-border/60 bg-muted/30 hover:border-border hover:bg-muted/50',
-                    isLoading && 'opacity-70 pointer-events-none'
-                )}
-            >
-                {isLoading ? (
-                    <>
-                        <div className="flex size-11 items-center justify-center rounded-full bg-accent/10 text-accent">
-                            <Loader2 className="size-5 animate-spin" />
-                        </div>
-                        <p className="text-sm text-muted-foreground">Extracting link info…</p>
-                    </>
-                ) : (
-                    <>
-                        <div className={cn(
-                            'flex size-11 items-center justify-center rounded-full transition-colors duration-200',
-                            isDragOver
-                                ? 'bg-accent/20 text-accent'
-                                : 'bg-muted text-muted-foreground'
-                        )}>
-                            <Link2 className="size-5" />
-                        </div>
-                        <div className="text-center">
-                            <p className={cn(
-                                'text-sm font-medium transition-colors duration-200',
-                                isDragOver ? 'text-accent' : 'text-foreground'
-                            )}>
-                                Drop a link here
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Drag any URL to quickly add it to a collection
-                            </p>
-                        </div>
-                    </>
-                )}
-            </div>
 
+            </div>
             {metadata && (
                 <LinkDropDialog
                     open={dialogOpen}
@@ -249,6 +267,6 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                     collections={collections}
                 />
             )}
-        </div>
+        </motion.div>
     )
 }

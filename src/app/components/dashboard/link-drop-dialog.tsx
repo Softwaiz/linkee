@@ -132,28 +132,30 @@ export function LinkDropDialog({
 
     useEffect(() => {
         if (open) {
-            searchDelay.delay(() => {
+            searchDelay.delay(async () => {
                 setSearching(true);
-                return searchCollections(search)
+                return await searchCollections(search)
                     .then((result) => {
                         if (result.items) {
                             setResult(result.items);
                         }
                     })
                     .catch((err) => {
-
                     })
                     .finally(() => {
                         setSearching(false);
                     })
             })
         }
+        return () => {
+            searchDelay.cancel();
+        }
     }, [open, search]);
 
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-md space-y-4">
+            <DialogContent className="sm:max-w-md space-y-4 max-h-[60vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {step === 'create-new' ? 'Link captured!' : 'Add to collection'}
@@ -191,106 +193,125 @@ export function LinkDropDialog({
                 </div>
 
                 <div className='w-full space-y-4'>
-                    <h2>
-                        What's next ?
-                    </h2>
-
-                    <motion.div className='w-full space-y-4' layout>
-                        <Button
-                            variant="default"
-                            className="w-full justify-start gap-2 h-auto py-3"
-                            onClick={handleCreateNewCollection}
-                        >
-                            <FolderPlus className="size-4 shrink-0" />
-                            <div className="text-left">
-                                <p className="text-sm font-medium">Create a new collection</p>
-                                <p className="text-xs opacity-70">Start a collection with this link</p>
-                            </div>
-                        </Button>
-                        <div className='w-full flex flex-row items-center justify-center gap-2'>
-                            <span className="grow h-0.5 bg-border"></span>
-                            <span className="text-sm text-muted-foreground uppercase">or</span>
-                            <span className="grow h-0.5 bg-border"></span>
-                        </div>
-
-                        <div className="w-full space-y-4 pt-2">
-                            {/* Collection picker */}
-                            <div className="w-full space-y-2">
-                                <div className="w-full flex flex-row items-center justify-between">
-                                    <Label>Select a collection</Label>
-                                    <div className="basis-3/5 relative">
-                                        <Input
-                                            placeholder='Start typing a label'
-                                            value={search}
-                                            onChange={(ev) => {
-                                                setSearch(ev.currentTarget.value);
-                                            }} />
-                                        <motion.div>
-                                            <AnimatePresence>
-                                                {
-                                                    searching ? (
-                                                        <motion.span
-                                                            className='absolute right-2 top-1/2 -translate-y-1/2'
-                                                            initial={{
-                                                                y: -10,
-                                                                opacity: 0
-                                                            }}
-                                                            animate={{
-                                                                y: 0,
-                                                                opacity: 1
-                                                            }}
-                                                            exit={{
-                                                                y: -10,
-                                                                opacity: 0
-                                                            }}
-                                                        >
-                                                            <Loader2 className='size-4 text-muted-foreground animate-spin' />
-                                                        </motion.span>
-                                                    ) : (
-                                                        <motion.span
-                                                            className='absolute right-2 top-1/2 -translate-y-1/2'
-                                                            initial={{
-                                                                y: 10,
-                                                                opacity: 0
-                                                            }}
-                                                            animate={{
-                                                                y: 0,
-                                                                opacity: 1
-                                                            }}
-                                                            exit={{
-                                                                y: 10,
-                                                                opacity: 0
-                                                            }}>
-                                                            <Search className='size-4 text-muted-foreground' />
-                                                        </motion.span>
-                                                    )
-                                                }
-                                            </AnimatePresence>
-                                        </motion.div>
-                                    </div>
+                    <AnimatePresence>
+                        <h2>
+                            What's next ?
+                        </h2>
+                        <motion.div className='w-full space-y-4' layout>
+                            <Button
+                                variant="default"
+                                className="w-full justify-start gap-2 h-auto py-3"
+                                onClick={handleCreateNewCollection}
+                            >
+                                <FolderPlus className="size-4 shrink-0" />
+                                <div className="text-left">
+                                    <p className="text-sm font-medium">Create a new collection</p>
+                                    <p className="text-xs opacity-70">Start a collection with this link</p>
                                 </div>
+                            </Button>
+                            <div className='w-full flex flex-row items-center justify-center gap-2'>
+                                <span className="grow h-0.5 bg-border"></span>
+                                <span className="text-sm text-muted-foreground uppercase">or</span>
+                                <span className="grow h-0.5 bg-border"></span>
+                            </div>
 
-                                <motion.div className='w-full flex flex-col items-start justify-start gap-2 max-h-[200px] overflow-y-auto' layout>
-                                    <AnimatePresence>
-                                        {
-                                            result.map((item) => {
-                                                const selected = selectedCollectionId === item.id;
-
-                                                return <motion.button
-                                                    key={item.id}
-                                                    data-selected={selected}
-                                                    className={
-                                                        cn(
-                                                            'w-full flex flex-col items-start justify-start border border-input rounded-md px-3 py-2',
-                                                            selected && 'border-primary bg-primary/5'
+                            <div className="w-full space-y-4 pt-2">
+                                {/* Collection picker */}
+                                <div className="w-full space-y-2">
+                                    <div className="sticky top-0 w-full flex flex-row items-center justify-between bg-background">
+                                        <Label>Select a collection</Label>
+                                        <div className="basis-3/5 relative">
+                                            <Input
+                                                placeholder='Start typing'
+                                                value={search}
+                                                onChange={(ev) => {
+                                                    setSearch(ev.currentTarget.value);
+                                                }} />
+                                            <motion.div>
+                                                <AnimatePresence>
+                                                    {
+                                                        searching ? (
+                                                            <motion.span
+                                                                className='absolute right-2 top-1/2 -translate-y-1/2'
+                                                                initial={{
+                                                                    y: -10,
+                                                                    opacity: 0
+                                                                }}
+                                                                animate={{
+                                                                    y: 0,
+                                                                    opacity: 1
+                                                                }}
+                                                                exit={{
+                                                                    y: -10,
+                                                                    opacity: 0
+                                                                }}
+                                                            >
+                                                                <Loader2 className='size-4 text-muted-foreground animate-spin' />
+                                                            </motion.span>
+                                                        ) : (
+                                                            <motion.span
+                                                                className='absolute right-2 top-1/2 -translate-y-1/2'
+                                                                initial={{
+                                                                    y: 10,
+                                                                    opacity: 0
+                                                                }}
+                                                                animate={{
+                                                                    y: 0,
+                                                                    opacity: 1
+                                                                }}
+                                                                exit={{
+                                                                    y: 10,
+                                                                    opacity: 0
+                                                                }}>
+                                                                <Search className='size-4 text-muted-foreground' />
+                                                            </motion.span>
                                                         )
                                                     }
-                                                    onClick={() => {
-                                                        setSelectedCollectionId(item.id)
-                                                        setSelectedSectionId('')
-                                                        setIsCreatingSection(false)
-                                                        setNewSectionTitle('')
-                                                    }}
+                                                </AnimatePresence>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                    <motion.div className='w-full flex flex-col items-start justify-start gap-2' layout>
+                                        <AnimatePresence>
+                                            {
+                                                result.map((item) => {
+                                                    const selected = selectedCollectionId === item.id;
+
+                                                    return <motion.button
+                                                        key={item.id}
+                                                        data-selected={selected}
+                                                        className={
+                                                            cn(
+                                                                'w-full flex flex-col items-start justify-start border border-input rounded-md px-3 py-2',
+                                                                selected && 'border-primary bg-primary/5'
+                                                            )
+                                                        }
+                                                        onClick={() => {
+                                                            setSelectedCollectionId(item.id)
+                                                            setSelectedSectionId('')
+                                                            setIsCreatingSection(false)
+                                                            setNewSectionTitle('')
+                                                        }}
+                                                        initial={{
+                                                            opacity: 0,
+                                                            y: -10
+                                                        }}
+                                                        animate={{
+                                                            opacity: 1,
+                                                            y: 0
+                                                        }}
+                                                        exit={{
+                                                            opacity: 0,
+                                                            y: -10
+                                                        }}>
+                                                        <p className='text-sm text-foreground'>{item.label}</p>
+                                                        <p className='text-sm text-muted-foreground/50'>{item.description}</p>
+                                                    </motion.button>
+                                                })
+                                            }
+                                            {
+                                                result.length === 0 && <motion.div
+                                                    key="empty"
                                                     initial={{
                                                         opacity: 0,
                                                         y: -10
@@ -303,116 +324,116 @@ export function LinkDropDialog({
                                                         opacity: 0,
                                                         y: -10
                                                     }}>
-                                                    <p className='text-sm text-foreground'>{item.label}</p>
-                                                    <p className='text-sm text-muted-foreground/50'>{item.description}</p>
-                                                </motion.button>
-                                            })
-                                        }
-                                        {
-                                            result.length === 0 && <motion.div
-                                                key="empty"
-                                                initial={{
-                                                    opacity: 0,
-                                                    y: -10
-                                                }}
-                                                animate={{
-                                                    opacity: 1,
-                                                    y: 0
-                                                }}
-                                                exit={{
-                                                    opacity: 0,
-                                                    y: -10
-                                                }}>
-                                                <p className='text-sm text-muted-foreground'>No collections found matching "{search}"</p>
-                                            </motion.div>
-                                        }
-                                    </AnimatePresence>
-                                </motion.div>
-                            </div>
+                                                    <p className='text-sm text-muted-foreground'>No collections found matching "{search}"</p>
+                                                </motion.div>
+                                            }
+                                        </AnimatePresence>
+                                    </motion.div>
+                                </div>
 
-                            {/* Section picker */}
-                            {selectedCollection && (
-                                <div className="space-y-2">
-                                    <Label>Topic / Group</Label>
-                                    {!isCreatingSection ? (
-                                        <div className="space-y-2">
-                                            {sections.length > 0 && (
-                                                <Select
-                                                    value={selectedSectionId}
-                                                    onValueChange={setSelectedSectionId}
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select a topic" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {sections.map((s) => (
-                                                            <SelectItem key={s.id} value={s.id}>
-                                                                {s.title || 'Untitled section'}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            )}
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-xs gap-1"
-                                                onClick={() => setIsCreatingSection(true)}
-                                            >
-                                                <Plus className="size-3" />
-                                                Create a new topic
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-2">
-                                            <Input
-                                                value={newSectionTitle}
-                                                onChange={(e) => setNewSectionTitle(e.target.value)}
-                                                placeholder="New topic name"
-                                                autoFocus
-                                            />
-                                            {sections.length > 0 && (
+                                {/* Section picker */}
+                                {selectedCollection && (
+                                    <motion.div
+                                        className="space-y-2"
+                                        initial={{
+                                            opacity: 0,
+                                            y: -10
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            y: 0
+                                        }}
+                                        exit={{
+                                            opacity: 0,
+                                            y: -10
+                                        }}>
+                                        <Label>Topic / Group</Label>
+                                        {!isCreatingSection ? (
+                                            <div className="space-y-2">
+                                                {sections.length > 0 && (
+                                                    <Select
+                                                        value={selectedSectionId}
+                                                        onValueChange={setSelectedSectionId}
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select a topic" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {sections.map((s) => (
+                                                                <SelectItem key={s.id} value={s.id}>
+                                                                    {s.title || 'Untitled section'}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                )}
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="text-xs"
-                                                    onClick={() => {
-                                                        setIsCreatingSection(false)
-                                                        setNewSectionTitle('')
-                                                    }}
+                                                    className="text-xs gap-1"
+                                                    onClick={() => setIsCreatingSection(true)}
                                                 >
-                                                    Pick existing topic instead
+                                                    <Plus className="size-3" />
+                                                    Create a new topic
                                                 </Button>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <DialogFooter>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => setStep('create-new')}
-                                >
-                                    Back
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    disabled={
-                                        isSaving ||
-                                        !selectedCollectionId ||
-                                        (!isCreatingSection && !selectedSectionId) ||
-                                        (isCreatingSection && !newSectionTitle.trim())
-                                    }
-                                    onClick={handleConfirmAdd}
-                                >
-                                    {isSaving ? 'Adding…' : 'Add link'}
-                                </Button>
-                            </DialogFooter>
-                        </div>
-                    </motion.div>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                <Input
+                                                    value={newSectionTitle}
+                                                    onChange={(e) => setNewSectionTitle(e.target.value)}
+                                                    placeholder="New topic name"
+                                                    autoFocus
+                                                />
+                                                {sections.length > 0 && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-xs"
+                                                        onClick={() => {
+                                                            setIsCreatingSection(false)
+                                                            setNewSectionTitle('')
+                                                        }}
+                                                    >
+                                                        Pick existing topic instead
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
+
+                <DialogFooter>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                            setSelectedCollectionId('')
+                            setSelectedSectionId('')
+                            setIsCreatingSection(false)
+                            setNewSectionTitle('')
+                            handleOpenChange(false);
+                        }}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        size="sm"
+                        disabled={
+                            isSaving ||
+                            !selectedCollectionId ||
+                            (!isCreatingSection && !selectedSectionId) ||
+                            (isCreatingSection && !newSectionTitle.trim())
+                        }
+                        onClick={handleConfirmAdd}
+                    >
+                        {isSaving ? 'Adding…' : 'Add link'}
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )
