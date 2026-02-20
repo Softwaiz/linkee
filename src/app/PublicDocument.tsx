@@ -3,7 +3,6 @@ import customStyles from "../app/layouts/theme.css?url";
 import { PropsWithChildren } from "react";
 import { env } from "cloudflare:workers";
 import { RequestInfo } from "rwsdk/worker";
-import { IdentityProvider } from "./providers/identity";
 
 export const PublicDocument = ({
     children,
