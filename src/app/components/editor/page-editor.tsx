@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, PropsWithChildren, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -21,7 +21,7 @@ import {
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable'
-import { Plus, Layers, Save, GripVertical, Pen } from 'lucide-react'
+import { Plus, Layers, Save, GripVertical, Pen, Brush, Info, List, Eye, Lock } from 'lucide-react'
 import { SectionBlock } from './section-block'
 import { SectionDialog, LinkDialog, TextDialog } from './dialog'
 import { EditorHeader } from './header'
@@ -79,18 +79,27 @@ const initialPage: () => Partial<CollectionInput> = () => ({
   nodes: [
     {
       id: generateId(),
-      title: "Default group",
-      description: "This is the default group. your can change the name",
+      title: "First Topic",
+      description: "This is the first topic in the collection. You can add links to this topic by clicking the add link button.",
       items: []
     }
   ],
   slug: '',
 })
 
-export function PageEditor({ header, collection, settings: initialSettings }: {
+export type PrefillLink = {
+  url: string
+  title: string
+  description?: string
+  image?: string
+  favicon?: string
+}
+
+export function PageEditor({ header, collection, settings: initialSettings, prefillLink }: {
   header?: ReactNode,
   collection?: Collection,
-  settings?: Partial<CollectionSettings>
+  settings?: Partial<CollectionSettings>,
+  prefillLink?: PrefillLink
 }) {
 
   const cachedPage = useMemo(() => {
@@ -107,11 +116,34 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
     if (collection) {
       return collection as CollectionInput;
     }
-    if (globalThis.localStorage) {
+    if (!prefillLink && globalThis.localStorage) {
       let previous = cachedPage.get();
       if (previous) {
         return JSON.parse(previous) as Partial<CollectionInput>;
       }
+    }
+    if (prefillLink) {
+      return {
+        ...initialPage(),
+        nodes: [
+          {
+            id: generateId(),
+            title: 'Links',
+            description: 'Your curated links',
+            items: [
+              {
+                id: generateId(),
+                type: 'link' as const,
+                url: prefillLink.url,
+                title: prefillLink.title || prefillLink.url,
+                description: prefillLink.description || '',
+                image: prefillLink.image,
+                favicon: prefillLink.favicon,
+              },
+            ],
+          },
+        ],
+      };
     }
     return initialPage();
   });
@@ -521,7 +553,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
               id: toastId,
               description: value.message,
               action: <Button onClick={() => {
-                navigate(`/collections/${value.updated?.slug ?? value.updated?.id}`);
+                navigate(value.path!);
               }}>View</Button>
             });
         }
@@ -584,17 +616,18 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
       settings: settings as any
     })
       .then((value) => {
+        console.log("post create:", value);
         if (value.success && value.created) {
+          cachedPage.clear()
           toast.success(
             "Saved !",
             {
               id: "collection.save",
               description: value.message,
               action: <Button onClick={() => {
-                navigate(`/collections/${value.created?.slug ?? value.created?.id}`);
+                navigate(value.path!);
               }}>View</Button>
             })
-          cachedPage.clear()
         }
         else {
           toast.error("Your collection was not saved.",
@@ -668,98 +701,58 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
             </Button>
           </div>
 
-          <div className="col-span-12 lg:col-span-4 relative w-full bg-card rounded-md border border-input text-foreground space-y-4">
-            <div className="relative z-1 w-full min-h-full px-4 py-8 space-y-4">
-              <div className="space-y-8">
-                <div className='space-y-2'>
-                  <Label className='popover-foreground'>Name this collection</Label>
-                  <Input
-                    value={page.label}
-                    onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
-                    placeholder="Page Title"
-                    className="bg-white/10 text-lg placeholder:text-muted-foreground focus-visible:ring-0"
-                  />
-                </div>
-                <div className='space-y-2'>
-                  <Label>What resources does it contain ?</Label>
-                  <Textarea
-                    value={page.description || ''}
-                    onChange={(e) =>
-                      setPage((prev) => ({ ...prev, description: e.target.value }))
-                    }
-                    placeholder="Add a description for your page..."
-                    className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
-                    rows={6}
-                  />
-                </div>
-              </div>
+          <SectionCard className="col-span-12 w-full text-foreground">
+            <div className="w-full flex flex-row items-center justify-start">
+              <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+                <span className='text-muted-foreground inline-block pr-2'>
+                  <Info className="size-4" />
+                </span>
+                About this collection
+              </h1>
             </div>
-          </div>
-
-          <div className="col-span-12 lg:col-span-8 bg-card rounded-sm border">
-            <div className="w-full relative mb-16">
-
-              <div className='space-y-2 relative'>
-                <input
-                  hidden
-                  type="file"
-                  name=""
-                  id=""
-                  accept='image/png, image/webp, image/jpeg'
-                  ref={bannerInputRef}
-                  onChange={handleBannerChange} />
-                <img
-                  className='w-full h-60 aspect-video object-cover object-center rounded-md'
-                  src={selectedBanner.url ?? page.banner ?? initialPage().banner}
-                  alt="Banner image" />
-                <Button
-                  size="icon-sm"
-                  className='absolute top-4 right-4 rounded-full'
-                  onClick={() => {
-                    bannerInputRef.current?.click();
-                  }}>
-                  <Pen />
-                </Button>
-              </div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3">
-                <div className="rounded-lg overflow-hidden border border-white/20 shadow-lg">
-                  <input
-                    hidden
-                    type="file"
-                    name=""
-                    id=""
-                    accept='image/png, image/webp, image/jpeg'
-                    ref={pictureInputRef}
-                    onChange={handlePictureChange} />
-                  <img
-                    className='w-30 aspect-square object-cover object-center rounded-lg'
-                    src={selectedPicture.url ?? page.picture ?? initialPage().picture}
-                    alt="Main image" />
-                  <Button
-                    size="icon-sm"
-                    className=' absolute top-4 right-4 rounded-full'
-                    onClick={() => {
-                      pictureInputRef.current?.click();
-                    }}>
-                    <Pen />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-span-12 lg:col-span-4 space-y-4 bg-card p-4 rounded-md border border-input">
             <div className="w-full space-y-4">
-              <div className="w-full flex flex-row items-center justify-between">
-                <h4>Groups in this collection</h4>
-                <Button
-                  onClick={handleAddSection}
-                  variant="default"
-                >
-                  <Plus className="size-4" />
-                  Add a group
-                </Button>
+              <div className='space-y-2'>
+                <Label className='popover-foreground'>Name this collection</Label>
+                <Input
+                  value={page.label}
+                  onChange={(e) => setPage((prev) => ({ ...prev, label: e.target.value }))}
+                  placeholder="Page Title"
+                  className="bg-white/10 placeholder:text-muted-foreground focus-visible:ring-0"
+                />
               </div>
+              <div className='space-y-2'>
+                <Label>What resources does it contain ?</Label>
+                <Textarea
+                  value={page.description || ''}
+                  onChange={(e) =>
+                    setPage((prev) => ({ ...prev, description: e.target.value }))
+                  }
+                  placeholder="Add a description for your page..."
+                  className="bg-white/10 placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                  rows={6}
+                />
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard className="col-span-12 lg:col-span-4">
+            <div className="w-full flex flex-row items-center justify-between">
+              <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+                <span className='text-muted-foreground inline-block pr-2'>
+                  <List className="size-4" />
+                </span>
+                Manage topics
+              </h1>
+              <Button
+                onClick={handleAddSection}
+                variant="default"
+                size="sm"
+              >
+                <Plus className="size-4" />
+                Add a topic
+              </Button>
+            </div>
+            <div className="w-full space-y-4">
               <SortableContext
                 items={page.nodes!.map((s) => s.id)}
                 strategy={verticalListSortingStrategy}
@@ -788,10 +781,10 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                 )}
               </DragOverlay>
             </div>
-          </div>
+          </SectionCard>
 
           <div className="col-span-12 lg:col-span-8 space-y-4 bg-card rounded-md border border-input">
-            <div className="w-full  min-h-100 relative overflow-hidden">
+            <div className="w-full min-h-100 relative overflow-hidden">
               <AnimatePresence>
                 {
                   activeSection && <motion.section
@@ -837,14 +830,14 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                     <Layers className="size-6 text-secondary-500" />
                   </div>
                   <h3 className="mb-1 text-lg font-medium text-foreground">
-                    No groups yet.
+                    No topics yet.
                   </h3>
                   <p className="mb-6 text-sm text-muted-foreground">
-                    Create your first group to start organizing your links.
+                    Create your first topic to start organizing your links.
                   </p>
                   <Button onClick={handleAddSection}>
                     <Plus className="size-4" />
-                    Add group
+                    Add topic
                   </Button>
                 </div>
               )}
@@ -855,10 +848,10 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                       <Layers className="size-6 text-secondary-500" />
                     </div>
                     <h3 className="mb-1 text-lg font-medium text-center text-foreground">
-                      No group selected.
+                      No topic selected.
                     </h3>
                     <p className="mb-1 text-sm font-medium text-center text-muted-foreground">
-                      Select or add a group to edit its content.
+                      Select or add a topic to start adding links.
                     </p>
                   </div>
                 )
@@ -866,53 +859,55 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
             </div>
           </div>
 
-          <div className="col-span-12">
-            <div className='space-y-2'>
-              <Label className='popover-foreground'>Customize the link</Label>
-              <div className="relative flex flex-row items-center gap-2 border border-input rounded-md">
-                <div
-                  ref={slugRef}
-                  className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start'>
-                  <span
-                    className='text-sm md:text-base text-nowrap truncate opacity-60'
-                    style={{ direction: "rtl" }}>
-                    {urlPrefix}
-                  </span>
-                  <span className='text-sm md:text-base text-nowrap truncate opacity-60'>/</span>
+          <SectionCard className="col-span-12 rounded-sm">
+            <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+              <span className='text-muted-foreground inline-block pr-2'>
+                <Brush className="size-4" />
+              </span>
+              Layout & appearance
+            </h1>
+            <div className="w-full relative">
+              <div className="w-full flex flex-col md:flex-row items-center justify-start gap-4">
+                <div className="basis-full w-full md:w-auto md:basis-1/3 space-y-4 order-2 md:order-1">
+                  <div className="flex flex-col items-start justify-start space-y-2">
+                    <Label>Page Banner</Label>
+                    <p className='text-sm text-muted-foreground'>
+                      The collection banner will be displayed at the top of the page and on collection cards.
+                    </p>
+                  </div>
+                  <input
+                    hidden
+                    type="file"
+                    name=""
+                    id=""
+                    accept='image/png, image/webp, image/jpeg'
+                    ref={bannerInputRef}
+                    onChange={handleBannerChange}
+                  />
+                  <Button
+                    className="w-full md:w-auto"
+                    onClick={() => bannerInputRef.current?.click()}
+                    variant="outline"
+                  >
+                    <Pen className="size-4" />
+                    Select an image
+                  </Button>
                 </div>
-                <Input
-                  value={page.slug || ''}
-                  onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
-                  placeholder="my-awesome-tag"
-                  style={{
-                    paddingLeft: `${dimensions.dimensions?.width}px`
-                  }}
-                  className={
-                    cn(
-                      "shadow-none",
-                      "md:text-base bg-white/10 placeholder:text-neutral-400 focus-visible:ring-0 pr-10 border-0",
-                      slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
-                    )
-                  }
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                  {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
-                  {!isCheckingSlug && slugAvailable === true && <Check className="size-4 text-green-500" />}
-                  {!isCheckingSlug && slugAvailable === false && <X className="size-4 text-red-500" />}
-                </div>
+                <img
+                  className='w-full md:w-auto md:grow h-60 aspect-video object-cover object-center rounded-md order-1 md:order-2'
+                  src={selectedBanner.url ?? page.banner ?? initialPage().banner}
+                  alt="Banner image" />
               </div>
-              {slugMessage && (
-                <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
-                  {slugMessage}
-                </p>
-              )}
-              <p className="text-sm text-muted-foreground">
-                Your collection will be accessible at <a href={`${urlPrefix}/${page.slug}`} target="_blank" className="underline text-blue-500">{urlPrefix}/{page.slug}</a>
-              </p>
             </div>
-          </div>
+          </SectionCard>
 
-          {settings && <div className="col-span-12">
+          {settings && <SectionCard className="col-span-12">
+            <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+              <span className="inline-block pr-2">
+                <Lock className="size-4" />
+              </span>
+              Security & Privacy
+            </h1>
             <SettingsArea
               collection={collection}
               settings={settings as any}
@@ -925,20 +920,19 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                   <div className="relative flex flex-row items-center gap-2 border border-input rounded-md">
                     <div
                       ref={slugRef}
-                      className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start'>
+                      className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start border-r border-input'>
                       <span
-                        className='text-sm text-nowrap truncate opacity-40'
-                        style={{ direction: "rtl" }}>
+                        className='text-sm text-nowrap truncate opacity-75'
+                      >
                         {urlPrefix}
                       </span>
-                      <span className='text-sm text-nowrap truncate opacity-60'>/</span>
                     </div>
                     <Input
                       value={page.slug || ''}
                       onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
                       placeholder="my-awesome-tag"
                       style={{
-                        paddingLeft: `${dimensions.dimensions?.width}px`
+                        paddingLeft: `${(dimensions.dimensions?.width ?? 0) + 8}px`
                       }}
                       className={
                         cn(
@@ -980,7 +974,7 @@ export function PageEditor({ header, collection, settings: initialSettings }: {
                 </AnimatePresence>
               </motion.div>
             </SettingsArea>
-          </div>
+          </SectionCard>
           }
         </div>
       </DndContext >
@@ -1023,6 +1017,23 @@ function ReorderableSectionList({ sections, onSectionSelect, active }: { active:
   </div>
 }
 
+function SectionCard(props: { className?: string, children: [first: ReactNode, second: ReactNode] }) {
+  return <div className={
+    cn(
+      "col-span-12 relative w-full bg-card rounded-md border border-input text-foreground",
+      props.className
+    )
+  }>
+    <div className="w-full flex flex-row items-center justify-start p-2 md:p-3 lg:p-4">
+      {props.children[0]}
+    </div>
+    <hr />
+    <div className="w-full p-2 md:p-3 lg:p-4">
+      {props.children[1]}
+    </div>
+  </div>
+}
+
 function DraggableSectionCard({ active, section, onClick }: { active: boolean; section: Group, onClick: () => void }) {
 
   const {
@@ -1045,7 +1056,10 @@ function DraggableSectionCard({ active, section, onClick }: { active: boolean; s
   }
 
   return <div
-    ref={setSortableRef}
+    ref={(el) => {
+      setSortableRef(el);
+      setDroppableRef(el);
+    }}
     key={section.id}
     onClick={() => {
       onClick()
@@ -1053,8 +1067,10 @@ function DraggableSectionCard({ active, section, onClick }: { active: boolean; s
     data-active={active}
     className={
       cn(
-        "w-full border border-neutral-300 text-neutral-900 p-4 rounded-md flex flex-row items-center justify-start gap-1 transition-all duration-75 hover:border-transparent hover:bg-secondary-200 hover:text-secondary-700 cursor-pointer",
-        active && "border bg-secondary-500/10 text-secondary-700 border-transparent"
+        "w-full border border-neutral-300 text-neutral-900 p-2",
+        "rounded-md flex flex-row items-center justify-start gap-2 transition-all duration-75",
+        "hover:border-transparent hover:bg-secondary-200/20 hover:text-secondary-700 cursor-pointer",
+        active && "border bg-secondary-500/5 text-secondary-700 border-transparent"
       )
     }>
     <button
@@ -1066,7 +1082,7 @@ function DraggableSectionCard({ active, section, onClick }: { active: boolean; s
     </button>
     <div className="grow flex flex-col items-start justify-start gap-1">
       <p className='font-semibold text-sm text-left'>{section.title}</p>
-      <p className='text-xs text-left text-inherit/50'>{section.description}</p>
+      <p className='text-xs text-left text-inherit opacity-50'>{section.description}</p>
     </div>
   </div>
 }

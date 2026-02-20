@@ -12,7 +12,7 @@ export async function SearchResults({ count, items, query }: { count: number, it
                         title={`See collection ${item.label}`}
                         className="group/board w-full flex flex-row items-center justify-start gap-2 p-2 rounded-md transition-all duration-100"
                         key={item.id}
-                        href={`/collections/${item.slug ?? item.id}`}>
+                        href={`/collections/${item.slug || item.id}`}>
                         {item.picture && <img className="w-12 h-12 rounded-md" src={item.picture} alt={`Picture ${item.label}`} srcSet="" />}
                         <div className="grow flex flex-col items-start justify-start">
                             <h2 className="text-sm opacity-75">{item.label}</h2>

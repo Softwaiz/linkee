@@ -7,7 +7,7 @@ import { Collection } from "@db/index";
 import { Layers, MoreHorizontal, Pencil, Share2, SquareStack } from "lucide-react";
 import { toast } from "sonner";
 
-export function SingleCollectionHeader({collection: board, readOnly = false}: { collection: Collection, readOnly?: boolean }) {
+export function SingleCollectionHeader({ collection: board, readOnly = false }: { collection: Collection, readOnly?: boolean }) {
     return <>
         <div className="grow flex flex-row items-center justify-start gap-2">
             <Page.BackButton />
@@ -25,7 +25,7 @@ export function SingleCollectionHeader({collection: board, readOnly = false}: { 
                         size="sm"
                         className="gap-2 bg-transparent"
                         onClick={() => {
-                            navigator.clipboard.writeText(`${window.location.origin}/shared/${board.slug ?? board.id}`)
+                            navigator.clipboard.writeText(`${window.location.origin}/shared/${board.slug || board.id}`)
                                 .then(() => {
                                     toast.success("Link copied", { id: `${board.id}.copy_link` });
                                 });

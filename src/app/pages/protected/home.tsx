@@ -1,10 +1,12 @@
 import { CollectionsGrid } from '@/components/dashboard/collections-grid';
+import { LinkDropZone } from '@/components/dashboard/link-drop-zone';
 import { Link } from '@/components/link';
 import Page from '@/components/page';
 import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
 import { Home, Plus } from 'lucide-react';
 import { DefaultAppContext } from 'rwsdk/worker';
+import { motion } from "motion/react";
 
 export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext }) {
   const user = ctx.user!;
@@ -38,12 +40,10 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
       </div>
     </Page.Header.Custom>
 
+
     <Page.Content container>
+      <LinkDropZone collections={items} />
       <CollectionsGrid items={items} />
     </Page.Content>
   </Page.Root>
 }
-
-/*
-
-    */

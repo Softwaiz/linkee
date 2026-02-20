@@ -32,11 +32,9 @@ export function SettingsArea({ children, hasDangerZone, collection, settings: in
     }
 
     return (
-        <div className="w-full bg-card border p-4 rounded-md">
+        <div className="w-full">
             <div className="flex-1 space-y-4">
                 <div className="space-y-4">
-                    <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Visibility & Access</h4>
-
                     <div className="flex flex-col items-start justify-start gap-4 rounded-lg">
                         <div className="space-y-0.5">
                             <div className="flex flex-row items-center justify-start gap-1">

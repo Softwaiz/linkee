@@ -5,6 +5,7 @@ import { CollectionNotFound } from '../protected/collections/not-found';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
+import { Group } from '@/validations/collection/create';
 
 export default async function PublicCollectionPage({ params, ctx }: RequestInfo) {
     const { id } = params;
@@ -12,7 +13,14 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
         .selectFrom("boards")
         .selectAll()
         .select(({ eb, fn }) => {
+
             const selects: any[] = [
+                jsonObjectFrom(
+                    eb.selectFrom("users")
+                        .select(["alias", "firstName", "lastName"])
+                        .whereRef("users.id", "=", "boards.userId")
+                        .limit(1)
+                ).as("users"),
                 jsonObjectFrom(
                     eb.selectFrom("boardSettings")
                         .select(['visibility'])
@@ -67,11 +75,34 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
     }
 
     const selectedImage = board.picture;
+    const ogImage = board.banner || board.picture || 'https://linkits.xyz/og-image.png';
+    const collectionUrl = `https://linkits.xyz/shared/${board.slug || board.id}`;
+    const authorName = board.users
+        ? [board.users.firstName, board.users.lastName].filter(Boolean).join(' ') || board.users.alias || 'Linkits User'
+        : 'Linkits User';
 
     return <>
-        <title>{`${board?.label} - Linkits`}</title>
-        <meta name="description" content={board.description} />
+        <title>{`${board.label} — a link kit on Linkits`}</title>
+        <meta name="description" content={board.description || `A curated link kit by ${authorName} on Linkits.`} />
+        <link rel="canonical" href={collectionUrl} />
         {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Linkits" />
+        <meta property="og:title" content={`${board.label} — a link kit on Linkits`} />
+        <meta property="og:description" content={board.description || `A curated link kit by ${authorName} on Linkits.`} />
+        <meta property="og:url" content={collectionUrl} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={board.label} />
+        <meta property="article:author" content={authorName} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@linkits" />
+        <meta name="twitter:title" content={`${board.label} — a link kit on Linkits`} />
+        <meta name="twitter:description" content={board.description || `A curated link kit by ${authorName} on Linkits.`} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content={board.label} />
+
         <Header />
         <CollectionView
             collection={board as unknown as Collection}
@@ -82,5 +113,28 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
             isSaved={Boolean(board.isSaved)}
         />
         <Footer />
+        <script type="application/ld+json">
+            {JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": board.label,
+                "description": board.description,
+                "url": collectionUrl,
+                "creator": {
+                    "@type": "Person",
+                    "name": authorName,
+                },
+                "itemListElement": (board.nodes as unknown as Group[]).flatMap((group, groupIndex) =>
+                    group.items
+                        .filter((item) => item.type === "link")
+                        .map((item, itemIndex) => ({
+                            "@type": "ListItem",
+                            "position": groupIndex * 100 + itemIndex + 1,
+                            "name": item.title,
+                            "url": item.url
+                        }))
+                ),
+            }, null, 2)}
+        </script>
     </>
 }
