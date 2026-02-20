@@ -7,6 +7,7 @@ import { Link } from '../link';
 import { Layers, Pencil } from 'lucide-react';
 
 interface CollectionViewProps {
+  isPublicView?: boolean;
   collection: Collection;
   likesCount?: number;
   savesCount?: number;
@@ -14,7 +15,7 @@ interface CollectionViewProps {
   isSaved?: boolean;
 }
 
-export function CollectionView({ collection, readOnly, likesCount = 0, savesCount = 0, isLiked = false, isSaved = false }: CollectionViewProps & { readOnly?: boolean }) {
+export function CollectionView({ collection, readOnly, likesCount = 0, savesCount = 0, isLiked = false, isSaved = false, isPublicView = false }: CollectionViewProps & { readOnly?: boolean }) {
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
@@ -39,7 +40,7 @@ export function CollectionView({ collection, readOnly, likesCount = 0, savesCoun
           <p className='text-base'>
             {collection.description}
           </p>
-          {readOnly && actions}
+          {readOnly && !isPublicView && actions}
         </div>}
         <div className="col-span-12 lg:col-span-4">
           {(collection.banner || collection.picture) && <div className="w-full lg:sticky lg:top-20 lg:left-0 space-y-4">

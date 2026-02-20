@@ -46,6 +46,7 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
             </Page.Header.Custom>
             <Page.Content container>
                 <CollectionView
+                    isPublicView={false}
                     collection={board as unknown as Collection}
                 />
             </Page.Content>

@@ -3,10 +3,12 @@ import customStyles from "../app/layouts/theme.css?url";
 import { PropsWithChildren } from "react";
 import { env } from "cloudflare:workers";
 import { RequestInfo } from "rwsdk/worker";
+import { IdentityProvider } from "./providers/identity";
 
 export const PublicDocument = ({
     children,
-    rw
+    rw,
+    ctx
 }: PropsWithChildren<RequestInfo>) => (
     <html lang="en">
         <head>
@@ -34,7 +36,9 @@ export const PublicDocument = ({
             <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
         </head>
         <body>
-            <div id="root">{children}</div>
+            <div id="root">
+                {children}
+            </div>
             <script>import("/src/client.tsx")</script>
         </body>
     </html>
