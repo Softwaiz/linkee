@@ -49,7 +49,7 @@ export function CollectionView({ collection, readOnly, likesCount = 0, savesCoun
               {collection.nodes.length > 0 && !readOnly && (
                 <div className="mt-4 flex justify-center">
                   <Button variant="outline" size="lg" className="gap-2 bg-transparent" asChild>
-                    <Link href={`/collections/${collection.slug ?? collection.id}/edit`}>
+                    <Link href={`/collections/${collection.slug || collection.id}/edit`}>
                       <Pencil className="size-4" />
                       Edit this collection
                     </Link>
@@ -80,7 +80,7 @@ export function CollectionView({ collection, readOnly, likesCount = 0, savesCoun
               </p>
               {!readOnly && (
                 <Button asChild>
-                  <Link href={`/collections/${collection.slug ?? collection.id}/edit`}>
+                  <Link href={`/collections/${collection.slug || collection.id}/edit`}>
                     <Pencil className="mr-2 size-4" />
                     Start Editing
                   </Link>

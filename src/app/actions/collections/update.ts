@@ -67,7 +67,7 @@ export async function updateCollection(id: string, page: Partial<Collection> & {
             userId: ctx.user.id,
             label: data.label,
             description: data.description ?? candidate.description,
-            slug: data.slug ?? candidate.slug,
+            slug: data.slug || candidate.slug,
             picture: data.picture ?? candidate.picture,
             banner: data.banner ?? candidate.banner,
             nodes: JSON.stringify(data.nodes),
@@ -109,6 +109,7 @@ export async function updateCollection(id: string, page: Partial<Collection> & {
     return {
         success: true,
         message: `Collection ${updatedItem?.label} was updated !`,
+        path: `/collections/${updatedItem?.slug || updatedItem?.id}`,
         updated: updatedItem
     }
 
