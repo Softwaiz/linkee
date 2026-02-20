@@ -75,9 +75,6 @@ export function Footer() {
                     <p className="text-sm text-muted-foreground">
                         &copy; {new Date().getFullYear()} Linkits. All rights reserved.
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                        Built on the edge.
-                    </p>
                 </div>
             </div>
         </footer>

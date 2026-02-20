@@ -20,7 +20,7 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
                         .select(["alias", "firstName", "lastName"])
                         .whereRef("users.id", "=", "boards.userId")
                         .limit(1)
-                ).as("users"),
+                ).as("user"),
                 jsonObjectFrom(
                     eb.selectFrom("boardSettings")
                         .select(['visibility'])
@@ -78,7 +78,7 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
     const ogImage = board.banner || board.picture || 'https://linkits.xyz/og-image.png';
     const collectionUrl = `https://linkits.xyz/shared/${board.slug || board.id}`;
     const authorName = board.users
-        ? [board.users.firstName, board.users.lastName].filter(Boolean).join(' ') || board.users.alias || 'Linkits User'
+        ? [board.user.firstName, board.user.lastName].filter(Boolean).join(' ') || board.user.alias || 'Linkits User'
         : 'Linkits User';
 
     return <>
@@ -106,7 +106,8 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
         <Header />
         <CollectionView
             collection={board as unknown as Collection}
-            readOnly={true}
+            readOnly
+            isPublicView
             likesCount={Number(board.likesCount ?? 0)}
             savesCount={Number(board.savesCount ?? 0)}
             isLiked={Boolean(board.isLiked)}
