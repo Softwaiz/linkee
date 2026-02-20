@@ -24,13 +24,11 @@ import { ExtractedMetadata } from './link-drop-zone'
 import { addLinkToCollection } from '@/actions/collections/add-link'
 import { toast } from 'sonner'
 import { navigate } from 'rwsdk/client'
-import { ExternalLink, Globe, Layers, Plus, FolderPlus, Search, Loader2 } from 'lucide-react'
+import { ExternalLink, Globe, Plus, FolderPlus, Search, Loader2 } from 'lucide-react'
 import { AnimatePresence, motion } from "motion/react";
 import { searchCollections } from '@/actions/collections/search'
 import { useDebounce } from '@/hooks/useDebounce'
 import { cn } from '@/lib/utils'
-
-type Step = 'create-new' | 'append'
 
 export function LinkDropDialog({
     open,
@@ -43,7 +41,6 @@ export function LinkDropDialog({
     metadata: ExtractedMetadata
     collections: Collection[]
 }) {
-    const [step, setStep] = useState<Step>('create-new')
     const [selectedCollectionId, setSelectedCollectionId] = useState<string>('')
     const [selectedSectionId, setSelectedSectionId] = useState<string>('')
     const [newSectionTitle, setNewSectionTitle] = useState('')
@@ -63,10 +60,6 @@ export function LinkDropDialog({
         const prefillData = encodeURIComponent(JSON.stringify(metadata))
         navigate(`/collections/new?prefill=${prefillData}`)
         onOpenChange(false)
-    }
-
-    const handleAddToExisting = () => {
-        setStep('append')
     }
 
     const handleConfirmAdd = async () => {
@@ -113,7 +106,6 @@ export function LinkDropDialog({
     }
 
     const resetState = () => {
-        setStep('create-new')
         setSelectedCollectionId('')
         setSelectedSectionId('')
         setNewSectionTitle('')
@@ -158,7 +150,7 @@ export function LinkDropDialog({
             <DialogContent className="sm:max-w-md space-y-4 max-h-[60vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
-                        {step === 'create-new' ? 'Link captured!' : 'Add to collection'}
+                        Link captured !
                     </DialogTitle>
                 </DialogHeader>
 

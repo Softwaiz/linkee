@@ -879,7 +879,7 @@ export function PageEditor({ header, collection, settings: initialSettings, pref
                     hidden
                     type="file"
                     name=""
-                    id=""
+                    id="banner-input"
                     accept='image/png, image/webp, image/jpeg'
                     ref={bannerInputRef}
                     onChange={handleBannerChange}

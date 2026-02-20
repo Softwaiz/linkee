@@ -1,12 +1,10 @@
 'use client'
 
 import { useState, useCallback, DragEvent } from 'react'
-import { ArrowRight, Link2, Loader2 } from 'lucide-react'
+import { ArrowRight, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collection } from '@db/index'
 import { LinkDropDialog } from './link-drop-dialog'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
 import { AnimatePresence, motion } from 'motion/react'
 
 export interface ExtractedMetadata {
@@ -18,7 +16,6 @@ export interface ExtractedMetadata {
 }
 
 export function LinkDropZone({ collections }: { collections: Collection[] }) {
-    const [isDragOver, setIsDragOver] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [metadata, setMetadata] = useState<ExtractedMetadata | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -46,18 +43,6 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
 
         return null
     }
-
-    const handleDragOver = useCallback((e: DragEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        setIsDragOver(true)
-    }, [])
-
-    const handleDragLeave = useCallback((e: DragEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        setIsDragOver(false)
-    }, [])
 
     const handleCollectDraft = useCallback(async () => {
 
@@ -115,59 +100,6 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
             setIsLoading(false)
         }
     }, [draftUrl])
-
-    const handleDrop = useCallback(async (e: DragEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        setIsDragOver(false)
-
-        const url = extractUrl(e.dataTransfer)
-        if (!url) return
-
-        setIsLoading(true)
-
-        try {
-            const res = await fetch('/api/metadata', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url }),
-            })
-            const data = await res.json() as {
-                success: boolean
-                title?: string
-                description?: string
-                image?: string
-                favicon?: string
-            }
-
-            if (data.success) {
-                setMetadata({
-                    url,
-                    title: data.title || url,
-                    description: data.description || '',
-                    image: data.image || undefined,
-                    favicon: data.favicon || undefined,
-                })
-            } else {
-                setMetadata({
-                    url,
-                    title: url,
-                    description: '',
-                })
-            }
-            setDialogOpen(true)
-        } catch {
-            // Still allow the user to proceed even if metadata extraction fails
-            setMetadata({
-                url,
-                title: url,
-                description: '',
-            })
-            setDialogOpen(true)
-        } finally {
-            setIsLoading(false)
-        }
-    }, [])
 
     const handleDialogClose = useCallback(() => {
         setDialogOpen(false)
