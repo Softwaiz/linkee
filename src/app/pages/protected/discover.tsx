@@ -5,22 +5,16 @@ import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
 import Page from '@/components/page'
 import { RequestInfo } from 'rwsdk/worker'
-import { jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export default async function DiscoverPage(props: RequestInfo) {
 
   const items = await db
     .selectFrom("boards")
-    .selectAll()
-    .select(({ eb }) => {
-      return jsonObjectFrom(
-        eb.selectFrom("boardSettings")
-          .select(['visibility'])
-          .whereRef("boardSettings.boardId", "=", "boards.id")
-          .where("visibility", "=", "public")
-          .limit(1)
-      ).as("settings")
-    })
+    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
+    .select(["boards.id", "boards.label", "boards.description", "boards.createdAt", "boards.updatedAt", "boards.userId", "boards.slug", "boards.sourceId", "boardSettings.visibility", "boards.nodes", "boards.slug", "boards.banner"])
+    .where("boardSettings.visibility", "=", "public")
+    .orderBy("boards.createdAt", "desc")
+    .limit(20)
     .execute();
 
   return <Page.Root>
@@ -53,7 +47,8 @@ export default async function DiscoverPage(props: RequestInfo) {
           Explore curated collections from creators around the world.
         </p>
       </div>
-      <div className="columns-1 @[20rem]:columns-2 md:columns-3 gap-5 lg:columns-4 xl:columns-5">
+      <div
+        className="columns-1 @[20rem]:columns-2 md:columns-3 gap-5 lg:columns-4 xl:columns-5">
         {items.map((collection) => (
           <div key={collection.id} className="mb-5 break-inside-avoid">
             <DiscoverCard collection={collection as unknown as Collection} />
