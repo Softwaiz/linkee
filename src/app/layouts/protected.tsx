@@ -5,7 +5,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { IdentityProvider } from "@/providers/identity";
 import { BottomBar } from "@/components/bottom-bar";
 import styles from "./theme.css?url";
-import { SearchQuery } from "@/components/search/query";
 import { SearchLayout } from "@/components/search/layout";
 
 export default async function ProtectedLayout(props: LayoutProps) {
@@ -18,8 +17,6 @@ export default async function ProtectedLayout(props: LayoutProps) {
         return <div className="w-full min-h-dvh">{props.children}</div>
     }
 
-    const searchQuery = url.searchParams.get("q") ?? '';
-
     return <SidebarProvider defaultOpen={false}>
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,12 +27,10 @@ export default async function ProtectedLayout(props: LayoutProps) {
         <IdentityProvider user={ctx.user}>
             <div className="w-full min-h-dvh">
                 <AppBar
-                    initialQuery={searchQuery}
+                    initialQuery={""}
                     user={ctx.user!}
                     search={
-                        <SearchLayout initialQuery={searchQuery}>
-                            <SearchQuery query={searchQuery} />
-                        </SearchLayout>
+                        <SearchLayout initialQuery={""} />
                     }
                 />
                 <main className="pb-16">
