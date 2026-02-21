@@ -1,4 +1,3 @@
-import { CollectionView } from '@/components/collection/collection-view'
 import { Collection, db } from '@db/index';
 import { RequestInfo } from 'rwsdk/worker'
 import { CollectionNotFound } from '../errors/not-found';

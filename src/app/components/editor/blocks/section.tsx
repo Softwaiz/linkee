@@ -6,11 +6,11 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { Plus, Pencil, Trash2, Link2, Type, Link, Text } from 'lucide-react'
-import { LinkCard } from './links-card'
-import { TextBlock } from './text-block'
+import { TextBlock } from './text'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Group, GroupItem } from '@/validations/collection/create'
+import { LinkCard } from '../cards/link'
 
 interface SectionBlockProps {
   section: Group

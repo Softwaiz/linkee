@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, PropsWithChildren, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -21,10 +21,9 @@ import {
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable'
-import { Plus, Layers, Save, GripVertical, Pen, Brush, Info, List, Eye, Lock } from 'lucide-react'
-import { SectionBlock } from './section-block'
+import { Plus, Layers, Save, GripVertical, Pen, Brush, Info, List, Lock } from 'lucide-react'
+import { SectionBlock } from './blocks/section'
 import { SectionDialog, LinkDialog, TextDialog } from './dialog'
-import { EditorHeader } from './header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -33,7 +32,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { createCollection } from '@/actions/collections/create'
 import { toast } from 'sonner'
 import { navigate } from 'rwsdk/client'
-import { CollectionInput, CollectionSettingsInput, CollectionSettingsSchema, Group, GroupItem, LinkItem, TextItem } from "@/validations/collection/create"
+import { CollectionInput, CollectionSettingsInput, Group, GroupItem, LinkItem, TextItem } from "@/validations/collection/create"
 import { SettingsArea } from "../collection/settings-dialog"
 import { Collection } from '@db/index'
 import { updateCollection } from '@/actions/collections/update'
@@ -95,8 +94,9 @@ export type PrefillLink = {
   favicon?: string
 }
 
-export function PageEditor({ header, collection, settings: initialSettings, prefillLink }: {
+export function PageEditor({ header, footer, collection, settings: initialSettings, prefillLink }: {
   header?: ReactNode,
+  footer?: ReactNode,
   collection?: Collection,
   settings?: Partial<CollectionSettings>,
   prefillLink?: PrefillLink
@@ -659,10 +659,17 @@ export function PageEditor({ header, collection, settings: initialSettings, pref
   const slugRef = useRef<HTMLDivElement | null>(null);
   const dimensions = useDimensions(slugRef);
 
-  const urlPrefix = useMemo(() => {
-    let origin = globalThis.window ? globalThis.window.origin : "";
-    return origin + "/kit/";
+  const [origin, setOrigin] = useState('');
+
+  useEffect(() => {
+    if (globalThis.location) {
+      setOrigin(globalThis.location.origin);
+    }
   }, []);
+
+  const urlPrefix = useMemo(() => {
+    return origin + "/kit/";
+  }, [origin]);
 
   const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
     setSettings(newSettings);
@@ -978,7 +985,13 @@ export function PageEditor({ header, collection, settings: initialSettings, pref
           }
         </div>
       </DndContext >
-
+      {
+        footer && <div className="w-full mt-4">
+          {
+            footer
+          }
+        </div>
+      }
       <SectionDialog
         open={sectionDialogOpen}
         onOpenChange={setSectionDialogOpen}
