@@ -56,7 +56,7 @@ export function PublicCollectionsGrid({ items }: { items: Collection[] }) {
                             Updated {timeAgo(collection.updatedAt)}
                         </span>
                         <Button size="sm" asChild>
-                            <Link href={`/shared/${collection.slug || collection.id}`}>
+                            <Link href={`/kit/${collection.slug || collection.id}`}>
                                 View
                                 <ArrowRight />
                             </Link>

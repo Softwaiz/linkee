@@ -1,6 +1,6 @@
 import { PageEditor } from '@/components/editor/page-editor'
 import { Collection, db } from '@db/index'
-import { CollectionNotFound } from './not-found';
+import { CollectionNotFound } from './errors/not-found';
 import { RequestInfo } from 'rwsdk/worker';
 import { LayersPlus } from 'lucide-react';
 import Page from '@/components/page';

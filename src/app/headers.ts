@@ -26,6 +26,6 @@ export const setCommonHeaders =
       // Defines trusted sources for content loading and script execution:
       response.headers.set(
         "Content-Security-Policy",
-        `default-src 'self'; script-src 'self' 'unsafe-eval' 'nonce-${nonce}' https://us.i.posthog.com https://us-assets.i.posthog.com https://challenges.cloudflare.com; connect-src 'self' https://us.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://us.i.posthog.com; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; frame-src 'self' https://challenges.cloudflare.com; object-src 'none'; img-src 'self' blob: https://placehold.co https://api.dicebear.com https://images.unsplash.com https://lh3.googleusercontent.com https://us.i.posthog.com;`
+        `default-src 'self'; script-src 'self' 'unsafe-eval' 'nonce-${nonce}' https://us.i.posthog.com https://us-assets.i.posthog.com https://challenges.cloudflare.com; connect-src 'self' https://us.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://us.i.posthog.com; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; frame-src 'self' https://challenges.cloudflare.com; object-src 'none'; img-src 'self' blob: https://placehold.co https://picsum.photos https://fastly.picsum.photos https://api.dicebear.com https://images.unsplash.com https://lh3.googleusercontent.com https://us.i.posthog.com;`
       );
     };

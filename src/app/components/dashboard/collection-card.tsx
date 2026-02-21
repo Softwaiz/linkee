@@ -61,7 +61,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/shared/${collection.slug || collection.id}`} className="flex items-center gap-2">
+                <Link href={`/kit/${collection.slug || collection.id}`} className="flex items-center gap-2">
                   <Share className="size-4" />
                   Share
                 </Link>

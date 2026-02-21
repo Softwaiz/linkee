@@ -1,10 +1,11 @@
 import { CollectionView } from '@/components/collection/collection-view'
 import { Collection, db } from '@db/index';
 import { RequestInfo } from 'rwsdk/worker'
-import { CollectionNotFound } from './not-found';
+import { CollectionNotFound } from '../errors/not-found';
 import Page from '@/components/page';
-import { SingleCollectionHeader } from './single-header';
+import { SingleCollectionHeader } from './header';
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
+import { CollectionContent } from '@/pages/public/kit/content';
 
 export default async function CollectionPage({ params, ctx }: RequestInfo) {
     const { id } = params;
@@ -38,17 +39,14 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
         <title>{`${board?.label} - Linkits`}</title>
         <meta name="description" content={board.description} />
         <Page.Root>
-            <Page.Header.Custom container className="justify-between">
+            <Page.Header.Custom container className="justify-between overflow-hidden gap-1">
                 <SingleCollectionHeader
                     collection={board as unknown as Collection}
                     readOnly={readOnly}
                 />
             </Page.Header.Custom>
-            <Page.Content container>
-                <CollectionView
-                    isPublicView={false}
-                    collection={board as unknown as Collection}
-                />
+            <Page.Content container={false} className='py-0'>
+                <CollectionContent collection={board as unknown as Collection} />
             </Page.Content>
         </Page.Root>
     </>

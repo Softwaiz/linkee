@@ -95,7 +95,7 @@ export function PublicDiscoverCard({ collection }: DiscoverCardProps) {
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
       {/* Cover Image */}
       {collection.banner && (
-        <Link href={`/shared/${collection.slug || collection.id}`} className="relative aspect-16/10 overflow-hidden">
+        <Link href={`/kit/${collection.slug || collection.id}`} className="relative aspect-16/10 overflow-hidden">
           <img
             src={collection.banner || "/placeholder.svg"}
             alt={collection.label}
@@ -126,7 +126,7 @@ export function PublicDiscoverCard({ collection }: DiscoverCardProps) {
         </DropdownMenu>
       </div>
 
-      <Link href={`/shared/${collection.slug || collection.id}`} className="flex flex-1 flex-col p-5">
+      <Link href={`/kit/${collection.slug || collection.id}`} className="flex flex-1 flex-col p-5">
         {!collection.banner && (
           <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
             <Layers className="size-5" />

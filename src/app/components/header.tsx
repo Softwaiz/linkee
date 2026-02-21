@@ -1,15 +1,32 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "./logo";
 import { Link } from "./link";
+import { useDimensions } from "@/hooks/useDimensions";
+import { cn } from "@/lib/utils";
 
-export function Header() {
+export function Header({ className, sticky = true }: { className?: string, sticky?: boolean }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const headerRef = useRef<HTMLDivElement>(null);
+    const header = useDimensions(headerRef);
+
+    useEffect(() => {
+        if (header.dimensions) {
+            document.body.style.setProperty('--app-header-width', header.dimensions.width + "px");
+            document.body.style.setProperty('--app-header-height', header.dimensions.height + "px");
+        }
+    }, [header.dimensions]);
 
     return (
-        <header className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+        <header ref={headerRef} className={
+            cn(
+                sticky && "sticky top-0 left-0 right-0 z-50",
+                "bg-background/80 backdrop-blur-xl border-b border-border",
+                className
+            )
+        }>
             <div className="container mx-auto h-16 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight">
                     <Logo />

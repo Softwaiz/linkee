@@ -661,7 +661,7 @@ export function PageEditor({ header, collection, settings: initialSettings, pref
 
   const urlPrefix = useMemo(() => {
     let origin = globalThis.window ? globalThis.window.origin : "";
-    return origin + "/shared/";
+    return origin + "/kit/";
   }, []);
 
   const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
