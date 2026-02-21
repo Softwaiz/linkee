@@ -18,7 +18,6 @@ import EditCollectionPage from "@/pages/protected/collections/edit";
 import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
 import PublicProfilePage from "@/pages/public/user-profile";
-import PublicCollectionPage from "@/pages/public/collection";
 import Sitemap from "@/pages/sitemap";
 import Robots from "@/pages/robots";
 import { extractMetadata } from "@/actions/website/extractMetadata";
@@ -29,7 +28,9 @@ import { LinkSocialAccount } from "@/pages/protected/profile/social-accounts/lin
 import { HandleGoogleLoginReturn } from "@/pages/auth/google-return";
 import { SocialSignin } from "@/pages/auth/social-signin";
 import { handleLogout } from "@/pages/auth/logout";
+import PublicCollectionPage from "@/pages/public/kit/index";
 export { Database } from "@db/durableObject";
+
 
 async function verifyUserFromCookie(request: Request, response: RequestInfo['response'], ctx: DefaultAppContext) {
   try {
@@ -82,7 +83,11 @@ export default defineApp([
   render(PublicDocument, [
     layout(PublicLayout, [
       route("/@:alias", PublicProfilePage),
-      route("/shared/:id", PublicCollectionPage),
+      // Gently redirect to the new path, don't remove this - It will break existing links that are using /shared/<slug|id>
+      route("/shared/:id", (request) => {
+        return request.ctx.hardRedirect({ path: `/kit/${request.params.id}` })
+      }),
+      route("/kit/:id", PublicCollectionPage)
     ])
   ]),
   render(Document, [

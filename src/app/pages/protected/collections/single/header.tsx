@@ -9,11 +9,11 @@ import { toast } from "sonner";
 
 export function SingleCollectionHeader({ collection: board, readOnly = false }: { collection: Collection, readOnly?: boolean }) {
     return <>
-        <div className="grow flex flex-row items-center justify-start gap-2">
+        <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
             <Page.BackButton />
             <span
-                className="p-4">
-                <Layers size={32} />
+                className="p-1 md:p-2">
+                <Layers className="size-6 lg:size-8" />
             </span>
             <Page.Title>{board.label}</Page.Title>
         </div>
@@ -25,7 +25,7 @@ export function SingleCollectionHeader({ collection: board, readOnly = false }: 
                         size="sm"
                         className="gap-2 bg-transparent"
                         onClick={() => {
-                            navigator.clipboard.writeText(`${window.location.origin}/shared/${board.slug || board.id}`)
+                            navigator.clipboard.writeText(`${window.location.origin}/kit/${board.slug || board.id}`)
                                 .then(() => {
                                     toast.success("Link copied", { id: `${board.id}.copy_link` });
                                 });

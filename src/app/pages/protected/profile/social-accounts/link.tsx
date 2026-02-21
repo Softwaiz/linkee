@@ -3,10 +3,7 @@ import { SocialAccountType } from "../../../../lib/shared";
 import { stringify } from "node:querystring";
 import { GoogleAuth } from "@/lib/google";
 import { db } from "@db/index";
-import { redirect } from "../../../../../utils/sdk";
-import jwt from "jsonwebtoken";
 import { User } from "@db/index";
-import { identityCookie } from "@cookies/index";
 
 export async function handleGoogleConnectionWithAlreadyConnectedProfile(args: RequestInfo) {
     let { request } = args;

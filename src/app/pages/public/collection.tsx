@@ -1,7 +1,7 @@
 import { CollectionView } from '@/components/collection/collection-view'
 import { Collection, db } from '@db/index';
 import { RequestInfo } from 'rwsdk/worker'
-import { CollectionNotFound } from '../protected/collections/not-found';
+import { CollectionNotFound } from '../protected/collections/errors/not-found';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
@@ -76,7 +76,7 @@ export default async function PublicCollectionPage({ params, ctx }: RequestInfo)
 
     const selectedImage = board.picture;
     const ogImage = board.banner || board.picture || 'https://linkits.xyz/og-image.png';
-    const collectionUrl = `https://linkits.xyz/shared/${board.slug || board.id}`;
+    const collectionUrl = `https://linkits.xyz/kit/${board.slug || board.id}`;
     const authorName = board.users
         ? [board.user.firstName, board.user.lastName].filter(Boolean).join(' ') || board.user.alias || 'Linkits User'
         : 'Linkits User';
