@@ -52,5 +52,11 @@
 		"R2_PUBLIC_URL": "/medias",
 		"GOOGLE_AUTH_RETURN_URL": "https://linkits.xyz/signin/after/google",
 		"GOOGLE_CONNECT_RETURN_URL": "https://linkits.xyz/profile/connect/google"
-	}
+	},
+	"kv_namespaces": [
+		{
+			"binding": "CONTENT_CACHE",
+			"id": "a7cce871064e4175874d4c59c1aa82fa"
+		}
+	]
 }

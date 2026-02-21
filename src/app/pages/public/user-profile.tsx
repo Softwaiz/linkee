@@ -4,15 +4,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RequestInfo } from "rwsdk/worker";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-
+import { env } from "cloudflare:workers";
 
 export default async function PublicProfilePage({ params }: RequestInfo) {
     const alias = params.alias;
 
-    const user = await db.selectFrom("users")
-        .selectAll()
-        .where("alias", "=", alias)
-        .executeTakeFirst();
+    let user: User | null | undefined = await env.CONTENT_CACHE.get(`user-${alias}`, "json")
+    if (!user) {
+        user = await db.selectFrom("users")
+            .selectAll()
+            .where("alias", "=", alias)
+            .executeTakeFirst();
+        await env.CONTENT_CACHE.put(`user-${alias}`, JSON.stringify(user), { expirationTtl: 60 * 3 });
+    }
 
     if (!user) {
         return <div className="flex h-screen flex-col items-center justify-center p-4 text-center">
@@ -56,7 +60,6 @@ export default async function PublicProfilePage({ params }: RequestInfo) {
                 <PublicCollectionsGrid items={collections} />
             </main>
         </div>
-
         <Footer />
     </div>
 }

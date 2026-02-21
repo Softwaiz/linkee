@@ -58,7 +58,14 @@ export default async function EditCollectionPage({ ctx, params, request }: Reque
                     settings={{
                         boardId: collection.id,
                         ...collection.settings
-                    } as any} />
+                    } as any}
+                    footer={
+                        <div className="w-full p-4 bg-yellow-100 border border-yellow-200 rounded-md">
+                            <p className="text-xs text-muted-foreground">
+                                If this collection is <strong>public</strong>, this update will take up to 5 minutes to be visible to the public.
+                            </p>
+                        </div>
+                    } />
             </Page.Content>
         </Page.Root>
     </>
