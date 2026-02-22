@@ -8,6 +8,9 @@ import { CollectionNotFound } from "@/pages/protected/collections/errors/not-fou
 import { CollectionIsPrivate } from "@/pages/protected/collections/errors/error-private";
 import { Group } from "@/validations/collection/create";
 import { env } from "cloudflare:workers";
+import { useEffect } from "react";
+import posthog from "posthog-js";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type PubliclyVisibleCollection = Collection & { settings?: CollectionSettings, user?: User, [key: string]: any } | null | undefined;
 
@@ -95,6 +98,22 @@ export default async function PublicCollectionPage({ params, ctx, request }: Req
     const origin = new URL(request.url).origin;
 
     const authorLabel = authorAlias ? `@${authorAlias}` : authorName;
+
+    const eventDebounce = useDebounce(3000);
+    useEffect(() => {
+        eventDebounce.delay(() => {
+            posthog.capture("viewed-kit", {
+                collection: board.id,
+                collection_name: board.label,
+                collection_description: board.description,
+                collection_visibility: board.settings?.visibility,
+                collection_url: collectionUrl,
+                author: board.user?.id,
+                author_name: authorName,
+                author_alias: authorAlias,
+            })
+        })
+    }, []);
 
     return (
         <div className="min-h-screen bg-background">
