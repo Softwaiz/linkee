@@ -5,6 +5,7 @@ import { db } from "@db/index"
 import { Group } from "@/validations/collection/create"
 
 interface Kit {
+    href: string;
     title: string
     linkCount: number
     category: string
@@ -51,7 +52,7 @@ export async function FeaturedKits() {
                     {items.map((kit) => (
                         <Link
                             key={kit.title}
-                            href="#"
+                            href={kit.href}
                             className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                         >
                             {/* Category badge */}
