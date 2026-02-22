@@ -17,6 +17,7 @@ export default async function DiscoverPage(props: RequestInfo) {
     .limit(20)
     .execute();
 
+
   return <Page.Root>
     <Page.Header.Custom container className="justify-between">
       <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">

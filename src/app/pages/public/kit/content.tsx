@@ -8,6 +8,7 @@ import { Collection } from "@db/index"
 import { TextPreview } from "@/components/collection/text-preview"
 import { LinkCard, LinkOriginIcon } from "@/components/collection/link-card"
 import { useDebounce } from "@/hooks/useDebounce"
+import posthog from "posthog-js"
 
 export function CollectionContent({ collection }: { collection: Collection }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -78,6 +79,17 @@ export function CollectionContent({ collection }: { collection: Collection }) {
             window.scrollTo({ top, behavior: "smooth" })
         }
     }
+
+    const eventDebounce = useDebounce(3000);
+    useEffect(() => {
+        eventDebounce.delay(() => {
+            posthog.capture("viewed-kit", {
+                collection: collection.id,
+                collection_slug: collection.slug,
+                collection_name: collection.label,
+            })
+        })
+    }, [collection.id, collection.slug, collection.label]);
 
     return (
         <div className="min-h-screen bg-background">
