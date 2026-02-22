@@ -1703,10 +1703,10 @@
   dependencies:
     cross-spawn "^7.0.6"
 
-"@posthog/react@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@posthog/react/-/react-1.7.0.tgz#58acca801bf04d4617885d05642ab66001ef94e5"
-  integrity sha512-pM7GL7z/rKjiIwosbRiQA3buhLI6vUo+wg+T/ZrVZC7O5bVU07TfgNZTcuOj8E9dx7vDbfNrc1kjDN7PKMM8ug==
+"@posthog/react@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@posthog/react/-/react-1.8.0.tgz#b92caf1a97f62cfc954883b027fc9b02f0d8c845"
+  integrity sha512-UEX3BAIXMrzN7r/JoVotMY9BSTfJ1umiQqfsU30X1OZAW59cO5cPf50YDj4XNhHTCZpiLqenmvJdtJLsx5Pn4Q==
 
 "@posthog/types@1.342.1", "@posthog/types@^1.342.1":
   version "1.342.1"

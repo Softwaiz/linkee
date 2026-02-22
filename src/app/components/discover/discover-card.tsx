@@ -133,7 +133,7 @@ export function PublicDiscoverCard({ collection }: DiscoverCardProps) {
           </div>
         )}
 
-        <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
+        <h3 className="mb-2 text-lg text-card-foreground transition-colors group-hover:text-accent">
           {collection.label || 'Untitled Collection'}
         </h3>
 
