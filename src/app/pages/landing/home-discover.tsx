@@ -11,8 +11,6 @@ export async function HomeDiscover() {
         .limit(20)
         .execute();
 
-    console.log("items: ", items);
-
     return <div className="container mx-auto space-y-4">
         <div className="my-20 columns-2 gap-5 xs:columns-2 sm:columns-2 lg:columns-3">
             {items.map((collection) => (

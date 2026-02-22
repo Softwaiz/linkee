@@ -40,12 +40,12 @@ export function TextBlock({ item, onEdit, onDelete }: TextBlockProps) {
       <button
         {...attributes}
         {...listeners}
-        className="mt-0.5 flex-shrink-0 cursor-grab touch-none text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
+        className="mt-0.5 shrink-0 cursor-grab touch-none text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 active:cursor-grabbing"
       >
         <GripVertical className="size-4" />
       </button>
 
-      <div className="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-secondary">
+      <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary">
         <Type className="size-4 text-muted-foreground" />
       </div>
 
