@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function useDebounce(timeout: number = 3000) {
     const timerRef = useRef<NodeJS.Timeout>(null);
