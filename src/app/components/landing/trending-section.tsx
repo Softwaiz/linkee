@@ -7,15 +7,6 @@ export interface TrendingItem {
     title: string;
 }
 
-const trendingItems: TrendingItem[] = [
-    { href: "#", title: "Learn The Web" },
-    { href: "#", title: "Peter Pistorius" },
-    { href: "#", title: "Sans Permission" },
-    { href: "#", title: "Productivity Stack 2026" },
-    { href: "#", title: "Design Systems Hub" },
-    { href: "#", title: "Startup Toolkit" },
-    { href: "#", title: "Frontend Roadmap" },
-]
 
 export async function TrendingSectionSSR() {
     let items = await env.CONTENT_CACHE.get("trending-items", "json");
