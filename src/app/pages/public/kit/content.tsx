@@ -246,7 +246,7 @@ export function CollectionContent({ collection }: { collection: Collection }) {
                                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                     {section.items.map((item) => {
                                         if (item.type === "link") {
-                                            return <LinkCard key={item.id} item={item} />
+                                            return <LinkCard utm_campaign={`${collection.slug || collection.label.toLowerCase().replace(" ", "-")}-${section.title.toLowerCase().replace(" ", "-")}`} key={item.id} item={item} />
                                         }
                                         return <TextPreview key={item.id} text={item} />
                                     })}

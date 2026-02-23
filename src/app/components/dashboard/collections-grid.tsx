@@ -66,39 +66,35 @@ export function CollectionsGrid({ items }: { items: Collection[] }) {
   }
 
   return (
-    <div className="min-h-dvh bg-background">
+    <main className="w-full py-10">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-foreground">Your Collections</h1>
+        <p className="mt-1 text-muted-foreground">
+          {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
+        </p>
+      </div>
 
-      <main className="container mx-auto px-4 py-10">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Your Collections</h1>
-          <p className="mt-1 text-muted-foreground">
-            {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <AddCollectionCard
-            onClick={() => {
-              navigate("/collections/new");
-            }}
+      <div className="w-full grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <AddCollectionCard
+          onClick={() => {
+            navigate("/collections/new");
+          }}
+        />
+        {filteredCollections.map(collection => (
+          <CollectionCard
+            key={collection.id}
+            collection={collection}
+            onDelete={handleDelete}
+            onDuplicate={handleDuplicate}
           />
-          {filteredCollections.map(collection => (
-            <CollectionCard
-              key={collection.id}
-              collection={collection}
-              onDelete={handleDelete}
-              onDuplicate={handleDuplicate}
-            />
-          ))}
+        ))}
+      </div>
+
+      {filteredCollections.length === 0 && searchQuery && (
+        <div className="mt-12 text-center">
+          <p className="text-muted-foreground">No collections found for "{searchQuery}"</p>
         </div>
-
-        {filteredCollections.length === 0 && searchQuery && (
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground">No collections found for "{searchQuery}"</p>
-          </div>
-        )}
-      </main>
-
-    </div>
+      )}
+    </main>
   )
 }

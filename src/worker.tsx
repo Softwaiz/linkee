@@ -57,7 +57,7 @@ async function verifyUserFromCookie(request: Request, response: RequestInfo['res
   }
 }
 
-export default defineApp([
+const app = defineApp([
   setCommonHeaders(),
   async ({ ctx, request, response }) => {
     return verifyUserFromCookie(request, response, ctx);
@@ -67,7 +67,6 @@ export default defineApp([
       response.status = statusCode ?? 302;
       response.headers.set('Location', path);
     }
-
     ctx.hardRedirect = ({ path, body, init }) => {
       const next = new Response(body ?? null, {
         ...init,
@@ -117,3 +116,10 @@ export default defineApp([
     ])
   ])
 ]);
+
+export default {
+  fetch: app.fetch,
+  async queue(batch, env, ctx) {
+
+  }
+} satisfies ExportedHandler<Env>;

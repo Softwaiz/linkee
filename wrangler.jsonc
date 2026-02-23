@@ -59,5 +59,18 @@
 			"binding": "CONTENT_CACHE",
 			"id": "a7cce871064e4175874d4c59c1aa82fa"
 		}
-	]
+	],
+	"queues": {
+		"producers": [
+			{
+				"queue": "kit-enrichment",
+				"binding": "kit_enrichment"
+			}
+		],
+		"consumers": [
+			{
+				"queue": "kit-enrichment"
+			}
+		]
+	}
 }

@@ -5,16 +5,22 @@ import { useMemo } from "react"
 
 export function LinkCard({
     item,
+    utm_campaign = "kit"
 }: {
-    item: LinkItem
+    item: LinkItem,
+    utm_campaign?: string
 }) {
     const url = useMemo(() => {
         try {
-            return new URL(item.url);
+            let url = new URL(item.url);
+            url.searchParams.set("utm_source", "linkits");
+            url.searchParams.set("utm_medium", "social");
+            url.searchParams.set("utm_campaign", utm_campaign);
+            return url;
         } catch (error) {
             return null;
         }
-    }, [item]);
+    }, [item, utm_campaign]);
 
     const avatar = useMemo(() => {
         return item.title
@@ -27,7 +33,7 @@ export function LinkCard({
 
     return (
         <a
-            href={item.url}
+            href={url?.toString()}
             title={`Open ${item.title} in a new tab`}
             target="_blank"
             rel="noopener noreferrer"
