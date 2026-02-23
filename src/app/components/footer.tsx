@@ -75,6 +75,9 @@ export function Footer() {
                     <p className="text-sm text-muted-foreground">
                         &copy; {new Date().getFullYear()} Linkits. All rights reserved.
                     </p>
+                    <p className="text-sm text-muted-foreground">
+                        Built with <a className="text-blue-700 underline" target="_blank" rel="noopener noreferrer" href="https://rwsdk.com?utm_source=linkits&utm_medium=footer&utm_campaign=linkits">RedwoodSDK</a>
+                    </p>
                 </div>
             </div>
         </footer>

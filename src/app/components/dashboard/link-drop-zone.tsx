@@ -19,30 +19,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
     const [isLoading, setIsLoading] = useState(false)
     const [metadata, setMetadata] = useState<ExtractedMetadata | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)
-
     const [draftUrl, setDraftUrl] = useState('');
-
-    const extractUrl = (dataTransfer: DataTransfer): string | null => {
-        // Try text/uri-list first
-        const uriList = dataTransfer.getData('text/uri-list')
-        if (uriList) {
-            const firstUrl = uriList.split('\n').find((line) => line.trim() && !line.startsWith('#'))
-            if (firstUrl) return firstUrl.trim()
-        }
-
-        // Fallback to text/plain
-        const text = dataTransfer.getData('text/plain')
-        if (text) {
-            try {
-                new URL(text.trim())
-                return text.trim()
-            } catch {
-                return null
-            }
-        }
-
-        return null
-    }
 
     const handleCollectDraft = useCallback(async () => {
 
@@ -117,26 +94,16 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                 opacity: 1,
                 y: 0
             }}>
-            <div className="w-full relative overflow-hidden flex flex-col items-center justify-center p-3 md:p-4 lg:p-12 rounded-md">
-                <div className="w-full absolute top-0 left-0">
-                    <div className="min-h-screen w-full relative bg-black">
-                        <div
-                            className="absolute inset-0 z-0"
-                            style={{
-                                background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(249, 115, 22, 0.25), transparent 70%), #000000",
-                            }}
-                        />
-                    </div>
-                </div>
+            <div className="w-full relative overflow-hidden flex flex-col items-center justify-center rounded-md">
                 <div className="relative w-full flex flex-col items-start justify-center gap-4">
                     <div className="flex flex-col items-start justify-start gap-0.5">
-                        <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-white'>Save your inspiration now.</h1>
-                        <p className='text-white/80 text-xs md:text-sm lg:text-base opacity-75'>Don't let it fade away. Quickly save your links and access them from any device, where you need them.</p>
+                        <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-foreground'>Save your inspiration now.</h1>
+                        <p className='text-foreground/80 text-xs md:text-sm lg:text-base opacity-75'>Don't let it fade away. Quickly save your links and access them from any device, where you need them.</p>
                     </div>
-                    <div className="mt-4 w-full flex flex-col md:flex-row items-center bg-background/20 rounded-md md:rounded-full focus-within:ring-ring/50 focus-within:ring-[3px]">
+                    <div className="w-full flex flex-row items-center bg-background/20 rounded-md focus-within:ring-ring/50 focus-within:ring-[3px] border border-input">
                         <input
                             type="url"
-                            className='w-full px-4 placeholder:text-white/60 text-white/80 border-0 h-10 lg:h-12 shadow-sm focus:outline-none focus:ring-0 text-xs md:text-sm'
+                            className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 lg:h-12 focus:outline-none focus:ring-0 text-xs md:text-sm'
                             placeholder="Copy paste your new link here."
                             value={draftUrl}
                             onChange={(ev) => {
@@ -151,10 +118,10 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                             layout
                             onClick={handleCollectDraft}
                             className={cn(
-                                'w-full md:w-auto rounded-b-md md:rounded-bl-none md:rounded-r-full bg-primary text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                'w-auto rounded-r-md bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
                                 !draftUrl && 'cursor-not-allowed',
                                 "h-10 lg:h-12 shadow-sm",
-                                "px-8 gap-2",
+                                "px-4 md:px-8 gap-2",
                                 "text-xs md:text-sm font-semibold"
                             )}>
                             <AnimatePresence>
@@ -187,7 +154,6 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                         </motion.button>
                     </div>
                 </div>
-
             </div>
             {metadata && (
                 <LinkDropDialog
