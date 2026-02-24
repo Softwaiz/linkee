@@ -1,5 +1,5 @@
 import styles from "../styles/globals.css?url";
-import customStyles from "../app/layouts/theme.css?url";
+import customStyles from "../layouts/theme.css?url";
 import { PropsWithChildren } from "react";
 import { env } from "cloudflare:workers";
 import { RequestInfo } from "rwsdk/worker";
