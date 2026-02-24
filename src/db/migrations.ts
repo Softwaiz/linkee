@@ -155,4 +155,17 @@ export const migrations = {
             await db.schema.dropTable("boardReactions").ifExists().execute();
         }
     },
+    "009_add_user_roles": {
+        async up(db) {
+            return [
+                await db.schema
+                    .alterTable("users")
+                    .addColumn("role", "text", (col) => col.notNull().defaultTo("user"))
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.alterTable("users").dropColumn("role").execute();
+        }
+    }
 } satisfies Migrations;

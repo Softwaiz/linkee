@@ -1,7 +1,7 @@
 import { layout, prefix, render, route } from "rwsdk/router";
 import { DefaultAppContext, defineApp, RequestInfo } from "rwsdk/worker";
-import { Document } from "@/Document";
-import { PublicDocument } from "@/PublicDocument";
+import { Document } from "@/documents/Document";
+import { PublicDocument } from "@/documents/PublicDocument";
 import { setCommonHeaders } from "@/headers";
 import LoginPage from "@/pages/auth/signin";
 import Home from "@/pages/landing/home";
@@ -29,6 +29,14 @@ import { HandleGoogleLoginReturn } from "@/pages/auth/google-return";
 import { SocialSignin } from "@/pages/auth/social-signin";
 import { handleLogout } from "@/pages/auth/logout";
 import PublicCollectionPage from "@/pages/public/kit/index";
+import { queue, QueueMessage } from "./queue";
+import AdminInitPage from "@/office/pages/init";
+import OfficeSignin from "@/office/signin";
+import OfficeDashboard from "@/office/pages";
+import { OfficeDocument } from "@/documents/OfficeDocument";
+import OfficeLayout from "@/office/layouts";
+import UsersPage from "@/office/pages/users";
+import { CollectionsPage } from "@/office/pages/collections";
 export { Database } from "@db/durableObject";
 
 
@@ -112,14 +120,24 @@ const app = defineApp([
           route("profile", ProfilePage),
           route("saved", SavedCollections)
         ])
-      ]),
+      ])
+    ])
+  ]),
+
+  render(OfficeDocument, [
+    prefix("/office", [
+      route("init", AdminInitPage),
+      route("signin", OfficeSignin),
+      layout(OfficeLayout, [
+        route("/", OfficeDashboard),
+        route("/users", UsersPage),
+        route("/kits", CollectionsPage)
+      ])
     ])
   ])
 ]);
 
 export default {
   fetch: app.fetch,
-  async queue(batch, env, ctx) {
-
-  }
-} satisfies ExportedHandler<Env>;
+  queue: queue
+} satisfies ExportedHandler<Env, QueueMessage>;
