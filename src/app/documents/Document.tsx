@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
-import styles from "./styles/globals.css?url";
-import rootStyles from "./styles/root.css?url";
+import styles from "../styles/globals.css?url";
+import rootStyles from "../styles/root.css?url";
 import { RequestInfo } from "rwsdk/worker";
 import { PropsWithChildren } from "react";
 
