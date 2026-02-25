@@ -167,5 +167,34 @@ export const migrations = {
         async down(db) {
             await db.schema.alterTable("users").dropColumn("role").execute();
         }
+    },
+    "010_add_tags_system": {
+        async up(db) {
+            return [
+                await db.schema
+                    .createTable("tags")
+                    .ifNotExists()
+                    .addColumn("id", "text", (col) => col.primaryKey())
+                    .addColumn("canonicalLabelEn", "text", (col) => col.notNull().defaultTo(""))
+                    .addColumn("canonicalLabelFr", "text", (col) => col.notNull().defaultTo(""))
+                    .addColumn("synonymsEn", "text", (col) => col.notNull().defaultTo("[]"))
+                    .addColumn("synonymsFr", "text", (col) => col.notNull().defaultTo("[]"))
+                    .addColumn("createdAt", "text", (col) => col.notNull())
+                    .addColumn("updatedAt", "text", (col) => col.notNull())
+                    .execute(),
+
+                await db.schema
+                    .createTable("boardTags")
+                    .ifNotExists()
+                    .addColumn("boardId", "text", (col) => col.notNull().references("boards.id").onDelete("cascade"))
+                    .addColumn("tagId", "text", (col) => col.notNull().references("tags.id").onDelete("cascade"))
+                    .addPrimaryKeyConstraint("boardTags_pk", ["boardId", "tagId"])
+                    .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.dropTable("boardTags").ifExists().execute();
+            await db.schema.dropTable("tags").ifExists().execute();
+        },
     }
 } satisfies Migrations;

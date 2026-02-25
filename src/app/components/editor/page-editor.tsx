@@ -34,7 +34,7 @@ import { toast } from 'sonner'
 import { navigate } from 'rwsdk/client'
 import { CollectionInput, CollectionSettingsInput, Group, GroupItem, LinkItem, TextItem } from "@/validations/collection/create"
 import { SettingsArea } from "../collection/settings-dialog"
-import { Collection } from '@db/index'
+import { BoardTag, Collection } from '@db/index'
 import { updateCollection } from '@/actions/collections/update'
 import { checkSlugAvailability } from '@/actions/collections/check-slug'
 import { Loader2, Check, X } from 'lucide-react'
@@ -94,11 +94,12 @@ export type PrefillLink = {
   favicon?: string
 }
 
-export function PageEditor({ header, footer, collection, settings: initialSettings, prefillLink }: {
+export function PageEditor({ header, footer, collection, tags: initialTags = [], settings: initialSettings, prefillLink }: {
   header?: ReactNode,
   footer?: ReactNode,
   collection?: Collection,
   settings?: Partial<CollectionSettings>,
+  tags?: string[],
   prefillLink?: PrefillLink
 }) {
 
@@ -114,7 +115,7 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
 
   const [page, setPage] = useState<Partial<CollectionInput>>(() => {
     if (collection) {
-      return collection as CollectionInput;
+      return { ...collection, tags: initialTags || [] } as CollectionInput;
     }
     if (!prefillLink && globalThis.localStorage) {
       let previous = cachedPage.get();
@@ -147,6 +148,8 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
     }
     return initialPage();
   });
+
+  const [tags, setTags] = useState<string[]>(initialTags || []);
 
   const [activeId, setActiveId] = useState<string | null>(null)
   const [activeDragType, setActiveDragType] = useState<'section' | 'item' | null>(null)
@@ -541,6 +544,7 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
         ...page,
         picture: pictureUrl,
         banner: bannerUrl,
+        tags: tags,
         settings: settings as any
       }
     )
@@ -568,7 +572,7 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
       .finally(() => {
         setSaving(false);
       })
-  }, [cachedPage, page, collection, selectedPicture, selectedBanner, settings]);
+  }, [cachedPage, page, collection, selectedPicture, selectedBanner, settings, tags]);
 
   const handleSaveCollection = useCallback(async () => {
     if (collection) {
@@ -613,6 +617,7 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
       ...page,
       picture: pictureUrl,
       banner: bannerUrl,
+      tags: tags,
       settings: settings as any
     })
       .then((value) => {
@@ -640,7 +645,7 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
       .finally(() => {
         setSaving(false);
       })
-  }, [page, cachedPage, collection, selectedPicture, selectedBanner, settings]);
+  }, [page, cachedPage, collection, selectedPicture, selectedBanner, settings, tags]);
 
   const handlePictureChange = useCallback((ev: ChangeEvent<HTMLInputElement>) => {
     const file = ev.currentTarget.files?.item(0);
@@ -673,6 +678,10 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
 
   const handleSettingsUpdate = useCallback((newSettings: CollectionSettingsInput) => {
     setSettings(newSettings);
+  }, []);
+
+  const handleTagsUpdate = useCallback((newTags: string[]) => {
+    setTags(newTags);
   }, []);
 
   return (
@@ -918,8 +927,10 @@ export function PageEditor({ header, footer, collection, settings: initialSettin
             <SettingsArea
               collection={collection}
               settings={settings as any}
+              tags={tags}
               hasDangerZone={Boolean(collection)}
               onSettingsUpdate={handleSettingsUpdate}
+              onTagsUpdate={handleTagsUpdate}
             >
               <motion.div layout className='space-y-2'>
                 <AnimatePresence>

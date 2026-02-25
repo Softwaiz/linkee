@@ -4,7 +4,7 @@ import { CollectionNotFound } from './errors/not-found';
 import { RequestInfo } from 'rwsdk/worker';
 import { LayersPlus } from 'lucide-react';
 import Page from '@/components/page';
-import { jsonObjectFrom } from "kysely/helpers/sqlite";
+import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export default async function EditCollectionPage({ ctx, params, request }: RequestInfo) {
     const id = params.id;
@@ -13,14 +13,20 @@ export default async function EditCollectionPage({ ctx, params, request }: Reque
         .selectFrom("boards")
         .selectAll()
         .select(({ eb }) => {
-            return jsonObjectFrom(
-                eb.selectFrom("boardSettings")
-                    .select(['visibility'])
-                    .whereRef("boardSettings.boardId", "=", "boards.id")
-                    .limit(1)
-            ).as("settings")
-        })
-        .where((eb) => eb.or([
+            return [
+                jsonObjectFrom(
+                    eb.selectFrom("boardSettings")
+                        .select(['visibility'])
+                        .whereRef("boardSettings.boardId", "=", "boards.id")
+                        .limit(1)
+                ).as("settings"),
+                jsonArrayFrom(
+                    eb.selectFrom("boardTags")
+                        .select("tagId")
+                        .whereRef("boardTags.boardId", "=", "boards.id")
+                ).as("tags")
+            ]
+        }).where((eb) => eb.or([
             eb("boards.id", "=", id),
             eb("boards.slug", "=", id)
         ]))
@@ -59,6 +65,7 @@ export default async function EditCollectionPage({ ctx, params, request }: Reque
                         boardId: collection.id,
                         ...collection.settings
                     } as any}
+                    tags={collection.tags?.map(t => t.tagId) || []}
                     footer={
                         <div className="w-full p-4 bg-yellow-100 border border-yellow-200 rounded-md">
                             <p className="text-xs text-muted-foreground">

@@ -60,6 +60,14 @@ export function Appbar() {
                                 </SidebarMenuSubItem>
                             </SidebarMenuSub>
                         </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild>
+                                <a href="/office/tags">
+                                    <Layers className="size-4" />
+                                    <span>Tags</span>
+                                </a>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroupContent>
             </SidebarGroup>

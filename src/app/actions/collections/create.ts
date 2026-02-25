@@ -58,6 +58,14 @@ export async function createCollection(page: Partial<Collection> & { settings?: 
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         }).execute();
+
+        if (data.tags && data.tags.length > 0) {
+            const tagValues = data.tags.map(tagId => ({
+                boardId: createdItem.id,
+                tagId: tagId
+            }));
+            await db.insertInto("boardTags").values(tagValues).execute();
+        }
     }
 
     return {
