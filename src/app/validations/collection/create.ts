@@ -43,6 +43,7 @@ export const CreateCollectionSchema = z.object({
     slug: z.string().optional(),
     picture: z.string().optional(),
     banner: z.string().optional(),
+    tags: z.array(z.string()).optional().default([]),
     nodes: z.array(GroupSchema),
     settings: CollectionSettingsSchema.optional(),
 });

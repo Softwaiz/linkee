@@ -37,6 +37,8 @@ import { OfficeDocument } from "@/documents/OfficeDocument";
 import OfficeLayout from "@/office/layouts";
 import UsersPage from "@/office/pages/users";
 import { CollectionsPage } from "@/office/pages/collections";
+import { TagsPage } from "@/office/pages/tags";
+import { seedTags } from "@/api/office/seed-tags";
 export { Database } from "@db/durableObject";
 
 
@@ -131,7 +133,9 @@ const app = defineApp([
       layout(OfficeLayout, [
         route("/", OfficeDashboard),
         route("/users", UsersPage),
-        route("/kits", CollectionsPage)
+        route("/kits", CollectionsPage),
+        route("/tags", TagsPage),
+        route("/seed/tags/1", seedTags)
       ])
     ])
   ])

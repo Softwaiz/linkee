@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { useState, useEffect, PropsWithChildren } from "react"
+import { getTagsWithCounts } from "@/actions/tags"
 import { CollectionSettingsInput } from "@/validations/collection/create"
 import { Collection } from "@db/index"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
@@ -9,17 +11,29 @@ import { Eye } from "lucide-react"
 interface SettingsAreaProps {
     collection?: Collection
     settings: CollectionSettingsInput
+    tags?: string[]
     onSettingsUpdate: (settings: CollectionSettingsInput) => void
+    onTagsUpdate?: (tags: string[]) => void
     hasDangerZone: boolean;
     onDeleteCollection?(): void;
 }
 
-export function SettingsArea({ children, hasDangerZone, collection, settings: initialSettings, onSettingsUpdate, onDeleteCollection }: PropsWithChildren<SettingsAreaProps>) {
+export function SettingsArea({ children, hasDangerZone, collection, settings: initialSettings, tags: initialTags, onSettingsUpdate, onTagsUpdate, onDeleteCollection }: PropsWithChildren<SettingsAreaProps>) {
     const [settings, setSettings] = useState<CollectionSettingsInput>(initialSettings)
+    const [tags, setTags] = useState<string[]>(initialTags || []);
+    const [availableTags, setAvailableTags] = useState<any[]>([]);
 
     useEffect(() => {
         setSettings(initialSettings)
     }, [initialSettings])
+
+    useEffect(() => {
+        setTags(initialTags || [])
+    }, [initialTags])
+
+    useEffect(() => {
+        getTagsWithCounts().then(data => setAvailableTags(data)).catch(console.error);
+    }, []);
 
     const handleSave = async (newSettings: Partial<CollectionSettingsInput>) => {
         const updated = { ...settings, ...newSettings };
@@ -29,6 +43,19 @@ export function SettingsArea({ children, hasDangerZone, collection, settings: in
 
     const updateField = (field: keyof CollectionSettingsInput, value: any) => {
         handleSave({ [field]: value });
+    }
+
+    const toggleTag = (tagId: string) => {
+        let newTags;
+        if (tags.includes(tagId)) {
+            newTags = tags.filter(id => id !== tagId);
+        } else {
+            newTags = [...tags, tagId];
+        }
+        setTags(newTags);
+        if (onTagsUpdate) {
+            onTagsUpdate(newTags);
+        }
     }
 
     return (
@@ -85,6 +112,34 @@ export function SettingsArea({ children, hasDangerZone, collection, settings: in
                                 </Label>
                             </div>
                         </RadioGroup>
+                    </div>
+
+                    <div className="flex flex-col items-start justify-start gap-4 rounded-lg mt-8 border-t pt-8">
+                        <div className="space-y-0.5">
+                            <div className="flex flex-row items-center justify-start gap-1">
+                                <Label>Collection Tags</Label>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                                Select tags to categorize your collection for discovery.
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                            {availableTags.map((tag) => (
+                                <div key={tag.id} className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`tag-${tag.id}`}
+                                        checked={tags.includes(tag.id)}
+                                        onCheckedChange={() => toggleTag(tag.id)}
+                                    />
+                                    <Label
+                                        htmlFor={`tag-${tag.id}`}
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        {tag.canonicalLabelEn}
+                                    </Label>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
                 {children}

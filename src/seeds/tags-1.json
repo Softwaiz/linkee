@@ -1,0 +1,1128 @@
+[
+    {
+        "id": "development",
+        "canonical_label_en": "Development",
+        "canonical_label_fr": "Développement",
+        "synonyms_en": [
+            "coding",
+            "programming",
+            "software"
+        ],
+        "synonyms_fr": [
+            "code",
+            "programmation"
+        ]
+    },
+    {
+        "id": "frontend",
+        "canonical_label_en": "Frontend",
+        "canonical_label_fr": "Frontend",
+        "synonyms_en": [
+            "html",
+            "css",
+            "javascript",
+            "ui"
+        ],
+        "synonyms_fr": [
+            "html",
+            "css",
+            "javascript",
+            "interface"
+        ]
+    },
+    {
+        "id": "backend",
+        "canonical_label_en": "Backend",
+        "canonical_label_fr": "Backend",
+        "synonyms_en": [
+            "api",
+            "server",
+            "database"
+        ],
+        "synonyms_fr": [
+            "serveur",
+            "api",
+            "base de données"
+        ]
+    },
+    {
+        "id": "fullstack",
+        "canonical_label_en": "Full-Stack",
+        "canonical_label_fr": "Full-Stack",
+        "synonyms_en": [
+            "developer",
+            "web dev"
+        ],
+        "synonyms_fr": [
+            "développeur web",
+            "dev"
+        ]
+    },
+    {
+        "id": "mobile",
+        "canonical_label_en": "Mobile Development",
+        "canonical_label_fr": "Développement Mobile",
+        "synonyms_en": [
+            "ios",
+            "android",
+            "flutter",
+            "react native"
+        ],
+        "synonyms_fr": [
+            "ios",
+            "android",
+            "mobile"
+        ]
+    },
+    {
+        "id": "devops",
+        "canonical_label_en": "DevOps & Cloud",
+        "canonical_label_fr": "DevOps & Cloud",
+        "synonyms_en": [
+            "infra",
+            "cloud",
+            "kubernetes"
+        ],
+        "synonyms_fr": [
+            "infrastructure",
+            "cloud",
+            "kubernetes"
+        ]
+    },
+    {
+        "id": "ai-ml",
+        "canonical_label_en": "AI & Machine Learning",
+        "canonical_label_fr": "IA & Machine Learning",
+        "synonyms_en": [
+            "artificial intelligence",
+            "ml",
+            "ai"
+        ],
+        "synonyms_fr": [
+            "intelligence artificielle",
+            "ml",
+            "ia"
+        ]
+    },
+    {
+        "id": "deep-learning",
+        "canonical_label_en": "Deep Learning",
+        "canonical_label_fr": "Deep Learning",
+        "synonyms_en": [
+            "neural networks",
+            "lstm",
+            "transformers"
+        ],
+        "synonyms_fr": [
+            "réseaux neuronaux",
+            "ia avancée"
+        ]
+    },
+    {
+        "id": "data-science",
+        "canonical_label_en": "Data Science",
+        "canonical_label_fr": "Data Science",
+        "synonyms_en": [
+            "analytics",
+            "statistics",
+            "python data"
+        ],
+        "synonyms_fr": [
+            "analyse",
+            "statistiques"
+        ]
+    },
+    {
+        "id": "data-engineering",
+        "canonical_label_en": "Data Engineering",
+        "canonical_label_fr": "Ingénierie Data",
+        "synonyms_en": [
+            "pipelines",
+            "big data"
+        ],
+        "synonyms_fr": [
+            "données",
+            "pipeline"
+        ]
+    },
+    {
+        "id": "cybersecurity",
+        "canonical_label_en": "Cybersecurity",
+        "canonical_label_fr": "Cybersécurité",
+        "synonyms_en": [
+            "infosec",
+            "security"
+        ],
+        "synonyms_fr": [
+            "sécurité",
+            "sécurité informatique"
+        ]
+    },
+    {
+        "id": "cloud",
+        "canonical_label_en": "Cloud",
+        "canonical_label_fr": "Cloud",
+        "synonyms_en": [
+            "aws",
+            "gcp",
+            "azure"
+        ],
+        "synonyms_fr": [
+            "aws",
+            "gcp",
+            "azure"
+        ]
+    },
+    {
+        "id": "blockchain",
+        "canonical_label_en": "Blockchain",
+        "canonical_label_fr": "Blockchain",
+        "synonyms_en": [
+            "crypto",
+            "web3"
+        ],
+        "synonyms_fr": [
+            "crypto",
+            "web3"
+        ]
+    },
+    {
+        "id": "web-tools",
+        "canonical_label_en": "Web Tools",
+        "canonical_label_fr": "Outils Web",
+        "synonyms_en": [
+            "online tools",
+            "apps"
+        ],
+        "synonyms_fr": [
+            "outils en ligne",
+            "applications"
+        ]
+    },
+    {
+        "id": "automation",
+        "canonical_label_en": "Automation",
+        "canonical_label_fr": "Automatisation",
+        "synonyms_en": [
+            "workflow",
+            "bot"
+        ],
+        "synonyms_fr": [
+            "flux",
+            "bot"
+        ]
+    },
+    {
+        "id": "productivity",
+        "canonical_label_en": "Productivity",
+        "canonical_label_fr": "Productivité",
+        "synonyms_en": [
+            "time management",
+            "workflow"
+        ],
+        "synonyms_fr": [
+            "organisation",
+            "gestion du temps"
+        ]
+    },
+    {
+        "id": "design",
+        "canonical_label_en": "Design",
+        "canonical_label_fr": "Design",
+        "synonyms_en": [
+            "ui",
+            "ux",
+            "product design"
+        ],
+        "synonyms_fr": [
+            "ui",
+            "ux",
+            "design produit"
+        ]
+    },
+    {
+        "id": "ui",
+        "canonical_label_en": "UI",
+        "canonical_label_fr": "UI",
+        "synonyms_en": [
+            "interface"
+        ],
+        "synonyms_fr": [
+            "interface"
+        ]
+    },
+    {
+        "id": "ux",
+        "canonical_label_en": "UX",
+        "canonical_label_fr": "UX",
+        "synonyms_en": [
+            "user experience"
+        ],
+        "synonyms_fr": [
+            "expérience utilisateur"
+        ]
+    },
+    {
+        "id": "branding",
+        "canonical_label_en": "Branding",
+        "canonical_label_fr": "Branding",
+        "synonyms_en": [
+            "identity",
+            "brand strategy"
+        ],
+        "synonyms_fr": [
+            "identité",
+            "stratégie de marque"
+        ]
+    },
+    {
+        "id": "marketing",
+        "canonical_label_en": "Marketing",
+        "canonical_label_fr": "Marketing",
+        "synonyms_en": [
+            "promotion",
+            "digital marketing"
+        ],
+        "synonyms_fr": [
+            "marketing digital",
+            "promotion"
+        ]
+    },
+    {
+        "id": "growth",
+        "canonical_label_en": "Growth",
+        "canonical_label_fr": "Croissance",
+        "synonyms_en": [
+            "growth hacking",
+            "experiments"
+        ],
+        "synonyms_fr": [
+            "growth hacking",
+            "expérimentations"
+        ]
+    },
+    {
+        "id": "seo",
+        "canonical_label_en": "SEO",
+        "canonical_label_fr": "SEO",
+        "synonyms_en": [
+            "search engine optimization"
+        ],
+        "synonyms_fr": [
+            "référencement"
+        ]
+    },
+    {
+        "id": "ads",
+        "canonical_label_en": "Ads & Acquisition",
+        "canonical_label_fr": "Publicité & Acquisition",
+        "synonyms_en": [
+            "ad campaigns",
+            "paid"
+        ],
+        "synonyms_fr": [
+            "publicité",
+            "acquisition"
+        ]
+    },
+    {
+        "id": "social-media",
+        "canonical_label_en": "Social Media",
+        "canonical_label_fr": "Réseaux Sociaux",
+        "synonyms_en": [
+            "twitter",
+            "tiktok",
+            "youtube"
+        ],
+        "synonyms_fr": [
+            "twitter",
+            "tiktok",
+            "youtube"
+        ]
+    },
+    {
+        "id": "sales",
+        "canonical_label_en": "Sales",
+        "canonical_label_fr": "Ventes",
+        "synonyms_en": [
+            "closing",
+            "outbound",
+            "prospecting"
+        ],
+        "synonyms_fr": [
+            "vente",
+            "prospection",
+            "closing"
+        ]
+    },
+    {
+        "id": "cold-email",
+        "canonical_label_en": "Cold Email",
+        "canonical_label_fr": "Cold Email",
+        "synonyms_en": [
+            "outreach"
+        ],
+        "synonyms_fr": [
+            "prospection mail"
+        ]
+    },
+    {
+        "id": "business",
+        "canonical_label_en": "Business",
+        "canonical_label_fr": "Business",
+        "synonyms_en": [
+            "strategy",
+            "management"
+        ],
+        "synonyms_fr": [
+            "stratégie",
+            "gestion"
+        ]
+    },
+    {
+        "id": "entrepreneurship",
+        "canonical_label_en": "Entrepreneurship",
+        "canonical_label_fr": "Entrepreneuriat",
+        "synonyms_en": [
+            "founders",
+            "startup"
+        ],
+        "synonyms_fr": [
+            "fondateurs",
+            "startup"
+        ]
+    },
+    {
+        "id": "startup",
+        "canonical_label_en": "Startup",
+        "canonical_label_fr": "Startup",
+        "synonyms_en": [
+            "founding",
+            "fundraising"
+        ],
+        "synonyms_fr": [
+            "levée de fonds",
+            "création"
+        ]
+    },
+    {
+        "id": "fundraising",
+        "canonical_label_en": "Fundraising",
+        "canonical_label_fr": "Levée de Fonds",
+        "synonyms_en": [
+            "pitch deck",
+            "investors"
+        ],
+        "synonyms_fr": [
+            "investisseurs",
+            "pitch"
+        ]
+    },
+    {
+        "id": "psychology",
+        "canonical_label_en": "Psychology",
+        "canonical_label_fr": "Psychologie",
+        "synonyms_en": [
+            "behavior",
+            "cognitive"
+        ],
+        "synonyms_fr": [
+            "comportement",
+            "cognitif"
+        ]
+    },
+    {
+        "id": "personal-growth",
+        "canonical_label_en": "Personal Growth",
+        "canonical_label_fr": "Développement Personnel",
+        "synonyms_en": [
+            "self improvement",
+            "habits"
+        ],
+        "synonyms_fr": [
+            "bien-être",
+            "habitudes"
+        ]
+    },
+    {
+        "id": "mindset",
+        "canonical_label_en": "Mindset",
+        "canonical_label_fr": "Mindset",
+        "synonyms_en": [
+            "discipline",
+            "mental models"
+        ],
+        "synonyms_fr": [
+            "discipline",
+            "modèles mentaux"
+        ]
+    },
+    {
+        "id": "product-management",
+        "canonical_label_en": "Product Management",
+        "canonical_label_fr": "Product Management",
+        "synonyms_en": [
+            "product",
+            "pm"
+        ],
+        "synonyms_fr": [
+            "produit",
+            "gestion produit"
+        ]
+    },
+    {
+        "id": "strategy",
+        "canonical_label_en": "Strategy",
+        "canonical_label_fr": "Stratégie",
+        "synonyms_en": [
+            "planning",
+            "frameworks"
+        ],
+        "synonyms_fr": [
+            "cadres",
+            "planification"
+        ]
+    },
+    {
+        "id": "leadership",
+        "canonical_label_en": "Leadership",
+        "canonical_label_fr": "Leadership",
+        "synonyms_en": [
+            "management",
+            "team"
+        ],
+        "synonyms_fr": [
+            "gestion",
+            "équipe"
+        ]
+    },
+    {
+        "id": "communication",
+        "canonical_label_en": "Communication",
+        "canonical_label_fr": "Communication",
+        "synonyms_en": [
+            "writing",
+            "messaging"
+        ],
+        "synonyms_fr": [
+            "écriture",
+            "message"
+        ]
+    },
+    {
+        "id": "writing",
+        "canonical_label_en": "Writing",
+        "canonical_label_fr": "Écriture",
+        "synonyms_en": [
+            "content",
+            "copywriting"
+        ],
+        "synonyms_fr": [
+            "rédaction",
+            "copywriting"
+        ]
+    },
+    {
+        "id": "copywriting",
+        "canonical_label_en": "Copywriting",
+        "canonical_label_fr": "Copywriting",
+        "synonyms_en": [
+            "sales writing",
+            "landing pages"
+        ],
+        "synonyms_fr": [
+            "rédaction marketing"
+        ]
+    },
+    {
+        "id": "career",
+        "canonical_label_en": "Career",
+        "canonical_label_fr": "Carrière",
+        "synonyms_en": [
+            "jobs",
+            "cv"
+        ],
+        "synonyms_fr": [
+            "emploi",
+            "cv"
+        ]
+    },
+    {
+        "id": "remote-work",
+        "canonical_label_en": "Remote Work",
+        "canonical_label_fr": "Travail à Distance",
+        "synonyms_en": [
+            "work from home"
+        ],
+        "synonyms_fr": [
+            "télétravail"
+        ]
+    },
+    {
+        "id": "economics",
+        "canonical_label_en": "Economics",
+        "canonical_label_fr": "Économie",
+        "synonyms_en": [
+            "macro",
+            "micro"
+        ],
+        "synonyms_fr": [
+            "macro",
+            "micro"
+        ]
+    },
+    {
+        "id": "finance",
+        "canonical_label_en": "Finance",
+        "canonical_label_fr": "Finance",
+        "synonyms_en": [
+            "investing",
+            "personal finance"
+        ],
+        "synonyms_fr": [
+            "investissement",
+            "budget"
+        ]
+    },
+    {
+        "id": "investing",
+        "canonical_label_en": "Investing",
+        "canonical_label_fr": "Investissement",
+        "synonyms_en": [
+            "stocks",
+            "markets"
+        ],
+        "synonyms_fr": [
+            "actions",
+            "marchés"
+        ]
+    },
+    {
+        "id": "trading",
+        "canonical_label_en": "Trading",
+        "canonical_label_fr": "Trading",
+        "synonyms_en": [
+            "forex",
+            "crypto trading"
+        ],
+        "synonyms_fr": [
+            "forex",
+            "trading crypto"
+        ]
+    },
+    {
+        "id": "real-estate",
+        "canonical_label_en": "Real Estate",
+        "canonical_label_fr": "Immobilier",
+        "synonyms_en": [
+            "property",
+            "housing"
+        ],
+        "synonyms_fr": [
+            "maison",
+            "propriété"
+        ]
+    },
+    {
+        "id": "legal",
+        "canonical_label_en": "Legal",
+        "canonical_label_fr": "Légal",
+        "synonyms_en": [
+            "law",
+            "contracts"
+        ],
+        "synonyms_fr": [
+            "loi",
+            "contrats"
+        ]
+    },
+    {
+        "id": "project-management",
+        "canonical_label_en": "Project Management",
+        "canonical_label_fr": "Gestion de Projet",
+        "synonyms_en": [
+            "planning",
+            "scrum"
+        ],
+        "synonyms_fr": [
+            "planification",
+            "scrum"
+        ]
+    },
+    {
+        "id": "tutorials",
+        "canonical_label_en": "Tutorials",
+        "canonical_label_fr": "Tutoriels",
+        "synonyms_en": [
+            "how to",
+            "guide"
+        ],
+        "synonyms_fr": [
+            "guide",
+            "comment faire"
+        ]
+    },
+    {
+        "id": "education",
+        "canonical_label_en": "Education",
+        "canonical_label_fr": "Éducation",
+        "synonyms_en": [
+            "learning",
+            "courses"
+        ],
+        "synonyms_fr": [
+            "apprentissage",
+            "cours"
+        ]
+    },
+    {
+        "id": "health",
+        "canonical_label_en": "Health",
+        "canonical_label_fr": "Santé",
+        "synonyms_en": [
+            "fitness",
+            "nutrition"
+        ],
+        "synonyms_fr": [
+            "forme",
+            "nutrition"
+        ]
+    },
+    {
+        "id": "fitness",
+        "canonical_label_en": "Fitness",
+        "canonical_label_fr": "Fitness",
+        "synonyms_en": [
+            "gym",
+            "workout"
+        ],
+        "synonyms_fr": [
+            "sport",
+            "exercice"
+        ]
+    },
+    {
+        "id": "nutrition",
+        "canonical_label_en": "Nutrition",
+        "canonical_label_fr": "Nutrition",
+        "synonyms_en": [
+            "diet",
+            "food"
+        ],
+        "synonyms_fr": [
+            "alimentation",
+            "régime"
+        ]
+    },
+    {
+        "id": "mental-health",
+        "canonical_label_en": "Mental Health",
+        "canonical_label_fr": "Santé Mentale",
+        "synonyms_en": [
+            "wellbeing"
+        ],
+        "synonyms_fr": [
+            "bien-être mental"
+        ]
+    },
+    {
+        "id": "philosophy",
+        "canonical_label_en": "Philosophy",
+        "canonical_label_fr": "Philosophie",
+        "synonyms_en": [
+            "thinking",
+            "ethics"
+        ],
+        "synonyms_fr": [
+            "réflexion",
+            "éthique"
+        ]
+    },
+    {
+        "id": "science",
+        "canonical_label_en": "Science",
+        "canonical_label_fr": "Science",
+        "synonyms_en": [
+            "research"
+        ],
+        "synonyms_fr": [
+            "recherche"
+        ]
+    },
+    {
+        "id": "math",
+        "canonical_label_en": "Math",
+        "canonical_label_fr": "Maths",
+        "synonyms_en": [
+            "algebra",
+            "geometry"
+        ],
+        "synonyms_fr": [
+            "algèbre",
+            "géométrie"
+        ]
+    },
+    {
+        "id": "culture",
+        "canonical_label_en": "Culture",
+        "canonical_label_fr": "Culture",
+        "synonyms_en": [
+            "society",
+            "trends"
+        ],
+        "synonyms_fr": [
+            "société",
+            "tendances"
+        ]
+    },
+    {
+        "id": "history",
+        "canonical_label_en": "History",
+        "canonical_label_fr": "Histoire",
+        "synonyms_en": [
+            "past"
+        ],
+        "synonyms_fr": [
+            "passé"
+        ]
+    },
+    {
+        "id": "politics",
+        "canonical_label_en": "Politics",
+        "canonical_label_fr": "Politique",
+        "synonyms_en": [
+            "policy"
+        ],
+        "synonyms_fr": [
+            "politique publique"
+        ]
+    },
+    {
+        "id": "news",
+        "canonical_label_en": "News",
+        "canonical_label_fr": "Actualités",
+        "synonyms_en": [
+            "updates",
+            "current events"
+        ],
+        "synonyms_fr": [
+            "actu",
+            "infos"
+        ]
+    },
+    {
+        "id": "analysis",
+        "canonical_label_en": "Analysis",
+        "canonical_label_fr": "Analyse",
+        "synonyms_en": [
+            "review"
+        ],
+        "synonyms_fr": [
+            "revue"
+        ]
+    },
+    {
+        "id": "opinion",
+        "canonical_label_en": "Opinion",
+        "canonical_label_fr": "Opinion",
+        "synonyms_en": [
+            "editorial"
+        ],
+        "synonyms_fr": [
+            "éditorial"
+        ]
+    },
+    {
+        "id": "entertainment",
+        "canonical_label_en": "Entertainment",
+        "canonical_label_fr": "Divertissement",
+        "synonyms_en": [
+            "movies",
+            "music"
+        ],
+        "synonyms_fr": [
+            "films",
+            "musique"
+        ]
+    },
+    {
+        "id": "movies",
+        "canonical_label_en": "Movies",
+        "canonical_label_fr": "Films",
+        "synonyms_en": [
+            "cinema"
+        ],
+        "synonyms_fr": [
+            "cinéma"
+        ]
+    },
+    {
+        "id": "music",
+        "canonical_label_en": "Music",
+        "canonical_label_fr": "Musique",
+        "synonyms_en": [
+            "songs"
+        ],
+        "synonyms_fr": [
+            "chansons"
+        ]
+    },
+    {
+        "id": "gaming",
+        "canonical_label_en": "Gaming",
+        "canonical_label_fr": "Jeux Vidéo",
+        "synonyms_en": [
+            "games",
+            "videogames"
+        ],
+        "synonyms_fr": [
+            "gaming",
+            "jeux"
+        ]
+    },
+    {
+        "id": "sports",
+        "canonical_label_en": "Sports",
+        "canonical_label_fr": "Sports",
+        "synonyms_en": [
+            "football",
+            "basketball"
+        ],
+        "synonyms_fr": [
+            "football",
+            "basket"
+        ]
+    },
+    {
+        "id": "travel",
+        "canonical_label_en": "Travel",
+        "canonical_label_fr": "Voyage",
+        "synonyms_en": [
+            "destination"
+        ],
+        "synonyms_fr": [
+            "destinations"
+        ]
+    },
+    {
+        "id": "photography",
+        "canonical_label_en": "Photography",
+        "canonical_label_fr": "Photographie",
+        "synonyms_en": [
+            "photo",
+            "camera"
+        ],
+        "synonyms_fr": [
+            "photo",
+            "caméra"
+        ]
+    },
+    {
+        "id": "art",
+        "canonical_label_en": "Art",
+        "canonical_label_fr": "Art",
+        "synonyms_en": [
+            "painting",
+            "drawing"
+        ],
+        "synonyms_fr": [
+            "peinture",
+            "dessin"
+        ]
+    },
+    {
+        "id": "creativity",
+        "canonical_label_en": "Creativity",
+        "canonical_label_fr": "Créativité",
+        "synonyms_en": [
+            "ideas",
+            "inspiration"
+        ],
+        "synonyms_fr": [
+            "idées",
+            "inspiration"
+        ]
+    },
+    {
+        "id": "inspiration",
+        "canonical_label_en": "Inspiration",
+        "canonical_label_fr": "Inspiration",
+        "synonyms_en": [
+            "creative ideas"
+        ],
+        "synonyms_fr": [
+            "idées créatives"
+        ]
+    },
+    {
+        "id": "lifestyle",
+        "canonical_label_en": "Lifestyle",
+        "canonical_label_fr": "Lifestyle",
+        "synonyms_en": [
+            "life tips"
+        ],
+        "synonyms_fr": [
+            "astuces de vie"
+        ]
+    },
+    {
+        "id": "fashion",
+        "canonical_label_en": "Fashion",
+        "canonical_label_fr": "Mode",
+        "synonyms_en": [
+            "style"
+        ],
+        "synonyms_fr": [
+            "style"
+        ]
+    },
+    {
+        "id": "food",
+        "canonical_label_en": "Food",
+        "canonical_label_fr": "Cuisine",
+        "synonyms_en": [
+            "recipes"
+        ],
+        "synonyms_fr": [
+            "recettes"
+        ]
+    },
+    {
+        "id": "household",
+        "canonical_label_en": "Home & Living",
+        "canonical_label_fr": "Maison & Vie",
+        "synonyms_en": [
+            "home tips"
+        ],
+        "synonyms_fr": [
+            "maison"
+        ]
+    },
+    {
+        "id": "diy",
+        "canonical_label_en": "DIY",
+        "canonical_label_fr": "DIY",
+        "synonyms_en": [
+            "craft",
+            "do it yourself"
+        ],
+        "synonyms_fr": [
+            "bricolage"
+        ]
+    },
+    {
+        "id": "parenting",
+        "canonical_label_en": "Parenting",
+        "canonical_label_fr": "Parentalité",
+        "synonyms_en": [
+            "family"
+        ],
+        "synonyms_fr": [
+            "famille"
+        ]
+    },
+    {
+        "id": "relationships",
+        "canonical_label_en": "Relationships",
+        "canonical_label_fr": "Relations",
+        "synonyms_en": [
+            "dating"
+        ],
+        "synonyms_fr": [
+            "amour"
+        ]
+    },
+    {
+        "id": "philanthropy",
+        "canonical_label_en": "Philanthropy",
+        "canonical_label_fr": "Philanthropie",
+        "synonyms_en": [
+            "charity"
+        ],
+        "synonyms_fr": [
+            "charité"
+        ]
+    },
+    {
+        "id": "environment",
+        "canonical_label_en": "Environment",
+        "canonical_label_fr": "Environnement",
+        "synonyms_en": [
+            "ecology"
+        ],
+        "synonyms_fr": [
+            "écologie"
+        ]
+    },
+    {
+        "id": "sustainability",
+        "canonical_label_en": "Sustainability",
+        "canonical_label_fr": "Durabilité",
+        "synonyms_en": [
+            "eco"
+        ],
+        "synonyms_fr": [
+            "éco"
+        ]
+    },
+    {
+        "id": "ai-tools",
+        "canonical_label_en": "AI Tools",
+        "canonical_label_fr": "Outils IA",
+        "synonyms_en": [
+            "llm tools",
+            "ai apps"
+        ],
+        "synonyms_fr": [
+            "outils d'ia",
+            "applications ia"
+        ]
+    },
+    {
+        "id": "coding-challenges",
+        "canonical_label_en": "Coding Challenges",
+        "canonical_label_fr": "Défis de Code",
+        "synonyms_en": [
+            "leetcode",
+            "problems"
+        ],
+        "synonyms_fr": [
+            "exercices de code"
+        ]
+    },
+    {
+        "id": "open-source",
+        "canonical_label_en": "Open Source",
+        "canonical_label_fr": "Open Source",
+        "synonyms_en": [
+            "github",
+            "community"
+        ],
+        "synonyms_fr": [
+            "github",
+            "communauté"
+        ]
+    },
+    {
+        "id": "apis",
+        "canonical_label_en": "APIs",
+        "canonical_label_fr": "APIs",
+        "synonyms_en": [
+            "endpoints"
+        ],
+        "synonyms_fr": [
+            "points d'accès"
+        ]
+    },
+    {
+        "id": "tools",
+        "canonical_label_en": "Tools",
+        "canonical_label_fr": "Outils",
+        "synonyms_en": [
+            "utilities"
+        ],
+        "synonyms_fr": [
+            "utilitaires"
+        ]
+    }
+]

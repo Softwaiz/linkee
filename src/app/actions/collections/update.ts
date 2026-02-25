@@ -106,6 +106,16 @@ export async function updateCollection(id: string, page: Partial<Collection> & {
             .execute();
     }
 
+    // Sync tags
+    await db.deleteFrom("boardTags").where("boardId", "=", candidate.id).execute();
+    if (data.tags && data.tags.length > 0) {
+        const tagValues = data.tags.map(tagId => ({
+            boardId: candidate.id,
+            tagId: tagId
+        }));
+        await db.insertInto("boardTags").values(tagValues).execute();
+    }
+
     return {
         success: true,
         message: `Collection ${updatedItem?.label} was updated !`,

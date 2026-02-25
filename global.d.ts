@@ -7,5 +7,6 @@ declare module "@db/index" {
          * The original collection this collection is duplicated from
          */
         sourceId?: string;
+        tags?: string[];
     }
 }
