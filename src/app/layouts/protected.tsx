@@ -1,11 +1,15 @@
 import { LayoutProps } from "rwsdk/router";
-import { AppBar } from "../components/app-bar";
+import { AppSideBar } from "../components/app-bar";
 import { getRequestInfo } from "rwsdk/worker";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
 import { IdentityProvider } from "@/providers/identity";
 import { BottomBar } from "@/components/bottom-bar";
 import styles from "./theme.css?url";
 import { SearchLayout } from "@/components/search/layout";
+import { Collection, db } from "@db/index";
+import { Bell, Menu, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ProtectedHeader } from "./protected-header";
 
 export default async function ProtectedLayout(props: LayoutProps) {
     const { ctx, request } = getRequestInfo();
@@ -17,27 +21,55 @@ export default async function ProtectedLayout(props: LayoutProps) {
         return <div className="w-full min-h-dvh">{props.children}</div>
     }
 
-    return <SidebarProvider defaultOpen={false}>
+    let limit = 6;
 
+    const [count, collections] = await Promise.all([
+        await db
+            .selectFrom("boards")
+            .where("userId", "=", props.requestInfo?.ctx.user?.id ?? "")
+            .select((eb) => [eb.fn.count("id").as("count")])
+            .execute(),
+        await db
+            .selectFrom("boards")
+            .select(["id", "slug", "label", "nodes"])
+            .where("userId", "=", props.requestInfo?.ctx.user?.id ?? "")
+            .orderBy("createdAt", "desc")
+            .limit(limit)
+            .execute()
+    ]);
+
+    return <>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href={styles} />
-
         <IdentityProvider user={ctx.user}>
-            <div className="w-full min-h-dvh">
-                <AppBar
-                    initialQuery={""}
-                    user={ctx.user!}
-                    search={
-                        <SearchLayout initialQuery={""} />
-                    }
-                />
-                <main className="pb-16">
-                    {props.children}
-                </main>
-                <BottomBar />
-            </div>
+            <SidebarProvider defaultOpen={false}>
+                <div style={{
+                    '--sidebar-width': '280px',
+                } as any} className="w-full min-h-dvh flex flex-row items-start justify-start bg-[#F2F0EF]">
+                    <div className="fixed top-0 left-0 h-dvh w-(--sidebar-width) hidden md:block">
+                        <AppSideBar
+                            user={ctx.user!}
+                            privateCollections={collections as unknown as Pick<Collection, "id" | "slug" | "label" | "nodes">[]}
+                            hasMorePrivateCollections={(count[0].count as number) > limit}
+                        />
+                    </div>
+                    <main className="md:pl-(--sidebar-width) grow pb-16 min-h-[300vh] bg-background">
+                        <ProtectedHeader />
+                        <div className="w-full px-0 lg:px-4">
+                            {props.children}
+                        </div>
+                    </main>
+                    <Sidebar variant="floating">
+                        <AppSideBar
+                            user={ctx.user!}
+                            privateCollections={collections as unknown as Pick<Collection, "id" | "slug" | "label" | "nodes">[]}
+                            hasMorePrivateCollections={(count[0].count as number) > limit}
+                        />
+                    </Sidebar>
+                </div>
+            </SidebarProvider>
         </IdentityProvider>
-    </SidebarProvider >
+    </>
 }
