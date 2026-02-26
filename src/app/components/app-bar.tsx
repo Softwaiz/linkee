@@ -17,15 +17,13 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut, User as UserIcon, ChevronDown, Search, Lightbulb, Home, SquareStack } from "lucide-react";
-import { useCallback, useMemo, useState, useTransition } from "react";
-import { Input } from "./ui/input";
+import { LogOut, User as UserIcon, ChevronDown, Lightbulb, Home, SquareStack, Plus, ChevronRight } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { Logo } from "./logo";
-import { useWindowLocation } from "@/hooks/useWindowLocation";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar";
 import { navigate } from "rwsdk/client";
 import { Link } from "./link";
-import { useDebounce } from "@/hooks/useDebounce";
+import { Collection } from "@db/index";
 
 interface User {
     id: string;
@@ -38,11 +36,11 @@ interface User {
 
 interface ProtectedHeaderProps {
     user: User;
-    initialQuery?: string;
-    search?: React.ReactNode;
+    privateCollections: Pick<Collection, "id" | "slug" | "label" | "nodes">[];
+    hasMorePrivateCollections: boolean;
 }
 
-export function AppBar({ initialQuery, user, search }: ProtectedHeaderProps) {
+export function AppSideBar({ user, privateCollections, hasMorePrivateCollections }: ProtectedHeaderProps) {
     const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
     const sidebar = useSidebar();
@@ -56,139 +54,111 @@ export function AppBar({ initialQuery, user, search }: ProtectedHeaderProps) {
     }, [user?.image, dicebearUrl]);
 
     return (
-        <section className="w-full flex flex-col items-start justify-start">
-            <header className="hidden lg:flex min-h-16 w-full flex-col items-center justify-center border-b bg-primary-950 text-primary-100 backdrop-blur-lg">
-                <div className="container mx-auto flex h-14 items-center justify-between gap-2">
-                    <div className="mr-4 flex">
-                        <a className="mr-6 flex items-center space-x-2" href="/home">
-                            <Logo />
-                            <span className="font-bold inline-block">Linkits</span>
-                        </a>
-                    </div>
-                    <div id="home-search-container" className="h-full grow flex flex-col items-center justify-center">
-                        {search}
-                    </div>
-                    <div className="flex flex-row items-center justify-center gap-2">
-                        <Button size="sm" variant="ghost" asChild>
-                            <Link title="Go to home" href="/home">
-                                <Home />
-                                Home
-                            </Link>
-                        </Button>
-                        <Button size="sm" variant="ghost" asChild>
-                            <Link title="Discover new collections" href="/discover">
-                                <Lightbulb />
-                                Discover
-                            </Link>
-                        </Button>
-                        <Button size="sm" variant="ghost" asChild>
-                            <Link title="Create your collection" href="/collections/new">
-                                <SquareStack />
-                                Create yours
-                            </Link>
-                        </Button>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-auto px-2 flex items-center gap-2">
-                                    <div className="flex items-center justify-center w-6 h-6 rounded-full overflow-hidden bg-muted border border-border">
-                                        <img src={displayImage} alt="Avatar" className="w-full h-full object-cover" />
-                                    </div>
-                                    <span className="text-sm font-medium hidden md:inline-block">
-                                        {user.alias || `${user.firstName} ${user.lastName}`}
-                                    </span>
-                                    <ChevronDown className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
-                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem asChild>
-                                    <Link title="View my profile" href="/profile" className="flex items-center cursor-pointer">
-                                        <UserIcon className="mr-2 h-4 w-4" />
-                                        <span>Profile</span>
+        <>
+            <aside className="w-full h-full flex flex-col items-center justify-center border-b bg-[#F2F0EF] text-neutral-600 backdrop-blur-lg">
+                <div className="w-full flex px-2 py-1.5">
+                    <a className="flex items-center space-x-2" href="/home">
+                        <Logo />
+                        <span className="font-bold inline-block">Linkits</span>
+                    </a>
+                </div>
+                <hr className="w-full border-neutral-300" />
+                <div className="w-full grow flex flex-col items-start justify-start gap-2 p-2">
+                    <Button
+                        className="w-full justify-start hover:bg-secondary-500 hover:text-secondary-100"
+                        size="sm"
+                        variant="ghost"
+                        asChild>
+                        <Link title="Go to home" href="/home">
+                            <Home />
+                            Home
+                        </Link>
+                    </Button>
+                    <Button
+                        className="w-full justify-start hover:bg-secondary-500 hover:text-secondary-100"
+                        size="sm"
+                        variant="ghost"
+                        asChild>
+                        <Link
+                            title="Discover new collections"
+                            href="/discover">
+                            <Lightbulb />
+                            Discover
+                        </Link>
+                    </Button>
+                    <div className="w-full rounded-md bg-white shadow-sm flex flex-col items-start justify-start gap-1">
+                        <div className="w-full px-2 py-2 flex flex-row items-center justify-start gap-1">
+                            <div className="grow flex flex-row items-center justify-start gap-1">
+                                <SquareStack className="w-4 h-4" />
+                                <h1 className="text-xs font-medium">Your collections</h1>
+                            </div>
+                            {hasMorePrivateCollections && <button className="text-xs text-blue-700 underline">
+                                View all
+                            </button>}
+                        </div>
+                        <div className="w-full flex flex-col items-start justify-start">
+                            {
+                                privateCollections.map((item) => {
+                                    const topicCount = item.nodes.length;
+                                    const linkCount = item.nodes.reduce((acc, node) => acc + node.items?.length, 0);
+                                    return <Link key={item.id} href={`/collections/${item.slug || item.id}`} className="w-full px-2 py-1.5 flex flex-row items-center justify-between cursor-pointer transition-all duration-75 hover:bg-primary-500 hover:text-primary-100 gap-2">
+                                        <div className="grow flex flex-col items-start justify-start overflow-hidden">
+                                            <span className="truncate text-nowrap text-sm font-medium">{item.label}</span>
+                                            <div className="opacity-75 gap-1">
+                                                <span className="text-xs">
+                                                    <b>{topicCount}</b> topics, <b>{linkCount}</b> links in total
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <ChevronRight className="size-4" />
                                     </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)} className="text-destructive focus:text-destructive">
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    <span>Log out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                })
+                            }
+                        </div>
+                        <div className="w-full px-1 py-1.5">
+                            <Button className="w-full justify-start" size="sm" variant="default" asChild>
+                                <Link title="Create new collection" href="/collections/new">
+                                    <Plus />
+                                    Create new
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </header>
-
-            <LogoutDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen} />
-
-            <Sidebar className="bg-neutral-100" collapsible="offcanvas" variant="floating" side="left">
-                <SidebarHeader>
-                    <div className="flex flex-row items-center justify-start gap-2">
-                        <Logo />
-                        <span>Linkits</span>
-                    </div>
-                </SidebarHeader>
-                <SidebarContent>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Menu</SidebarGroupLabel>
-                        <SidebarMenu>
-                            <SidebarMenuItem
-                                onClick={() => {
-                                    sidebar.setOpenMobile(false);
-                                    navigate("/home");
-                                }}>
-                                <SidebarMenuButton>
-                                    <Home />
-                                    Home
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem
-                                onClick={() => {
-                                    sidebar.setOpenMobile(false);
-                                    navigate("/discover");
-                                }}>
-                                <SidebarMenuButton>
-                                    <Lightbulb />
-                                    Discover
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroup>
-                </SidebarContent>
-                <SidebarFooter>
-                    <SidebarMenuItem className="flex flex-row items-center justify-start gap-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div className="w-full flex flex-row items-center justify-center px-4">
-                                    <img
-                                        className="size-10 object-cover"
-                                        src={displayImage}
-                                        alt={`${user?.firstName} ${user?.lastName}`}
-                                    />
-                                    <div className="grow flex flex-col items-start justify-start">
-                                        <span className="text-sm">{user?.firstName} {user?.lastName}</span>
-                                        <span className="text-xs opacity-75">{user?.email}</span>
-                                    </div>
-                                    <div>
-                                        <ChevronDown />
-                                    </div>
+                <hr className="w-full border-neutral-300" />
+                <div className="w-full flex items-center gap-2 p-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-full px-2 flex items-center gap-2 cursor-pointer">
+                                <div className="flex items-center justify-start w-6 h-6 rounded-full overflow-hidden bg-muted border border-border">
+                                    <img src={displayImage} alt="Avatar" className="w-full h-full object-cover" />
                                 </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-full">
-                                <DropdownMenuItem asChild>
-                                    <Link href="/profile">
-                                        My Profile
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarFooter>
-            </Sidebar >
-        </section>
+                                <span className="grow text-left text-sm font-medium">
+                                    {user.alias || `${user.firstName} ${user.lastName}`}
+                                </span>
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                                <Link title="View my profile" href="/profile" className="flex items-center cursor-pointer">
+                                    <UserIcon className="mr-2 h-4 w-4" />
+                                    <span>Profile</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)} className="text-destructive focus:text-destructive">
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Log out</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            </aside>
+            <LogoutDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen} />
+        </>
     );
 }
 
