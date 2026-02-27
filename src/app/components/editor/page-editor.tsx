@@ -1,6 +1,6 @@
 'use client'
 
-import { ChangeEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, ReactNode, Ref, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -21,7 +21,7 @@ import {
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable'
-import { Plus, Layers, Save, GripVertical, Pen, Brush, Info, List, Lock } from 'lucide-react'
+import { Plus, Layers, Save, GripVertical, Pen, Brush, Info, List, Lock, Tag } from 'lucide-react'
 import { SectionBlock } from './blocks/section'
 import { SectionDialog, LinkDialog, TextDialog } from './dialog'
 import { Button } from '@/components/ui/button'
@@ -45,6 +45,8 @@ import { useDimensions } from '@/hooks/useDimensions'
 import { AnimatePresence, easeIn, easeOut, motion } from 'motion/react'
 import { CollectionSettings } from '@db/index'
 import { useDebounce } from '@/hooks/useDebounce'
+import { Checkbox } from '../ui/checkbox'
+import { getTagsWithCounts } from '@/actions/tags'
 
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
@@ -94,14 +96,19 @@ export type PrefillLink = {
   favicon?: string
 }
 
-export function PageEditor({ header, footer, collection, tags: initialTags = [], settings: initialSettings, prefillLink }: {
-  header?: ReactNode,
+type PageEditorProps = {
   footer?: ReactNode,
   collection?: Collection,
   settings?: Partial<CollectionSettings>,
   tags?: string[],
   prefillLink?: PrefillLink
-}) {
+} & ({ header: ReactNode; hasHeader: true } | { header?: undefined; hasHeader: false })
+
+export interface PageEditorRef {
+  save(): void;
+}
+
+export function PageEditor({ header, hasHeader = true, footer, collection, tags: initialTags = [], settings: initialSettings, prefillLink, ref }: PageEditorProps & { ref?: Ref<PageEditorRef> }) {
 
   const cachedPage = useMemo(() => {
     return pageCache(collection?.id ?? "new");
@@ -684,6 +691,26 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
     setTags(newTags);
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    save: handleSaveCollection,
+  }));
+
+  const [availableTags, setAvailableTags] = useState<Awaited<ReturnType<typeof getTagsWithCounts>>>([]);
+
+  useEffect(() => {
+    getTagsWithCounts().then(data => setAvailableTags(data)).catch(console.error);
+  }, []);
+
+  const toggleTag = (tagId: string) => {
+    let newTags;
+    if (tags.includes(tagId)) {
+      newTags = tags.filter(id => id !== tagId);
+    } else {
+      newTags = [...tags, tagId];
+    }
+    handleTagsUpdate(newTags);
+  }
+
   return (
     <div className="min-h-dvh">
       <DndContext
@@ -694,28 +721,30 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
         onDragEnd={handleDragEnd}
       >
         <div className="grid grid-cols-12 gap-4 min-h-[80vh]">
-          <div className="col-span-12 sticky top-0 z-2 border-b border-input flex flex-row items-center justify-end gap-2 bg-white/40 backdrop-blur-lg px-1 py-0.5">
-            <div className="grow overflow-hidden">
-              {header}
+          {
+            hasHeader && <div className="col-span-12 sticky top-0 z-2 border-b border-input flex flex-row items-center justify-end gap-2 bg-white/40 backdrop-blur-lg px-1 py-0.5">
+              <div className="grow overflow-hidden">
+                {header}
+              </div>
+              <Button
+                size="sm"
+                title='Save this collection'
+                className='text-sm flex flex-row items-center justify-center gap-2'
+                disabled={saving || slugAvailable === false}
+                onClick={() => {
+                  handleSaveCollection();
+                }}>
+                {
+                  saving ? <>
+                    Saving
+                    <Loader2 className="size-4 animate-spin" />
+                  </> : <>
+                    Save
+                    <Save className="size-4" /></>
+                }
+              </Button>
             </div>
-            <Button
-              size="sm"
-              title='Save this collection'
-              className='text-sm flex flex-row items-center justify-center gap-2'
-              disabled={saving || slugAvailable === false}
-              onClick={() => {
-                handleSaveCollection();
-              }}>
-              {
-                saving ? <>
-                  Saving
-                  <Loader2 className="size-4 animate-spin" />
-                </> : <>
-                  Save
-                  <Save className="size-4" /></>
-              }
-            </Button>
-          </div>
+          }
 
           <SectionCard className="col-span-12 w-full text-foreground">
             <div className="w-full flex flex-row items-center justify-start">
@@ -748,6 +777,65 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
                   rows={6}
                 />
               </div>
+              <motion.div layout className='space-y-2'>
+                <AnimatePresence>
+                  <Label className='popover-foreground'>Customize the link</Label>
+                  <div className="relative flex flex-row items-center gap-2 border border-input rounded-md">
+                    <div
+                      ref={slugRef}
+                      className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start border-r border-input'>
+                      <span
+                        className='text-sm text-nowrap truncate opacity-75'
+                      >
+                        {urlPrefix}
+                      </span>
+                    </div>
+                    <Input
+                      value={page.slug || ''}
+                      onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
+                      placeholder="my-awesome-tag"
+                      style={{
+                        paddingLeft: `${(dimensions.dimensions?.width ?? 0) + 8}px`
+                      }}
+                      className={
+                        cn(
+                          "shadow-none",
+                          "bg-white/10 placeholder:text-neutral-400 focus-visible:ring-0 pr-10 border-0",
+                          slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
+                        )
+                      }
+                    />
+                    <motion.div layout className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
+                      {!isCheckingSlug && slugAvailable === true && <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: .1, ease: easeOut }}>
+                        <Check className="size-4 text-green-500" />
+                      </motion.div>
+                      }
+                      {!isCheckingSlug && slugAvailable === false && <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: .1, ease: easeOut }}>
+                        <X className="size-4 text-red-500" />
+                      </motion.div>
+                      }
+                    </motion.div>
+                  </div>
+                  {slugMessage && (
+                    <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
+                      {slugMessage}
+                    </p>
+                  )}
+                  {page.slug && <p className="text-sm text-muted-foreground">
+                    Your collection will be accessible at <span className="underline text-blue-500">{urlPrefix}{page.slug}</span>
+                  </p>
+                  }
+                </AnimatePresence>
+              </motion.div>
             </div>
           </SectionCard>
 
@@ -799,7 +887,7 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
             </div>
           </SectionCard>
 
-          <div className="col-span-12 lg:col-span-8 space-y-4 bg-card rounded-md border border-input">
+          <div className="col-span-12 lg:col-span-8 space-y-4 rounded-md bg-card/20 border border-input">
             <div className="w-full min-h-100 relative overflow-hidden">
               <AnimatePresence>
                 {
@@ -917,6 +1005,37 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
             </div>
           </SectionCard>
 
+          <SectionCard className="col-span-12">
+            <div className="flex flex-col items-start justify-start gap-1">
+              <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
+                <span className='text-muted-foreground inline-block pr-2'>
+                  <Tag className="size-4" />
+                </span>
+                Tags & Categories
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Select tags to categorize your collection for discovery and promotion.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+              {availableTags.map((tag) => (
+                <div key={tag.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`tag-${tag.id}`}
+                    checked={tags.includes(tag.id)}
+                    onCheckedChange={() => toggleTag(tag.id)}
+                  />
+                  <Label
+                    htmlFor={`tag-${tag.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {tag.canonicalLabelEn}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+
           {settings && <SectionCard className="col-span-12">
             <h1 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
               <span className="inline-block pr-2">
@@ -932,65 +1051,7 @@ export function PageEditor({ header, footer, collection, tags: initialTags = [],
               onSettingsUpdate={handleSettingsUpdate}
               onTagsUpdate={handleTagsUpdate}
             >
-              <motion.div layout className='space-y-2'>
-                <AnimatePresence>
-                  <Label className='popover-foreground'>Customize the link</Label>
-                  <div className="relative flex flex-row items-center gap-2 border border-input rounded-md">
-                    <div
-                      ref={slugRef}
-                      className='absolute top-0 left-0 bottom-0 pl-2 pr-1 max-w-1/5 md:max-w-3/5 overflow-hidden flex flex-row items-center justify-start border-r border-input'>
-                      <span
-                        className='text-sm text-nowrap truncate opacity-75'
-                      >
-                        {urlPrefix}
-                      </span>
-                    </div>
-                    <Input
-                      value={page.slug || ''}
-                      onChange={(e) => setPage((prev) => ({ ...prev, slug: e.target.value }))}
-                      placeholder="my-awesome-tag"
-                      style={{
-                        paddingLeft: `${(dimensions.dimensions?.width ?? 0) + 8}px`
-                      }}
-                      className={
-                        cn(
-                          "shadow-none",
-                          "bg-white/10 placeholder:text-neutral-400 focus-visible:ring-0 pr-10 border-0",
-                          slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : ''
-                        )
-                      }
-                    />
-                    <motion.div layout className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                      {isCheckingSlug && <Loader2 className="animate-spin size-4 text-muted-foreground" />}
-                      {!isCheckingSlug && slugAvailable === true && <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: .1, ease: easeOut }}>
-                        <Check className="size-4 text-green-500" />
-                      </motion.div>
-                      }
-                      {!isCheckingSlug && slugAvailable === false && <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: .1, ease: easeOut }}>
-                        <X className="size-4 text-red-500" />
-                      </motion.div>
-                      }
-                    </motion.div>
-                  </div>
-                  {slugMessage && (
-                    <p className={`text-xs ${slugAvailable === false ? 'text-red-400' : slugAvailable === true ? 'text-green-400' : 'text-muted-foreground'}`}>
-                      {slugMessage}
-                    </p>
-                  )}
-                  {page.slug && <p className="text-sm text-muted-foreground">
-                    Your collection will be accessible at <span className="underline text-blue-500">{urlPrefix}{page.slug}</span>
-                  </p>
-                  }
-                </AnimatePresence>
-              </motion.div>
+
             </SettingsArea>
           </SectionCard>
           }
@@ -1044,7 +1105,7 @@ function ReorderableSectionList({ sections, onSectionSelect, active }: { active:
 function SectionCard(props: { className?: string, children: [first: ReactNode, second: ReactNode] }) {
   return <div className={
     cn(
-      "col-span-12 relative w-full bg-card rounded-md border border-input text-foreground",
+      "col-span-12 relative w-full bg-card/20 rounded-md border border-border text-foreground",
       props.className
     )
   }>
@@ -1091,10 +1152,10 @@ function DraggableSectionCard({ active, section, onClick }: { active: boolean; s
     data-active={active}
     className={
       cn(
-        "w-full border border-neutral-300 text-neutral-900 p-2",
+        "w-full bg-card/30 text-card-foreground border border-border p-2",
         "rounded-md flex flex-row items-center justify-start gap-2 transition-all duration-75",
-        "hover:border-transparent hover:bg-secondary-200/20 hover:text-secondary-700 cursor-pointer",
-        active && "border bg-secondary-500/5 text-secondary-700 border-transparent"
+        "hover:border-transparent hover:bg-background-700/20 hover:text-card-foreground cursor-pointer",
+        active && "border bg-card/40 border-transparent"
       )
     }>
     <button

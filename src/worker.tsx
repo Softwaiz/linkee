@@ -14,7 +14,7 @@ import { identityCookie } from "./cookies";
 import CreateCollectionPage from "@/pages/protected/collections/new";
 import DashboardPage from "@/pages/protected/home";
 import CollectionPage from "@/pages/protected/collections/single";
-import EditCollectionPage from "@/pages/protected/collections/edit";
+import EditCollectionPage from "@/pages/protected/collections/edit/edit";
 import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
 import PublicProfilePage from "@/pages/public/user-profile";
@@ -39,6 +39,7 @@ import UsersPage from "@/office/pages/users";
 import { CollectionsPage } from "@/office/pages/collections";
 import { TagsPage } from "@/office/pages/tags";
 import { seedTags } from "@/api/office/seed-tags";
+import { requireIdentity } from "@/middlewares/authentication";
 export { Database } from "@db/durableObject";
 
 
@@ -112,6 +113,7 @@ const app = defineApp([
       route("/robots.txt", Robots),
       route("/api/metadata", extractMetadata),
       prefix("/", [
+        requireIdentity,
         layout(ProtectedLayout, [
           route("home", DashboardPage),
           route("discover", DiscoverPage),
@@ -140,7 +142,6 @@ const app = defineApp([
     ])
   ])
 ]);
-
 
 export default {
   fetch: app.fetch,

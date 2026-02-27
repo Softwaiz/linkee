@@ -11,6 +11,7 @@ export function Link({ children, href, target, history, info, ...props }: Anchor
                 ev.preventDefault();
                 navigate(href, { history, info });
             }
+            props.onClick?.(ev);
         }}
     >
         {children}

@@ -4,46 +4,30 @@ import { LogIn, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "../link"
 import { Logo } from "../logo"
+import { SearchLayout } from "../search/layout"
 
 export function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false)
 
     return (
         <nav
-            className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md"
+            className="sticky top-0 z-50 border-b border-border bg-card/20 backdrop-blur-md"
             role="navigation"
             aria-label="Main navigation"
         >
             <div className="mx-auto flex max-w-[1080px] items-center justify-between px-6 py-4">
-                {/* Logo */}
                 <Link href="/" className="flex items-center gap-2" aria-label="Linkits home">
                     <Logo />
                     <span className="text-xl font-semibold tracking-tight text-foreground">
                         Linkits
                     </span>
                 </Link>
-
-                {/* Desktop links */}
-                <div className="hidden items-center gap-8 md:flex">
-                    <Link
-                        href="#discover"
-                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Discover
-                    </Link>
-                    <Link
-                        href="/collections/new"
-                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Create Yours
-                    </Link>
+                <div className="hidden lg:block w-full max-w-lg">
+                    <SearchLayout />
                 </div>
-
-                {/* Desktop CTA */}
                 <div className="hidden md:block">
                     <Button
-                        size="sm"
-                        className="bg-foreground text-background hover:bg-foreground/90"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
                         asChild
                     >
                         <Link href="/signin" className="flex flex-row items-center gap-2">
@@ -52,8 +36,6 @@ export function Navbar() {
                         </Link>
                     </Button>
                 </div>
-
-                {/* Mobile toggle */}
                 <button
                     className="md:hidden"
                     onClick={() => setMobileOpen(!mobileOpen)}

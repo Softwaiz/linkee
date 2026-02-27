@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Collection } from '@db/index'
 import { Link } from '../link'
+import { CollectionCardLayout } from '../collection/card'
 
 interface DiscoverCardProps {
   collection: Collection
@@ -19,12 +20,14 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalSections = collection.nodes.length
+  const totalSections = collection.nodes.length;
+
+  const href = `/collections/${collection.slug || collection.id}`;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
+    <CollectionCardLayout>
       {collection.banner && (
-        <Link href={`/collections/${collection.slug || collection.id}`} className="relative aspect-16/10 overflow-hidden">
+        <Link href={href} className="relative aspect-16/10 overflow-hidden">
           <img
             src={collection.banner || "/placeholder.svg"}
             alt={collection.label}
@@ -37,7 +40,7 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
           <DropdownMenuTrigger asChild>
             <Button
               size="icon"
-              className="size-8 rounded-full bg-[#5865F2] text-white shadow-md hover:bg-[#4752c4]"
+              className="size-8 rounded-full bg-primary-500/20 shadow-md hover:bg-primary-500/40"
             >
               <MoreHorizontal className="size-4" />
             </Button>
@@ -53,9 +56,9 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
         </DropdownMenu>
       </div>
 
-      <Link href={`/collections/${collection.slug || collection.id}`} className="flex flex-1 flex-col p-5">
+      <Link href={href} className="flex flex-1 flex-col p-5">
         {!collection.banner && (
-          <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+          <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-muted/10 text-muted-foreground">
             <Layers className="size-5" />
           </div>
         )}
@@ -80,7 +83,7 @@ export function DiscoverCard({ collection }: DiscoverCardProps) {
           </span>
         </div>
       </Link>
-    </div>
+    </CollectionCardLayout>
   )
 }
 

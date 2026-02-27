@@ -45,19 +45,6 @@ export function SettingsArea({ children, hasDangerZone, collection, settings: in
         handleSave({ [field]: value });
     }
 
-    const toggleTag = (tagId: string) => {
-        let newTags;
-        if (tags.includes(tagId)) {
-            newTags = tags.filter(id => id !== tagId);
-        } else {
-            newTags = [...tags, tagId];
-        }
-        setTags(newTags);
-        if (onTagsUpdate) {
-            onTagsUpdate(newTags);
-        }
-    }
-
     return (
         <div className="w-full">
             <div className="flex-1 space-y-4">
@@ -112,34 +99,6 @@ export function SettingsArea({ children, hasDangerZone, collection, settings: in
                                 </Label>
                             </div>
                         </RadioGroup>
-                    </div>
-
-                    <div className="flex flex-col items-start justify-start gap-4 rounded-lg mt-8 border-t pt-8">
-                        <div className="space-y-0.5">
-                            <div className="flex flex-row items-center justify-start gap-1">
-                                <Label>Collection Tags</Label>
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                                Select tags to categorize your collection for discovery.
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                            {availableTags.map((tag) => (
-                                <div key={tag.id} className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id={`tag-${tag.id}`}
-                                        checked={tags.includes(tag.id)}
-                                        onCheckedChange={() => toggleTag(tag.id)}
-                                    />
-                                    <Label
-                                        htmlFor={`tag-${tag.id}`}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                    >
-                                        {tag.canonicalLabelEn}
-                                    </Label>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
                 {children}

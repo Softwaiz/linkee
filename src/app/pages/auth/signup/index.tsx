@@ -1,5 +1,5 @@
 import { RequestInfo } from "rwsdk/worker";
-import SignupContent from "./signup-content";
+import SignupContent from "./content";
 
 export default function SignupPage(props: RequestInfo) {
     return (

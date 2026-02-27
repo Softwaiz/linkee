@@ -1,4 +1,4 @@
-import SigninContent from "./signin-content";
+import SigninContent from "./content";
 import { RequestInfo } from "rwsdk/worker";
 
 export default function Signin(props: RequestInfo) {

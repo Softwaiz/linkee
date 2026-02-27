@@ -126,17 +126,6 @@ export function SectionBlock({
               Add a link
             </span>
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              onAddText();
-            }}>
-            <Type size={16} />
-            <span className="text-sm">
-              Add Text
-            </span>
-          </Button>
         </div>
 
         {section.items.length === 0 && (

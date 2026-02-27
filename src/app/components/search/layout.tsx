@@ -7,6 +7,7 @@ import { useDimensions } from "@/hooks/useDimensions";
 import { AnimatePresence, motion } from "motion/react";
 import { SearchResults } from "./results";
 import { useSearch } from "@/hooks/useSearch";
+import { Popover } from "radix-ui";
 
 export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?: string }>) {
     const [searchAreaOpen, setSearchAreaOpen] = useState(false);
@@ -55,7 +56,7 @@ export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?
     }, [searchAreaOpen, currentStyle.x, currentStyle.y]);
 
     return <div className="w-full flex flex-row items-center justify-center relative">
-        <div className="relative w-full text-neutral-600 border border-neutral-200 rounded-full" ref={inputContainerRef}>
+        <div className="relative w-full text-neutral-600 border border-border rounded-md" ref={inputContainerRef}>
             <Input
                 type="text"
                 placeholder="Search people, collections, topics..."
@@ -66,9 +67,9 @@ export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?
                 onChange={(e) => {
                     setQuery(e.currentTarget.value)
                 }}
-                className="w-full h-10 rounded-full border-0 bg-neutral-300/10 pr-12 focus:bg-background/10 placeholder:text-neutral-600/60"
+                className="w-full h-9 rounded-md border-0 bg-neutral-300/10 pr-12 focus:bg-background/10 placeholder:text-foreground/60"
             />
-            <span className="h-full aspect-square flex items-center justify-center bg-background border border-neutral-200 rounded-full absolute right-0 top-0">
+            <span className="h-full aspect-square flex items-center justify-center bg-background border border-border rounded-md absolute right-0 top-0">
                 {
                     isSearching ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />
                 }
@@ -92,7 +93,7 @@ export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?
                                 width: `${inputContainerSize?.width ?? 0}px`,
                             }}
                         >
-                            <div className="container mx-auto bg-neutral/60 text-card-foreground backdrop-blur-lg flex flex-col gap-2 min-h-20 border border-input rounded-md p-2 lg:p-4">
+                            <div className="container mx-auto bg-card/80 text-card-foreground backdrop-blur-sm flex flex-col gap-2 min-h-20 border border-border rounded-md p-2 lg:p-4">
                                 <SearchResults
                                     isPending={isSearching}
                                     count={searchCount}

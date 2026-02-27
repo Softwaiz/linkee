@@ -29,8 +29,6 @@ export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="Linkits - Curate, Organize & Share Link Collections" />
-
-      {/* Twitter / X */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@linkits" />
       <meta name="twitter:title" content="Linkits - Curate, Organize & Share Link Collections" />
@@ -42,17 +40,19 @@ export const Document: React.FC<PropsWithChildren<RequestInfo>> = ({
       <link rel="stylesheet" href={styles} />
       <link rel="stylesheet" href={rootStyles} />
       <link rel="modulepreload" href="/src/client.tsx" />
-      <script nonce={rw.nonce} type="text/javascript" dangerouslySetInnerHTML={{
-        __html: `
+      <script
+        nonce={rw.nonce}
+        type="text/javascript"
+        dangerouslySetInnerHTML={{
+          __html: `
         window.posthogApiKey = "${env.POSTHOG_PUBLIC_KEY}";\n
         window.posthogApiHost = "${env.POSTHOG_PUBLIC_HOST}";
         `
-      }}>
-
+        }}>
       </script>
       <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
     </head>
-    <body>
+    <body className="dark">
       <div id="root">{children}</div>
       <script>import("/src/client.tsx")</script>
     </body>

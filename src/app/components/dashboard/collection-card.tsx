@@ -1,5 +1,4 @@
 'use client'
-
 import { MoreHorizontal, ExternalLink, Layers, Link as LinkIcon, Share } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Collection } from '@db/index'
 import { Link } from '../link'
+import { CollectionCardLayout } from '../collection/card'
 
 interface CollectionCardProps {
   collection: Collection;
@@ -26,20 +26,20 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
   const totalSections = collection.nodes.length
 
   return (
-    <div className="group relative flex flex-col rounded-xl border border-border bg-card overflow-hidden transition-all duration-200 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5">
+    <CollectionCardLayout>
       {collection.banner && (
         <div className="w-full aspect-video overflow-hidden">
           <img
             src={collection.banner}
             alt={collection.label}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+            className="w-full h-full object-cover object-top transition-transform duration-200 group-hover:scale-105"
           />
         </div>
       )}
       <div className="p-3 lg:p-5 flex flex-col flex-1">
         <div className="mb-2 flex items-start justify-between">
           {!collection.picture && (
-            <div className="flex size-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-card text-card-foreground">
               <Layers className="size-5" />
             </div>
           )}
@@ -99,6 +99,6 @@ export function CollectionCard({ collection, onDelete, onDuplicate }: Collection
           </div>
         </Link>
       </div>
-    </div>
+    </CollectionCardLayout>
   )
 }

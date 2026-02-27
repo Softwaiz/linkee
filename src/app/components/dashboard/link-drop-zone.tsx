@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, DragEvent } from 'react'
-import { ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowRight, Loader2, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collection } from '@db/index'
 import { LinkDropDialog } from './link-drop-dialog'
@@ -85,7 +85,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
 
     return (
         <motion.div
-            className='w-full space-y-4'
+            className='w-full space-y-4 bg-card/20 p-3 lg:p-4 rounded-md border border-border text-card-foreground'
             initial={{
                 opacity: 0,
                 y: 10
@@ -94,64 +94,119 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                 opacity: 1,
                 y: 0
             }}>
-            <div className="w-full relative overflow-hidden flex flex-col items-center justify-center rounded-md">
+            <div className="w-full relative flex flex-col items-center justify-center rounded-md">
                 <div className="relative w-full flex flex-col items-start justify-center gap-4">
-                    <div className="flex flex-col items-start justify-start gap-0.5">
-                        <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-foreground'>Save your inspiration now.</h1>
-                        <p className='text-foreground/80 text-xs md:text-sm lg:text-base opacity-75'>Don't let it fade away. Quickly save your links and access them from any device, where you need them.</p>
-                    </div>
-                    <div className="w-full flex flex-row items-center bg-background/20 rounded-md focus-within:ring-ring/50 focus-within:ring-[3px] border border-input">
-                        <input
-                            type="url"
-                            className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 lg:h-12 focus:outline-none focus:ring-0 text-xs md:text-sm'
-                            placeholder="Copy paste your new link here."
-                            value={draftUrl}
-                            onChange={(ev) => {
-                                setDraftUrl(ev.currentTarget.value);
-                            }}
-                            onKeyDown={(ev) => {
-                                if (ev.key === 'Enter') {
-                                    handleCollectDraft()
-                                }
-                            }} />
-                        <motion.button
-                            layout
-                            onClick={handleCollectDraft}
-                            className={cn(
-                                'w-auto rounded-r-md bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
-                                !draftUrl && 'cursor-not-allowed',
-                                "h-10 lg:h-12 shadow-sm",
-                                "px-4 md:px-8 gap-2",
-                                "text-xs md:text-sm font-semibold"
-                            )}>
-                            <AnimatePresence>
-                                {isLoading ? (
-                                    <motion.div
-                                        key="resolving"
-                                        className='flex flex-row items-center justify-center gap-2'
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <span className='uppercase leading-relaxed'>Resolving</span>
-                                        <Loader2 className="size-6 lg:size-8 animate-spin" />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="stale"
-                                        className='flex flex-row items-center justify-center gap-2'
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <span className='uppercase leading-relaxed'>Save</span>
-                                        <ArrowRight className="size-4 lg:size-8" />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.button>
+                    <div className="w-full flex flex-col items-start justify-start gap-2">
+                        <div className="w-full md:hidden flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-full">
+                            <input
+                                type="url"
+                                className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 focus:outline-none focus:ring-0 text-xs md:text-sm'
+                                placeholder="Paste your link here."
+                                value={draftUrl}
+                                onChange={(ev) => {
+                                    setDraftUrl(ev.currentTarget.value);
+                                }}
+                                onKeyDown={(ev) => {
+                                    if (ev.key === 'Enter') {
+                                        handleCollectDraft()
+                                    }
+                                }} />
+                            <motion.button
+                                layout
+                                onClick={handleCollectDraft}
+                                className={cn(
+                                    'w-auto rounded-full bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                    !draftUrl && 'cursor-not-allowed',
+                                    "h-10 shadow-sm",
+                                    "px-4 md:px-8 gap-2",
+                                    "text-xs md:text-sm font-semibold"
+                                )}>
+                                <AnimatePresence>
+                                    {isLoading ? (
+                                        <motion.div
+                                            key="resolving"
+                                            className='flex flex-row items-center justify-center gap-2'
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -20 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <span className='uppercase leading-relaxed'>Resolving</span>
+                                            <Loader2 className="size-6 lg:size-8 animate-spin" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="stale"
+                                            className='flex flex-row items-center justify-center gap-2'
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -20 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <span className='leading-relaxed'>Save</span>
+                                            <Save className="size-4 lg:size-8" />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </motion.button>
+                        </div>
+                        <div className="w-full flex flex-row items-center justify-between">
+                            <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-foreground'>Save your inspiration now.</h1>
+                            <div className="basis-2/3 hidden md:flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-full">
+                                <input
+                                    type="url"
+                                    className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 focus:outline-none focus:ring-0 text-xs md:text-sm'
+                                    placeholder="Copy paste your new link here."
+                                    value={draftUrl}
+                                    onChange={(ev) => {
+                                        setDraftUrl(ev.currentTarget.value);
+                                    }}
+                                    onKeyDown={(ev) => {
+                                        if (ev.key === 'Enter') {
+                                            handleCollectDraft()
+                                        }
+                                    }} />
+                                <motion.button
+                                    layout
+                                    onClick={handleCollectDraft}
+                                    className={cn(
+                                        'w-auto rounded-full bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                        !draftUrl && 'cursor-not-allowed',
+                                        "h-10 shadow-sm",
+                                        "px-4 md:px-8 gap-2",
+                                        "text-xs md:text-sm font-semibold"
+                                    )}>
+                                    <AnimatePresence>
+                                        {isLoading ? (
+                                            <motion.div
+                                                key="resolving"
+                                                className='flex flex-row items-center justify-center gap-2'
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <span className='uppercase leading-relaxed'>Resolving</span>
+                                                <Loader2 className="size-6 lg:size-8 animate-spin" />
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="stale"
+                                                className='flex flex-row items-center justify-center gap-2'
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <span className='leading-relaxed'>Save</span>
+                                                <Save className="size-4 lg:size-8" />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.button>
+                            </div>
+                        </div>
+                        <p className='text-foreground/80 text-xs md:text-sm opacity-75'>Don't let it fade away. Quickly save your links and access them from any device, where you need them.</p>
                     </div>
                 </div>
             </div>

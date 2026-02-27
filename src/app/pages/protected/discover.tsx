@@ -3,8 +3,9 @@ import { Collection, db } from '@db/index'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
-import Page from '@/components/page'
 import { RequestInfo } from 'rwsdk/worker'
+import { ContentLayout } from '@/components/page/content-layout'
+import { SearchLayout } from '@/components/search/layout'
 
 export default async function DiscoverPage(props: RequestInfo) {
 
@@ -17,45 +18,48 @@ export default async function DiscoverPage(props: RequestInfo) {
     .limit(20)
     .execute();
 
-
-  return <Page.Root>
-    <Page.Header.Custom container className="justify-between">
-      <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
-        <Page.BackButton />
-        <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
-          <div className="p-2">
-            <Lightbulb size={21} />
+  return <>
+    <title>Discover collections</title>
+    <meta name="description" content="Explore curated collections from creators around the world." />
+    <ContentLayout
+      header={{
+        icon: <Lightbulb className='size-7' />,
+        title: "Discover collections",
+        middle: <div className="w-full flex flex-row items-center justify-end">
+          <div className="max-w-lg w-full">
+            <SearchLayout />
           </div>
-          <Page.Title>Discover collections</Page.Title>
+        </div>,
+        actions: <>
+          <Button
+            asChild>
+            <Link href="/collections/new">
+              <Plus />
+              <span className="hidden md:inline-block">
+                Create yours
+              </span>
+            </Link>
+          </Button>
+        </>
+      }}>
+      <div className="w-full space-y-4 md:space-y-6 lg:space-y-8 @container/discover">
+        <div className="w-full flex flex-col items-start justify-start">
+          <h1 className='text-lg lg:text-2xl font-bold text-foreground'>These kits are public.</h1>
+          <p className="text-sm text-foreground/80">
+            Explore curated collections from creators around the world.
+          </p>
+        </div>
+        <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
+          <SearchLayout />
+        </div>
+
+        <div
+          className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+          {items.map((collection) => (
+            <DiscoverCard key={collection.id} collection={collection as unknown as Collection} />
+          ))}
         </div>
       </div>
-      <div>
-        <Button
-          variant="outline"
-          asChild>
-          <Link href="/collections/new">
-            <Plus />
-            <span className="hidden md:inline-block">
-              Create yours
-            </span>
-          </Link>
-        </Button>
-      </div>
-    </Page.Header.Custom>
-    <Page.Content container>
-      <div className="mb-4">
-        <p className="mt-1 text-muted-foreground">
-          Explore curated collections from creators around the world.
-        </p>
-      </div>
-      <div
-        className="columns-1 @[20rem]:columns-2 md:columns-3 gap-5 lg:columns-4 xl:columns-5">
-        {items.map((collection) => (
-          <div key={collection.id} className="mb-5 break-inside-avoid">
-            <DiscoverCard collection={collection as unknown as Collection} />
-          </div>
-        ))}
-      </div>
-    </Page.Content>
-  </Page.Root>
+    </ContentLayout>
+  </>
 }

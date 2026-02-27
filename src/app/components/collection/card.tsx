@@ -2,15 +2,10 @@
 
 import { MoreHorizontal, ExternalLink, Layers, Link as LinkIcon, Share } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Collection } from '@db/index'
 import { Link } from '../link'
+import { HTMLAttributes } from 'react'
+import { cn } from '@/lib/utils'
 
 interface CollectionCardProps {
   collection: Collection;
@@ -64,4 +59,20 @@ export function CollectionCard({ collection }: CollectionCardProps) {
       </div>
     </div>
   )
+}
+
+
+export function CollectionCardLayout(props: HTMLAttributes<HTMLDivElement>) {
+  return <div
+    {...props}
+    className={cn(
+      "group relative flex flex-col overflow-hidden rounded-xl",
+      "border border-border",
+      "bg-linear-to-b from-background-800/80 via-background-700 to-background-800",
+      "transition-all duration-200",
+      "hover:bg-card hover:shadow-lg hover:shadow-accent/5 shadow-sm",
+      props.className
+    )}>
+    {props.children}
+  </div>
 }
