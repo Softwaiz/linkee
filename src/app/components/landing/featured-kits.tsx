@@ -19,7 +19,7 @@ interface Kit {
 }
 
 export async function FeaturedKits() {
-    let items = undefined; //await env.CONTENT_CACHE.get("featured-kits", "json") as Kit[];
+    let items = await env.CONTENT_CACHE.get("featured-kits", "json") as Kit[];
     if (!items) {
         items = (await db
             .selectFrom("boards")
