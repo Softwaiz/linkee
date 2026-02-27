@@ -1,4 +1,4 @@
-import SigninContent from "@/pages/auth/signin-content";
+import SigninContent from "@/pages/auth/signin/content";
 import { db } from "@db/index";
 import { RequestInfo } from "rwsdk/worker";
 

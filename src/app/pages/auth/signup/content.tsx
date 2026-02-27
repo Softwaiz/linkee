@@ -8,13 +8,13 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupInput, SignupSchema } from "@/validations/signup";
 import { handleSignup } from "@/actions/auth/signup";
-import { navigate } from "rwsdk/client";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { toast } from "sonner";
 import { Logo } from "@/components/logo";
 import { UserPlus } from "lucide-react";
 import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { Link } from "@/components/link";
+import { PasswordInput } from "@/components/ui/password";
 
 
 export default function SignupContent() {
@@ -65,10 +65,10 @@ export default function SignupContent() {
     }, []);
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="flex flex-1 flex-col justify-center px-4 py-10 lg:px-6">
-                <Card className="sm:mx-auto sm:w-full sm:max-w-md">
-                    <CardContent>
+        <section className="bg-background text-foreground py-10 lg:py-10 min-h-dvh flex flex-col items-center justify-center">
+            <div className="w-full max-w-lg flex flex-col items-center justify-center p-2 md:p-4">
+                <Card className="w-full relative overflow-hidden py-4 md:py-8 text-center dark:bg-dark-2 rounded-md lg:rounded-lg">
+                    <CardContent className="px-3 md:px-6">
                         <CardHeader className="mb-10 text-center md:mb-8">
                             <Logo
                                 className="mx-auto h-10 w-10 text-foreground dark:text-foreground"
@@ -89,7 +89,7 @@ export default function SignupContent() {
                                 <Controller
                                     control={form.control}
                                     name="firstName"
-                                    render={({ field }) => {
+                                    render={({ field, fieldState }) => {
                                         return <Field>
                                             <FieldLabel
                                                 className="text-sm font-medium text-foreground dark:text-foreground"
@@ -102,7 +102,7 @@ export default function SignupContent() {
                                                 value={field.value}
                                                 onChange={field.onChange}
                                             />
-                                            <FieldError />
+                                            {fieldState.error && <FieldError errors={[fieldState.error]} />}
                                         </Field>
                                     }}
                                 />
@@ -110,7 +110,7 @@ export default function SignupContent() {
                                 <Controller
                                     control={form.control}
                                     name="lastName"
-                                    render={({ field }) => {
+                                    render={({ field, fieldState }) => {
                                         return <Field>
                                             <FieldLabel
                                                 className="text-sm font-medium text-foreground dark:text-foreground"
@@ -123,7 +123,7 @@ export default function SignupContent() {
                                                 value={field.value}
                                                 onChange={field.onChange}
                                             />
-                                            <FieldError />
+                                            {fieldState.error && <FieldError errors={[fieldState.error]} />}
                                         </Field>
                                     }}
                                 />
@@ -132,7 +132,7 @@ export default function SignupContent() {
                             <Controller
                                 control={form.control}
                                 name="email"
-                                render={({ field }) => {
+                                render={({ field, fieldState }) => {
                                     return <Field>
                                         <FieldLabel
                                             className="text-sm font-medium text-foreground dark:text-foreground"
@@ -145,7 +145,7 @@ export default function SignupContent() {
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
-                                        <FieldError />
+                                        {fieldState.error && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 }}
                             />
@@ -153,19 +153,18 @@ export default function SignupContent() {
                             <Controller
                                 control={form.control}
                                 name="password"
-                                render={({ field }) => {
+                                render={({ field, fieldState }) => {
                                     return <Field>
                                         <FieldLabel
                                             className="text-sm font-medium text-foreground dark:text-foreground"
                                         >
                                             Enter your password
                                         </FieldLabel>
-                                        <Input
-                                            type="password"
+                                        <PasswordInput
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
-                                        <FieldError />
+                                        {fieldState.error && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 }}
                             />
@@ -173,19 +172,18 @@ export default function SignupContent() {
                             <Controller
                                 control={form.control}
                                 name="confirmPassword"
-                                render={({ field }) => {
+                                render={({ field, fieldState }) => {
                                     return <Field>
                                         <FieldLabel
                                             className="text-sm font-medium text-foreground dark:text-foreground"
                                         >
                                             Confirm your password
                                         </FieldLabel>
-                                        <Input
-                                            type="password"
+                                        <PasswordInput
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
-                                        <FieldError />
+                                        {fieldState.error && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 }}
                             />
@@ -194,7 +192,7 @@ export default function SignupContent() {
                                 control={form.control}
                                 name="acceptNewsletter"
                                 render={({ field }) => {
-                                    return <Field className="w-full mt-2 flex flex-row items-center justify-start space-x-2">
+                                    return <Field className="w-full mt-2 flex flex-row items-center justify-start space-x-1">
                                         <Checkbox
                                             id="newsletter-checkbox"
                                             className="size-4!"
@@ -244,6 +242,6 @@ export default function SignupContent() {
                     </a>
                 </p>
             </div>
-        </div>
+        </section>
     );
 }

@@ -4,7 +4,7 @@ import { getRequestInfo, serverQuery } from "rwsdk/worker";
 
 export const searchCollections = serverQuery(async (search: string = "") => {
     const { ctx: { user } } = getRequestInfo();
-    if (!user || !search) return {
+    if (!user) return {
         items: []
     }
 

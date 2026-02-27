@@ -15,9 +15,9 @@ export function AddCollectionCard({ onClick }: AddCollectionCardProps) {
       onClick={onClick}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
-      className="group flex min-h-40 flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-transparent p-5 transition-all duration-200 hover:bg-secondary-500/20 hover:border-accent hover:bg-accent/5"
+      className="group flex min-h-40 flex-col items-center justify-center rounded-xl border-2 border-border bg-card/60 p-5 transition-all duration-200 hover:bg-card hover:bg-accent/5 cursor-pointer"
     >
-      <div className="mb-3 flex size-12 relative overflow-hidden items-center justify-center rounded-full bg-muted text-muted-foreground transition-all duration-200 group-hover:bg-secondary-500 group-hover:text-secondary-100">
+      <div className="mb-3 flex size-12 relative overflow-hidden items-center justify-center rounded-full bg-primary text-primary-foreground transition-all duration-200 group-hover:bg-primary/80 group-hover:text-primary-foreground">
         <AnimatePresence>
           {
             hovered ? <motion.span
@@ -58,7 +58,7 @@ export function AddCollectionCard({ onClick }: AddCollectionCardProps) {
           }
         </AnimatePresence>
       </div>
-      <span className="text-sm font-medium text-muted-foreground transition-colors group-hover:text-secondary-500">
+      <span className="text-sm font-medium text-primary transition-colors group-hover:text-primary/80">
         New Collection
       </span>
     </motion.button>

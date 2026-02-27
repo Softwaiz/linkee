@@ -64,7 +64,7 @@ export default function ProfileForm({ user }: { user: User }) {
     };
 
     return (
-        <div className="w-full border border-input p-4 rounded-md">
+        <div className="w-full">
             <form onSubmit={onSubmit} className="space-y-8">
                 <div className="flex flex-col items-center gap-4 mb-8">
                     <div className="relative w-32 h-32 rounded-full overflow-hidden bg-muted border-2 border-border">

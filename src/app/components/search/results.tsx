@@ -4,9 +4,9 @@ import { Link } from "../link";
 import { ArrowRight } from "lucide-react";
 
 export function SearchResults({ count, items, query, isPending }: { count: number, items: Collection[], query: string, isPending: boolean }) {
-    return <div className="w-full flex flex-col gap-2 text-card-foreground">
+    return <div className="w-full flex flex-col gap-2">
         <div className="w-full flex flex-col items-start justify-start gap-2">
-            <h4 className="text-xs font-semibold text-muted-foreground">Collections ({count})</h4>
+            <h4 className="text-xs font-semibold text-foreground/60">Collections ({count})</h4>
             <div className="w-full flex flex-col items-start justify-start gap-2">
                 {items.map((item) => (
                     <Link

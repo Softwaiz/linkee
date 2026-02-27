@@ -1,10 +1,9 @@
 import { DefaultAppContext } from "rwsdk/worker";
 import ProfileForm from "./form";
-import Page from "@/components/page";
-import BackButton from "@/components/page/actions/back-button";
 import { User } from "lucide-react";
 import UserSocialAccounts from "./social-accounts";
 import { db } from "@db/index";
+import { ContentLayout } from "@/components/page/content-layout";
 
 export default async function ProfilePage({ ctx }: { ctx: DefaultAppContext }) {
     const user = ctx?.user;
@@ -16,23 +15,20 @@ export default async function ProfilePage({ ctx }: { ctx: DefaultAppContext }) {
         .selectAll()
         .execute();
 
-    return <Page.Root>
-        <Page.Header.Custom container className="justify-between">
-            <div className="grow flex flex-row items-center justify-start gap-2 overflow-hidden">
-                <BackButton />
-                <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
-                    <span className="inline">
-                        <User size={21} />
-                    </span>
-                    <Page.Title>
-                        My profile
-                    </Page.Title>
+    return <ContentLayout
+        header={{
+            icon: <User size={21} />,
+            title: "My profile",
+        }}>
+        <div className="w-full grid grid-cols-12 gap-4">
+            <div className="col-span-12 lg:col-span-4">
+                <div className="w-full border border-border bg-card/20 text-card-foreground rounded-md">
+                    <UserSocialAccounts accounts={socialAccounts} />
                 </div>
             </div>
-        </Page.Header.Custom>
-        <Page.Content container className="space-y-4">
-            <ProfileForm user={user} />
-            <UserSocialAccounts accounts={socialAccounts} />
-        </Page.Content>
-    </Page.Root>
+            <div className="col-span-12 lg:col-span-8 border border-border bg-card/20 text-card-foreground rounded-md p-4">
+                <ProfileForm user={user} />
+            </div>
+        </div>
+    </ContentLayout>
 }

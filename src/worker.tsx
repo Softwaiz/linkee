@@ -14,7 +14,7 @@ import { identityCookie } from "./cookies";
 import CreateCollectionPage from "@/pages/protected/collections/new";
 import DashboardPage from "@/pages/protected/home";
 import CollectionPage from "@/pages/protected/collections/single";
-import EditCollectionPage from "@/pages/protected/collections/edit";
+import EditCollectionPage from "@/pages/protected/collections/edit/edit";
 import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
 import PublicProfilePage from "@/pages/public/user-profile";
@@ -140,7 +140,6 @@ const app = defineApp([
     ])
   ])
 ]);
-
 
 export default {
   fetch: app.fetch,

@@ -11,12 +11,12 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
         return accounts.find((acc) => acc.type === SocialAccountType.GOOGLE);
     }, [accounts]);
 
-    return <div className="w-full bg-card border border-input rounded-md p-4 space-y-4">
+    return <div className="w-full p-4 space-y-4">
         <div className="flex flex-col items-start justify-center gap-1">
-            <h6>
+            <h6 className="font-bold">
                 Social accounts
             </h6>
-            <p className="text-sm">
+            <p className="text-xs text-muted-foreground">
                 Connect to your Linkits account with your other social profiles.
             </p>
         </div>
@@ -36,13 +36,15 @@ export default function UserSocialAccounts({ accounts }: { accounts: SocialAccou
                         <ArrowRight />
                     </Button>
                 </div> : <div className="w-full flex flex-row items-center justify-start gap-2">
-                    <div className="grow overflow-hidden flex flex-col items-start justify-center">
-                        <p className="font-bold">
-                            Google
-                            <span className="bg-green-500 text-green-100 p-0.5 rounded-full inline-flex">
+                    <div className="grow overflow-hidden flex flex-col items-start justify-center space-y-2">
+                        <div className="flex flex-row items-center">
+                            <p className="font-bold">
+                                Google
+                            </p>
+                            <span className="bg-green-500 text-green-100 p-0.5 rounded-full inline-block mx-2">
                                 <Check className="size-4 text-inherit" />
                             </span>
-                        </p>
+                        </div>
                         <p className="text-sm opacity-75 text-nowrap truncate"><span className="text-xs border border-input px-1 py-0.5 rounded-sm">{googleAccount.email}</span></p>
                     </div>
                 </div>

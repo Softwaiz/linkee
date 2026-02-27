@@ -100,7 +100,6 @@ export default async function PublicCollectionPage({ params, ctx, request }: Req
         <div className="min-h-screen bg-background">
             <title>{`${board.label} - a kit by ${authorLabel} | Linkits`}</title>
             <meta name="description" content={board.description || `A curated link kit by ${authorLabel} on Linkits.`} />
-            <link rel="canonical" href={collectionUrl} />
             {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
             {authorAlias && <link rel="author" href={`${origin}/@${authorAlias}`} />}
             <meta property="og:type" content="article" />

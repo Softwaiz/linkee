@@ -1,6 +1,5 @@
 'use client'
 import { useState, useMemo } from 'react'
-import type { Page } from '@/lib/types'
 import { CollectionCard } from './collection-card'
 import { AddCollectionCard } from './add-collection-card'
 import { navigate } from 'rwsdk/client'
@@ -9,7 +8,7 @@ import { toast } from 'sonner'
 import { deleteCollection } from '@/actions/collections/delete'
 import { duplicate } from '@/actions/collections/duplicate'
 
-export function CollectionsGrid({ items }: { items: Collection[] }) {
+export function CollectionsGrid({ items, hideAdd = false }: { items: Collection[], hideAdd?: boolean }) {
   const [collections, setCollections] = useState<Collection[]>(items)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -66,20 +65,13 @@ export function CollectionsGrid({ items }: { items: Collection[] }) {
   }
 
   return (
-    <main className="w-full py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Your Collections</h1>
-        <p className="mt-1 text-muted-foreground">
-          {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
-        </p>
-      </div>
-
+    <main className="w-full">
       <div className="w-full grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <AddCollectionCard
+        {!hideAdd && <AddCollectionCard
           onClick={() => {
             navigate("/collections/new");
           }}
-        />
+        />}
         {filteredCollections.map(collection => (
           <CollectionCard
             key={collection.id}
@@ -95,6 +87,8 @@ export function CollectionsGrid({ items }: { items: Collection[] }) {
           <p className="text-muted-foreground">No collections found for "{searchQuery}"</p>
         </div>
       )}
+
+
     </main>
   )
 }

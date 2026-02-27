@@ -1,14 +1,10 @@
 import { LayoutProps } from "rwsdk/router";
-import { AppSideBar } from "../components/app-bar";
+import { AppSideBar } from "../components/app-sidebar";
 import { getRequestInfo } from "rwsdk/worker";
-import { Sidebar, SidebarProvider, useSidebar } from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { IdentityProvider } from "@/providers/identity";
-import { BottomBar } from "@/components/bottom-bar";
 import styles from "./theme.css?url";
-import { SearchLayout } from "@/components/search/layout";
 import { Collection, db } from "@db/index";
-import { Bell, Menu, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ProtectedHeader } from "./protected-header";
 
 export default async function ProtectedLayout(props: LayoutProps) {
@@ -45,9 +41,11 @@ export default async function ProtectedLayout(props: LayoutProps) {
         <link rel="stylesheet" href={styles} />
         <IdentityProvider user={ctx.user}>
             <SidebarProvider defaultOpen={false}>
-                <div style={{
-                    '--sidebar-width': '280px',
-                } as any} className="w-full min-h-dvh flex flex-row items-start justify-start bg-[#F2F0EF]">
+                <div
+                    style={{
+                        '--sidebar-width': '280px',
+                    } as any}
+                    className="w-full min-h-dvh flex flex-row items-start justify-start bg-background text-foreground">
                     <div className="fixed top-0 left-0 h-dvh w-(--sidebar-width) hidden md:block">
                         <AppSideBar
                             user={ctx.user!}
@@ -55,11 +53,8 @@ export default async function ProtectedLayout(props: LayoutProps) {
                             hasMorePrivateCollections={(count[0].count as number) > limit}
                         />
                     </div>
-                    <main className="md:pl-(--sidebar-width) grow pb-16 min-h-[300vh] bg-background">
-                        <ProtectedHeader />
-                        <div className="w-full px-0 lg:px-4">
-                            {props.children}
-                        </div>
+                    <main className="md:pl-(--sidebar-width) grow pb-16 bg-background text-foreground min-h-screen">
+                        {props.children}
                     </main>
                     <Sidebar variant="floating">
                         <AppSideBar

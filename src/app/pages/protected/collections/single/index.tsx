@@ -5,6 +5,13 @@ import Page from '@/components/page';
 import { SingleCollectionHeader } from './header';
 import { jsonObjectFrom } from "kysely/helpers/sqlite";
 import { CollectionContent } from '@/pages/public/kit/content';
+import { ContentLayout } from '@/components/page/content-layout';
+import { Button } from '@/components/ui/button';
+import { Link } from '@/components/link';
+import { Layers, MoreHorizontal, Pencil, Share2, SquareStack } from 'lucide-react';
+import { toast } from 'sonner';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import CollectionPageContent from './content';
 
 export default async function CollectionPage({ params, ctx }: RequestInfo) {
     const { id } = params;
@@ -37,16 +44,8 @@ export default async function CollectionPage({ params, ctx }: RequestInfo) {
     return <>
         <title>{`${board?.label} - Linkits`}</title>
         <meta name="description" content={board.description} />
-        <Page.Root>
-            <Page.Header.Custom container className="justify-between overflow-hidden gap-1">
-                <SingleCollectionHeader
-                    collection={board as unknown as Collection}
-                    readOnly={readOnly}
-                />
-            </Page.Header.Custom>
-            <Page.Content container={false} className='py-0'>
-                <CollectionContent collection={board as unknown as Collection} />
-            </Page.Content>
-        </Page.Root>
+        <CollectionPageContent
+            collection={board as unknown as Collection}
+            readOnly={readOnly} />
     </>
 }
