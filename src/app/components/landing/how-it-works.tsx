@@ -25,7 +25,7 @@ export function HowItWorks() {
     return (
         <section
             id="discover"
-            className="bg-primary/10 px-6 py-16 md:py-20"
+            className="px-6 py-16 md:py-20"
             aria-labelledby="how-it-works-heading"
         >
             <div className="mx-auto max-w-[1080px]">
@@ -36,7 +36,7 @@ export function HowItWorks() {
                     How Linkits helps you
                 </h2>
 
-                <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+                <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
                     {features.map((feature) => (
                         <div key={feature.title} className="flex flex-col items-center text-center">
                             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground text-background">

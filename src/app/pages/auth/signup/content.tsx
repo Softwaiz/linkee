@@ -231,7 +231,6 @@ export default function SignupContent() {
                         </Button>
                     </CardContent>
                 </Card>
-
                 <p className="mt-6 text-center text-sm text-muted-foreground dark:text-muted-foreground">
                     Already have an account?{" "}
                     <a
