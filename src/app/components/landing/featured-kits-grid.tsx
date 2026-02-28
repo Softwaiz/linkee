@@ -32,7 +32,7 @@ export function FeaturedKitsGrid({ items }: FeaturedKitsGridProps) {
                     description: kit.description,
                     banner: kit.banner ?? null,
                     slug: kit.slug ?? null,
-                    nodes: kit.nodes as Collection['nodes'],
+                    nodes: (kit.nodes || []) as Collection['nodes'],
                     userAlias: kit.userAlias ?? null,
                     userFullName: kit.userFullName ?? null,
                 } as Collection & { userAlias: string | null; userFullName: string | null }

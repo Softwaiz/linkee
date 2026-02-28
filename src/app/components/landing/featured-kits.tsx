@@ -64,7 +64,7 @@ export async function FeaturedKits() {
                     userAlias: board.alias ? board.alias : undefined,
                     userFullName: `${board.firstName} ${board.lastName}`,
                     slug: board.slug,
-                    nodes: board.nodes,
+                    nodes: board.nodes || [],
                     banner: board.banner,
                 }))
             })) as Kit[];
