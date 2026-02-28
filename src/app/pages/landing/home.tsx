@@ -1,5 +1,4 @@
 import { Footer } from "@/components/footer"
-import { AnythingIsCuratable } from "@/components/landing/anything-is-curatable"
 import { FeaturedKits } from "@/components/landing/featured-kits"
 import { HeroSection } from "@/components/landing/hero-section"
 import { HowItWorks } from "@/components/landing/how-it-works"

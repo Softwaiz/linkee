@@ -1,6 +1,7 @@
 import { BookOpen, Briefcase, Building2, Rocket, Star, Trophy, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/components/link"
+import { AnythingIsCuratable } from "./anything-is-curatable"
 
 const audiences = [
     {
@@ -70,6 +71,8 @@ export function WhoIsThisFor() {
                         </div>
                     ))}
                 </div>
+
+                <AnythingIsCuratable />
 
                 <div className="text-center bg-foreground/5 rounded-2xl p-8 md:p-12 border border-border">
                     <h3 className="text-2xl font-bold text-foreground mb-4">

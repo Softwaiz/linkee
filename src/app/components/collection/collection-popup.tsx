@@ -538,7 +538,7 @@ export function PublicCollectionPopup({
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={handleShare}>
+                                        onClick={handleSave}>
                                         <Heart className="size-3.5 mr-1.5" />
                                         Save
                                     </Button>
