@@ -35,7 +35,7 @@ function CardInner({ collection, isOwner = false, layoutPrefix = "discover" }: D
         <div className="grow w-full flex flex-col items-start justify-start gap-1">
           <motion.img
             layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
-            src={collection.banner ?? "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+            src={collection.banner || "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk"}
             alt={collection.label}
             className="w-full object-cover object-center rounded-t-md h-46"
           />
@@ -113,7 +113,7 @@ export function PublicDiscoverCard({ collection, layoutPrefix, isOwner = false }
         <div className="grow w-full flex flex-col items-start justify-start gap-1">
           <motion.img
             layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
-            src={collection.banner ?? "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+            src={collection.banner || "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
             alt={collection.label}
             className="w-full object-cover object-center rounded-t-md h-46"
           />

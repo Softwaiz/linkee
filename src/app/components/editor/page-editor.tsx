@@ -73,8 +73,8 @@ function pageCache(id: string) {
 
 const initialPage: () => Partial<CollectionInput> = () => ({
   id: generateId(),
-  picture: "https://placehold.co/120x120/2b73ff/d4edff/png",
-  banner: "https://placehold.co/416x240/0e37a1/d4edff/png",
+  picture: "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk",
+  banner: "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk",
   label: 'My Resource Collection',
   description: 'A curated list of valuable resources',
   nodes: [

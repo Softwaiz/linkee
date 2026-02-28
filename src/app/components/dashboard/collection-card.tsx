@@ -31,7 +31,7 @@ export function CollectionCard({ collection, onDelete, onDuplicate, layoutPrefix
       >
         <motion.img
           layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
-          src={collection.banner ?? "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+          src={collection.banner || "https://fastly.picsum.photos/id/67/600/400.jpg?hmac=Wnzw2Uj9L2X9bRX_B6bZ-_L4oj6EWlPlXVNmEHSdq7U"}
           alt={collection.label}
           className="w-full object-cover object-center rounded-t-md h-46"
         />

@@ -11,7 +11,6 @@ import { duplicate } from '@/actions/collections/duplicate'
 export function CollectionsGrid({
   items,
   hideAdd = false,
-  /** The authenticated user's ID. When provided, any collection with matching userId renders in owner mode. */
   currentUserId,
   layoutPrefix = "kit",
 }: {

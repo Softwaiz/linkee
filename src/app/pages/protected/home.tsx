@@ -51,7 +51,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
           </Link>
         </Button>
       }}>
-      <div className="w-full space-y-4 md:space-y-6 lg:space-y-8 @container/home">
+      <div className="w-full space-y-4 @container/home">
         <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
           <SearchLayout />
         </div>

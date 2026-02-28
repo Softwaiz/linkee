@@ -84,7 +84,7 @@ export async function FeaturedKits() {
                     >
                         <div className="grow flex flex-col items-start justify-start gap-1 w-full">
                             <img
-                                src={"https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+                                src={"https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk"}
                                 alt={"Your collection banner"}
                                 className="w-full object-cover object-center rounded-t-md h-46"
                             />

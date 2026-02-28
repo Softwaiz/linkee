@@ -151,8 +151,8 @@ export function CollectionPopup({
                             <motion.img
                                 layoutId={bannerLayoutId}
                                 src={
-                                    collection.banner ??
-                                    'https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs'
+                                    collection.banner ||
+                                    'https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk'
                                 }
                                 alt={collection.label}
                                 className="w-full h-44 object-cover object-center"
@@ -411,10 +411,7 @@ export function PublicCollectionPopup({
                         <div className="relative w-full shrink-0">
                             <motion.img
                                 layoutId={bannerLayoutId}
-                                src={
-                                    collection.banner ??
-                                    'https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs'
-                                }
+                                src={collection.banner || "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk"}
                                 alt={collection.label}
                                 className="w-full h-44 object-cover object-center"
                             />
