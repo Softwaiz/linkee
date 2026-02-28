@@ -34,7 +34,7 @@ export const PublicDocument = ({
 
             <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
         </head>
-        <body>
+        <body className="dark">
             <div id="root">
                 {children}
             </div>

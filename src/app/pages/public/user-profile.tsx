@@ -27,6 +27,7 @@ export default async function PublicProfilePage({ params }: RequestInfo) {
 
     const collections = await db.selectFrom("boards")
         .where("userId", "=", user.id)
+        .selectAll()
         .execute() as unknown as Collection[];
 
     return <div className="min-h-screen bg-background pb-20">
