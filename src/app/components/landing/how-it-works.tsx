@@ -39,7 +39,7 @@ export function HowItWorks() {
                 <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
                     {features.map((feature) => (
                         <div key={feature.title} className="flex flex-col items-center text-center">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground text-background">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-foreground/10 text-foreground">
                                 <feature.icon className="h-5 w-5" aria-hidden="true" />
                             </div>
                             <h3 className="mt-5 text-lg font-semibold text-foreground">

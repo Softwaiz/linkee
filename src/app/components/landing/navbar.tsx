@@ -31,7 +31,7 @@ export function Navbar() {
                         asChild
                     >
                         <Link href="/signin" className="flex flex-row items-center gap-2">
-                            Sign In
+                            Get Started
                             <LogIn className="h-4 w-4" />
                         </Link>
                     </Button>
@@ -54,20 +54,6 @@ export function Navbar() {
             {mobileOpen && (
                 <div className="border-t border-border bg-background px-6 pb-6 pt-4 md:hidden">
                     <div className="flex flex-col gap-4">
-                        <Link
-                            href="#discover"
-                            onClick={() => setMobileOpen(false)}
-                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            Discover
-                        </Link>
-                        <Link
-                            href="#create"
-                            onClick={() => setMobileOpen(false)}
-                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            Create yours !
-                        </Link>
                         <Button
                             size="sm"
                             className="mt-2 w-full bg-foreground text-background hover:bg-foreground/90"

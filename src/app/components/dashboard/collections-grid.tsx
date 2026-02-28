@@ -8,7 +8,18 @@ import { toast } from 'sonner'
 import { deleteCollection } from '@/actions/collections/delete'
 import { duplicate } from '@/actions/collections/duplicate'
 
-export function CollectionsGrid({ items, hideAdd = false }: { items: Collection[], hideAdd?: boolean }) {
+export function CollectionsGrid({
+  items,
+  hideAdd = false,
+  /** The authenticated user's ID. When provided, any collection with matching userId renders in owner mode. */
+  currentUserId,
+  layoutPrefix = "kit",
+}: {
+  items: Collection[]
+  hideAdd?: boolean
+  currentUserId?: string
+  layoutPrefix?: string
+}) {
   const [collections, setCollections] = useState<Collection[]>(items)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -74,7 +85,8 @@ export function CollectionsGrid({ items, hideAdd = false }: { items: Collection[
         />}
         {filteredCollections.map(collection => (
           <CollectionCard
-            key={collection.id}
+            layoutPrefix={layoutPrefix}
+            key={`${layoutPrefix}-${collection.id}`}
             collection={collection}
             onDelete={handleDelete}
             onDuplicate={handleDuplicate}
@@ -87,8 +99,6 @@ export function CollectionsGrid({ items, hideAdd = false }: { items: Collection[
           <p className="text-muted-foreground">No collections found for "{searchQuery}"</p>
         </div>
       )}
-
-
     </main>
   )
 }

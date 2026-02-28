@@ -5,6 +5,7 @@ const footerLinks = [
     { label: "Contact", href: "#" },
     { label: "Privacy Policy", href: "#", rel: "nofollow" },
     { label: "Terms of Use", href: "#", rel: "nofollow" },
+    { label: "Sitemap", href: "/html-sitemap" },
 ]
 
 export function Footer() {

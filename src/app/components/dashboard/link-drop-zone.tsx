@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useCallback, DragEvent } from 'react'
-import { ArrowRight, Loader2, Save } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { Loader2, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collection } from '@db/index'
 import { LinkDropDialog } from './link-drop-dialog'
@@ -97,7 +97,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
             <div className="w-full relative flex flex-col items-center justify-center rounded-md">
                 <div className="relative w-full flex flex-col items-start justify-center gap-4">
                     <div className="w-full flex flex-col items-start justify-start gap-2">
-                        <div className="w-full md:hidden flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-full">
+                        <div className="w-full md:hidden flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-md">
                             <input
                                 type="url"
                                 className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 focus:outline-none focus:ring-0 text-xs md:text-sm'
@@ -115,7 +115,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                                 layout
                                 onClick={handleCollectDraft}
                                 className={cn(
-                                    'w-auto rounded-full bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                    'w-auto rounded-md bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
                                     !draftUrl && 'cursor-not-allowed',
                                     "h-10 shadow-sm",
                                     "px-4 md:px-8 gap-2",
@@ -152,7 +152,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                         </div>
                         <div className="w-full flex flex-row items-center justify-between">
                             <h1 className='font-display font-extrabold text-lg md:text-xl lg:text-2xl text-foreground'>Save your inspiration now.</h1>
-                            <div className="basis-2/3 hidden md:flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-full">
+                            <div className="basis-2/3 hidden md:flex flex-row items-center bg-background/20 focus-within:ring-ring/50 focus-within:ring-[3px] border border-input rounded-md">
                                 <input
                                     type="url"
                                     className='w-full px-2 lg:px-4 placeholder:text-foreground/60 text-foreground/80 border-0 h-10 focus:outline-none focus:ring-0 text-xs md:text-sm'
@@ -170,7 +170,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                                     layout
                                     onClick={handleCollectDraft}
                                     className={cn(
-                                        'w-auto rounded-full bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
+                                        'w-auto rounded-md bg-primary-700 text-primary-foreground hover:bg-primary-700 transition-all duration-150 overflow-hidden',
                                         !draftUrl && 'cursor-not-allowed',
                                         "h-10 shadow-sm",
                                         "px-4 md:px-8 gap-2",

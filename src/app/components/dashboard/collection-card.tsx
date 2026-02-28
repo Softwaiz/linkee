@@ -1,104 +1,70 @@
 'use client'
-import { MoreHorizontal, ExternalLink, Layers, Link as LinkIcon, Share } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { Layers3, ExternalLink } from 'lucide-react'
 import { Collection } from '@db/index'
-import { Link } from '../link'
-import { CollectionCardLayout } from '../collection/card'
+import { useState } from 'react'
+import { motion } from 'motion/react'
+import { CollectionPopup } from '../collection/collection-popup'
 
 interface CollectionCardProps {
   collection: Collection;
   onDelete: (id: string) => void
   onDuplicate: (id: string) => void
+  layoutPrefix?: string
 }
 
-export function CollectionCard({ collection, onDelete, onDuplicate }: CollectionCardProps) {
+export function CollectionCard({ collection, onDelete, onDuplicate, layoutPrefix }: CollectionCardProps) {
+  const [open, setOpen] = useState(false)
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalSections = collection.nodes.length
+  const totalTopics = collection.nodes.length
 
   return (
-    <CollectionCardLayout>
-      {collection.banner && (
-        <div className="w-full aspect-video overflow-hidden">
-          <img
-            src={collection.banner}
-            alt={collection.label}
-            className="w-full h-full object-cover object-top transition-transform duration-200 group-hover:scale-105"
-          />
-        </div>
-      )}
-      <div className="p-3 lg:p-5 flex flex-col flex-1">
-        <div className="mb-2 flex items-start justify-between">
-          {!collection.picture && (
-            <div className="flex size-10 items-center justify-center rounded-lg bg-card text-card-foreground">
-              <Layers className="size-5" />
-            </div>
-          )}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="default"
-                size="icon"
-                className="absolute top-4 right-4 size-8 transition-all"
-              >
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href={`/collections/${collection.slug || collection.id}`} className="flex items-center gap-2">
-                  <ExternalLink className="size-4" />
-                  Open
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={`/kit/${collection.slug || collection.id}`} className="flex items-center gap-2">
-                  <Share className="size-4" />
-                  Share
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDuplicate(collection.id)}>
-                Duplicate
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete(collection.id)}
-                className="bg-destructive text-destructive-foreground focus:text-destructive-foreground focus:bg-destructive"
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <Link href={`/collections/${collection.slug || collection.id}`} className="flex flex-1 flex-col">
-          <h3 className="mb-1 text-lg font-semibold text-foreground transition-colors group-hover:text-accent">
+    <>
+      <motion.button
+        layoutId={`${layoutPrefix}-card-${collection.id}`}
+        onClick={() => setOpen(true)}
+        className="w-full text-left group relative bg-card/5 border border-card hover:bg-card/50 duration-200 transition-all rounded-md flex flex-col items-center justify-start cursor-pointer"
+        whileHover={{ y: -2 }}
+        transition={{ duration: 0.15 }}
+      >
+        <motion.img
+          layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
+          src={collection.banner ?? "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+          alt={collection.label}
+          className="w-full object-cover object-center rounded-t-md h-46"
+        />
+        <div className="w-full flex flex-col items-start justify-start px-3 py-4">
+          <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-foreground/80">
             {collection.label || 'Untitled Collection'}
           </h3>
-          <p className="mb-4 line-clamp-2 flex-1 text-sm text-muted-foreground">
+          <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <p>
+              <span className="text-xs inline-flex items-center mr-2">
+                <Layers3 className="size-3 inline-block mr-2" aria-hidden="true" />
+                {totalTopics} topic{totalTopics !== 1 ? 's' : ''}
+              </span>
+              <span className="text-xs inline-flex items-center">
+                <ExternalLink className="size-3 inline-block mr-2" aria-hidden="true" />
+                {totalLinks} link{totalLinks !== 1 ? 's' : ''}
+              </span>
+            </p>
+          </div>
+          <p className="mt-1 w-full text-xs leading-relaxed text-muted-foreground line-clamp-2">
             {collection.description || 'No description'}
           </p>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <LinkIcon className="size-3.5" />
-              {totalLinks} {totalLinks === 1 ? 'link' : 'links'}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Layers className="size-3.5" />
-              {totalSections} {totalSections === 1 ? 'section' : 'sections'}
-            </span>
-          </div>
-        </Link>
-      </div>
-    </CollectionCardLayout>
+        </div>
+      </motion.button>
+
+      <CollectionPopup
+        collection={collection}
+        layoutId={`${layoutPrefix}-card-${collection.id}`}
+        bannerLayoutId={`${layoutPrefix}-card-banner-${collection.id}`}
+        isOpen={open}
+        isOwner={true}
+        onClose={() => setOpen(false)}
+      />
+    </>
   )
 }

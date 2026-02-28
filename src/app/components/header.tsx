@@ -6,6 +6,7 @@ import { Logo } from "./logo";
 import { Link } from "./link";
 import { useDimensions } from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
+import { SearchLayout } from "./search/layout";
 
 export function Header({ className, sticky = true }: { className?: string, sticky?: boolean }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,17 +34,9 @@ export function Header({ className, sticky = true }: { className?: string, stick
                     Linkits
                 </Link>
 
-                <nav className="hidden md:flex items-center gap-8">
-                    <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        Features
-                    </Link>
-                    <Link href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        Pricing
-                    </Link>
-                    <Link href="#about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        About
-                    </Link>
-                </nav>
+                <div className="w-full max-w-md">
+                    <SearchLayout />
+                </div>
 
                 <div className="hidden md:flex items-center gap-4">
                     <Button variant="ghost" size="sm" asChild>

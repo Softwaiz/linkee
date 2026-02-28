@@ -72,8 +72,9 @@ export function Footer() {
                 </div>
 
                 <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-muted-foreground">
-                        &copy; {new Date().getFullYear()} Linkits. All rights reserved.
+                    <p className="text-sm text-muted-foreground flex gap-4 items-center">
+                        <span>&copy; {new Date().getFullYear()} Linkits. All rights reserved.</span>
+                        <a href="/html-sitemap" className="hover:text-foreground transition-colors hover:underline">Sitemap</a>
                     </p>
                     <p className="text-sm text-muted-foreground">
                         Built with <a className="text-foreground underline" target="_blank" rel="noopener noreferrer" href="https://rwsdk.com?utm_source=linkits&utm_medium=footer&utm_campaign=linkits">RedwoodSDK</a>

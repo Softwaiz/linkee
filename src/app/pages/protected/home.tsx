@@ -65,6 +65,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
           </div>
           <CollectionsGrid
             hideAdd={false}
+            layoutPrefix="kit-owned"
             items={items as unknown as Collection[]} />
         </div>
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
@@ -86,6 +87,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
           </div>
           <CollectionsGrid
             hideAdd
+            layoutPrefix="kit-discover"
             items={discoverableItems as unknown as Collection[]} />
         </div>
       </div>

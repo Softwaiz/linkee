@@ -7,7 +7,6 @@ import { useDimensions } from "@/hooks/useDimensions";
 import { AnimatePresence, motion } from "motion/react";
 import { SearchResults } from "./results";
 import { useSearch } from "@/hooks/useSearch";
-import { Popover } from "radix-ui";
 
 export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?: string }>) {
     const [searchAreaOpen, setSearchAreaOpen] = useState(false);

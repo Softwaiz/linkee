@@ -21,7 +21,7 @@ export function LinkPreview({ link }: LinkPreviewProps) {
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-start gap-4 rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:border-accent/50 hover:shadow-md hover:shadow-accent/5"
+      className="group flex items-start gap-2 rounded-xl border border-border bg-card/40 p-4 transition-all duration-200 hover:border-accent/50 hover:shadow-md hover:shadow-accent/5"
     >
       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary-100 text-secondary-500 transition-colors group-hover:bg-accent/10 group-hover:text-accent">
         {link.favicon ? (
@@ -38,14 +38,14 @@ export function LinkPreview({ link }: LinkPreviewProps) {
         <ExternalLink className={`size-4 ${link.favicon ? 'hidden' : ''}`} />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-center gap-2">
-          <h4 className="truncate font-medium text-foreground transition-colors group-hover:text-accent">
+        <div className="flex items-center gap-2">
+          <h4 className="truncate text-sm font-medium text-foreground transition-colors group-hover:text-accent">
             {link.title || 'Untitled Link'}
           </h4>
           <ExternalLink className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         {link.description && (
-          <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
+          <p className="mb-1 line-clamp-2 text-xs text-muted-foreground">
             {link.description}
           </p>
         )}

@@ -19,6 +19,7 @@ import ProfilePage from "@/pages/protected/profile";
 import mediaResolver from "@/pages/media";
 import PublicProfilePage from "@/pages/public/user-profile";
 import Sitemap from "@/pages/sitemap";
+import HtmlSitemap from "@/pages/public/html-sitemap";
 import Robots from "@/pages/robots";
 import { extractMetadata } from "@/actions/website/extractMetadata";
 import DiscoverPage from "@/pages/protected/discover";
@@ -110,6 +111,7 @@ const app = defineApp([
       route("/logout", handleLogout),
       route("/medias/*", mediaResolver),
       route("/sitemap", Sitemap),
+      route("/html-sitemap", HtmlSitemap),
       route("/robots.txt", Robots),
       route("/api/metadata", extractMetadata),
       prefix("/", [
