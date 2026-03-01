@@ -1,6 +1,5 @@
 'use client'
-
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Loader2, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collection } from '@db/index'
@@ -21,12 +20,13 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [draftUrl, setDraftUrl] = useState('');
 
-    const handleCollectDraft = useCallback(async () => {
+    const handleCollectDraft = useCallback(async (overrideUrl?: string | React.SyntheticEvent) => {
 
+        const targetUrl = typeof overrideUrl === 'string' ? overrideUrl : draftUrl;
         let url = undefined;
         try {
-            new URL(draftUrl);
-            url = draftUrl;
+            new URL(targetUrl);
+            url = targetUrl;
         } catch {
             url = undefined;
         }
@@ -77,6 +77,18 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
             setIsLoading(false)
         }
     }, [draftUrl])
+
+    useEffect(() => {
+        const pendingUrl = localStorage.getItem('landing_pending_drop')
+        if (pendingUrl) {
+            setDraftUrl(pendingUrl)
+            localStorage.removeItem('landing_pending_drop')
+            // Add a small timeout to let the UI reflect the draftUrl in the input field visually
+            setTimeout(() => {
+                handleCollectDraft(pendingUrl)
+            }, 300)
+        }
+    }, [handleCollectDraft])
 
     const handleDialogClose = useCallback(() => {
         setDialogOpen(false)

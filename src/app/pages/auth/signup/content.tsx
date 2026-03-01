@@ -12,7 +12,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { toast } from "sonner";
 import { Logo } from "@/components/logo";
 import { UserPlus } from "lucide-react";
-import { usePasswordVisibility } from "@/hooks/usePasswordVisibility";
 import { Link } from "@/components/link";
 import { PasswordInput } from "@/components/ui/password";
 
@@ -20,9 +19,6 @@ import { PasswordInput } from "@/components/ui/password";
 export default function SignupContent() {
 
     const [loading, setLoading] = useState(false);
-
-    const passwordVisible = usePasswordVisibility();
-    const confirmPasswordVisible = usePasswordVisibility();
 
     const form = useForm({
         resolver: zodResolver(SignupSchema),
