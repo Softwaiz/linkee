@@ -1,15 +1,14 @@
 import { CollectionsGrid } from '@/components/dashboard/collections-grid';
 import { LinkDropZone } from '@/components/dashboard/link-drop-zone';
-import { DiscoverCard } from '@/components/discover/discover-card';
 import { Link } from '@/components/link';
 import { ContentLayout } from '@/components/page/content-layout';
 import { SearchLayout } from '@/components/search/layout';
 import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
-import { ArrowRightFromLine, ChevronRight, Home, Plus } from 'lucide-react';
-import { DefaultAppContext } from 'rwsdk/worker';
+import { ChevronRight, Home, Plus } from 'lucide-react';
+import { RequestInfo } from 'rwsdk/worker';
 
-export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext }) {
+export default async function DashboardPage({ ctx }: RequestInfo) {
   const user = ctx.user!;
   const items = (await db
     .selectFrom("boards")
@@ -22,9 +21,51 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
   const discoverableItems = await db
     .selectFrom("boards")
     .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
-    .select(["boards.id", "boards.label", "boards.description", "boards.createdAt", "boards.updatedAt", "boards.userId", "boards.slug", "boards.sourceId", "boardSettings.visibility", "boards.nodes", "boards.slug", "boards.banner"])
+    .leftJoin("users", "boards.userId", "users.id")
     .where("boardSettings.visibility", "=", "public")
+    .select([
+      "boards.id",
+      "boards.label",
+      "boards.description",
+      "boards.createdAt",
+      "boards.updatedAt",
+      "boards.userId",
+      "boards.slug",
+      "boards.sourceId",
+      "boardSettings.visibility",
+      "boards.nodes",
+      "boards.slug",
+      "boards.banner"
+    ])
+    //.where("users.id", "!=", user?.id)
     .orderBy("boards.createdAt", "desc")
+    .limit(20)
+    .execute();
+
+  const savedItems = await db
+    .selectFrom("boards")
+    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
+    .leftJoin("boardReactions", "boards.id", "boardReactions.boardId")
+    .where("boardSettings.visibility", "=", "public")
+    .where((eb) => eb.and([
+      eb("boardReactions.userId", "=", user?.id),
+      eb("boardReactions.type", "=", "save")
+    ]))
+    .select([
+      "boards.id",
+      "boards.label",
+      "boards.description",
+      "boards.createdAt",
+      "boards.updatedAt",
+      "boards.userId",
+      "boards.slug",
+      "boards.sourceId",
+      "boardSettings.visibility",
+      "boards.nodes",
+      "boards.slug",
+      "boards.banner",
+    ])
+    .orderBy("boardReactions.createdAt", "desc")
     .limit(20)
     .execute();
 
@@ -58,9 +99,9 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
         <LinkDropZone collections={items} />
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-foreground">Your collections</h1>
+            <h1 className="text-2xl font-bold text-foreground">You own these collections.</h1>
             <p className="text-foreground/80">
-              Collections your recently added collections here.
+              Collections you own and recently added collections here.
             </p>
           </div>
           <CollectionsGrid
@@ -68,6 +109,30 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
             layoutPrefix="kit-owned"
             items={items as unknown as Collection[]} />
         </div>
+
+        <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
+          <div className="space-y-1">
+            <div className="w-full flex flex-row items-center justify-between">
+              <h1 className="text-2xl font-bold text-foreground">They recently hit your interest.</h1>
+              <Button asChild variant="outline">
+                <Link href="/saved">
+                  <span className="hidden md:inline-block">
+                    View all
+                  </span>
+                  <ChevronRight />
+                </Link>
+              </Button>
+            </div>
+            <p className="text-sm text-foreground/80">
+              You were interested in these collections.
+            </p>
+          </div>
+          <CollectionsGrid
+            hideAdd
+            layoutPrefix="kit-saved"
+            items={savedItems as unknown as Collection[]} />
+        </div>
+
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
           <div className="space-y-1">
             <div className="w-full flex flex-row items-center justify-between">
@@ -90,6 +155,7 @@ export default async function DashboardPage({ ctx }: { ctx: DefaultAppContext })
             layoutPrefix="kit-discover"
             items={discoverableItems as unknown as Collection[]} />
         </div>
+
       </div>
     </ContentLayout>
   </>

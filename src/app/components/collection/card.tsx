@@ -6,8 +6,11 @@ import { HTMLAttributes, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { motion } from 'motion/react'
 import { CollectionPopup } from './collection-popup'
+import { useMyReactions } from '@/hooks/use-reactions'
 
 interface CollectionCardProps {
+  layoutId?: string;
+  bannerLayoutId?: string;
   collection: Collection & {
     userAlias?: string | null
     userFullName?: string | null
@@ -15,7 +18,7 @@ interface CollectionCardProps {
   isOwner?: boolean
 }
 
-export function CollectionCard({ collection, isOwner = false }: CollectionCardProps) {
+export function CollectionCard({ collection, layoutId = "", bannerLayoutId = "", isOwner = false }: CollectionCardProps) {
   const [open, setOpen] = useState(false)
   const totalLinks = collection.nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
@@ -24,10 +27,11 @@ export function CollectionCard({ collection, isOwner = false }: CollectionCardPr
   const totalTopics = collection.nodes.length
   const creator = collection.userAlias ? `@${collection.userAlias}` : collection.userFullName || null
 
+  const reactions = useMyReactions(collection.id);
   return (
     <>
       <motion.button
-        layoutId={`card-${collection.id}`}
+        layoutId={layoutId}
         onClick={() => setOpen(true)}
         className="w-full text-left group bg-card/5 border border-card hover:bg-card/50 duration-200 transition-all rounded-md flex flex-col items-center justify-start cursor-pointer"
         whileHover={{ y: -2 }}
@@ -35,8 +39,8 @@ export function CollectionCard({ collection, isOwner = false }: CollectionCardPr
       >
         <div className="grow w-full flex flex-col items-start justify-start gap-1">
           <motion.img
-            layoutId={`card-banner-${collection.id}`}
-            src={collection.banner ?? "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
+            layoutId={bannerLayoutId}
+            src={collection.banner || "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
             alt={collection.label}
             className="w-full object-cover object-center rounded-t-md h-46"
           />
@@ -72,10 +76,15 @@ export function CollectionCard({ collection, isOwner = false }: CollectionCardPr
       </motion.button>
 
       <CollectionPopup
+        layoutId={layoutId}
+        bannerLayoutId={bannerLayoutId}
         collection={collection}
         isOpen={open}
         isOwner={isOwner}
         onClose={() => setOpen(false)}
+        loadingUserReactions={reactions.isLoading}
+        initialIsSaved={reactions.isSaved}
+        initialIsLiked={reactions.isLiked}
       />
     </>
   )

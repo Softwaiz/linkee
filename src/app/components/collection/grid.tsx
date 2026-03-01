@@ -8,6 +8,8 @@ export function CollectionsMasonry({ items }: { items: Collection[] }) {
             {items.map(collection => (
                 <CollectionCard
                     key={collection.id}
+                    layoutId={collection.id}
+                    bannerLayoutId={collection.id + "-banner"}
                     collection={collection}
                 />
             ))}

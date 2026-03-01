@@ -1,9 +1,12 @@
 'use client'
 import { Layers3, ExternalLink } from 'lucide-react'
 import { Collection } from '@db/index'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { CollectionPopup } from '../collection/collection-popup'
+import { useIdentity } from '@/providers/identity'
+import { getMyReactions } from '@/actions/collections/reactions'
+import { useMyReactions } from '@/hooks/use-reactions'
 
 interface CollectionCardProps {
   collection: Collection;
@@ -19,6 +22,18 @@ export function CollectionCard({ collection, onDelete, onDuplicate, layoutPrefix
     0
   )
   const totalTopics = collection.nodes.length
+
+  const identity = useIdentity();
+
+  const [myReactions, setMyReactions] = useState<{
+    isLiked: boolean;
+    isLoved: boolean;
+  }>({
+    isLiked: false,
+    isLoved: false
+  });
+
+  const reactions = useMyReactions(collection.id);
 
   return (
     <>
@@ -62,8 +77,11 @@ export function CollectionCard({ collection, onDelete, onDuplicate, layoutPrefix
         layoutId={`${layoutPrefix}-card-${collection.id}`}
         bannerLayoutId={`${layoutPrefix}-card-banner-${collection.id}`}
         isOpen={open}
-        isOwner={true}
+        isOwner={identity.user?.id === collection.userId}
         onClose={() => setOpen(false)}
+        loadingUserReactions={reactions.isLoading}
+        initialIsSaved={reactions?.isSaved}
+        initialIsLiked={reactions?.isLiked}
       />
     </>
   )

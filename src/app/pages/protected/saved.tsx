@@ -4,11 +4,9 @@ import { CollectionsMasonry } from "@/components/collection/grid";
 import { Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/link";
-import Page from "@/components/page";
-import PageHeader from "@/components/page/page-header";
-import BackButton from "@/components/page/actions/back-button";
-import PageTitle from "@/components/page/title";
-import PageContent from "@/components/page/content";
+import { ContentLayout } from "@/components/page/content-layout";
+import { SearchLayout } from "@/components/search/layout";
+import { CollectionCard } from "@/components/collection/card";
 
 export default async function SavedCollections(props: RequestInfo) {
 
@@ -20,31 +18,48 @@ export default async function SavedCollections(props: RequestInfo) {
         .where("boardReactions.type", "=", "save")
         .execute();
 
-    return <Page.Root>
-        <Page.Header.Custom container className="justify-between">
-            <div className="grow flex flex-row items-center justify-start gap-2 overflow-hidden">
-                <BackButton />
-                <div className="grow flex flex-row items-center justify-start gap-1 overflow-hidden">
-                    <span className="inline">
-                        <Heart size={21} />
-                    </span>
-                    <PageTitle>
-                        Collections you saved
-                    </PageTitle>
+    return <>
+        <title>Collections you saved</title>
+        <meta name="description" content="Explore curated collections from creators around the world." />
+        <ContentLayout
+            header={{
+                icon: <Heart className='size-7' />,
+                title: "Collections you saved",
+                middle: <div className="w-full flex flex-row items-center justify-end">
+                    <div className="max-w-lg w-full">
+                        <SearchLayout />
+                    </div>
+                </div>,
+                actions: <>
+                    <Button
+                        asChild>
+                        <Link href="/collections/new">
+                            <Plus />
+                            <span className="hidden md:inline-block">
+                                Create yours
+                            </span>
+                        </Link>
+                    </Button>
+                </>
+            }}>
+            <div className="w-full space-y-4 md:space-y-6 lg:space-y-8 @container/discover">
+                <div className="w-full flex flex-col items-start justify-start">
+                    <h1 className='text-lg lg:text-2xl font-bold text-foreground'>You previously saved these kits.</h1>
+                </div>
+                <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
+                    <SearchLayout />
+                </div>
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {collections.map(collection => (
+                        <CollectionCard
+                            key={collection.id}
+                            layoutId={collection.id}
+                            bannerLayoutId={collection.id + "-banner"}
+                            collection={collection as unknown as Collection}
+                        />
+                    ))}
                 </div>
             </div>
-            <div>
-                <Button
-                    variant="outline"
-                    size="icon-sm" asChild>
-                    <Link href="/collections/new">
-                        <Plus />
-                    </Link>
-                </Button>
-            </div>
-        </Page.Header.Custom>
-        <Page.Content container>
-            <CollectionsMasonry items={collections as unknown as Collection[]} />
-        </Page.Content>
-    </Page.Root>
+        </ContentLayout>
+    </>
 }

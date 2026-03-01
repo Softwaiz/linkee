@@ -17,10 +17,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut, User as UserIcon, ChevronDown, Lightbulb, Home, SquareStack, Plus, ChevronRight, Group, Layers2, Link2, Layers3, ChartNoAxesColumnIcon } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { LogOut, User as UserIcon, ChevronDown, Lightbulb, Home, SquareStack, Plus, ChevronRight, Link2, Layers3, Heart } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { Logo } from "./logo";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./ui/sidebar";
+import { useSidebar } from "./ui/sidebar";
 import { navigate } from "rwsdk/client";
 import { Link } from "./link";
 import { Collection } from "@db/index";
@@ -87,6 +87,18 @@ export function AppSideBar({ user, privateCollections, hasMorePrivateCollections
                                 onClick={() => sidebar.setOpenMobile(false)}>
                                 <Lightbulb />
                                 Discover
+                            </Link>
+                        </Button>
+                        <Button
+                            className="w-full justify-start hover:bg-secondary-500 hover:text-secondary-100"
+                            variant="sidebar-card"
+                            asChild>
+                            <Link
+                                title="Go to saved kits"
+                                href="/saved"
+                                onClick={() => sidebar.setOpenMobile(false)}>
+                                <Heart />
+                                Saved collections
                             </Link>
                         </Button>
                     </div>

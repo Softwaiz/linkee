@@ -23,7 +23,9 @@ interface CollectionPopupProps {
     isOpen: boolean
     isOwner: boolean
     onClose: () => void
+    loadingUserReactions?: boolean
     initialIsSaved?: boolean
+    initialIsLiked?: boolean
 }
 
 export function CollectionPopup({
@@ -33,6 +35,7 @@ export function CollectionPopup({
     isOpen,
     isOwner,
     onClose,
+    loadingUserReactions = false,
     initialIsSaved = false,
 }: CollectionPopupProps) {
     const [activeSection, setActiveSection] = useState<string | null>(null)
@@ -53,6 +56,12 @@ export function CollectionPopup({
     const href = `/collections/${collection.slug || collection.id}`
     const publicHref = `/kit/${collection.slug || collection.id}`
     const editHref = `/collections/${collection.slug || collection.id}/edit`
+
+    useEffect(() => {
+        if (!loadingUserReactions) {
+            setIsSaved(initialIsSaved)
+        }
+    }, [loadingUserReactions, initialIsSaved])
 
     // PostHog: fire once after 3s open
     useEffect(() => {
@@ -156,10 +165,9 @@ export function CollectionPopup({
                                 }
                                 alt={collection.label}
                                 className="w-full h-44 object-cover object-center"
-                            />
-                            <button
+                            /><button
                                 onClick={onClose}
-                                className="absolute top-3 right-3 size-8 flex items-center justify-center rounded-full bg-black/40 text-white/90 hover:bg-black/60 transition-colors"
+                                className="fixed top-3 right-3 shadow-md size-8 flex items-center justify-center rounded-full bg-black/40 text-white/90 hover:bg-black/60 transition-colors"
                                 aria-label="Close popup"
                             >
                                 <X className="size-4" />
