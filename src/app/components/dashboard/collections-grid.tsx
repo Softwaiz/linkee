@@ -39,7 +39,9 @@ export function CollectionsGrid({
         if (value.success) {
           toast.success("Deleted !", {
             id: toastId,
-            description: value.message
+            description: <p className='text-foreground'>
+              {value.message}
+            </p>,
           });
           window.location.reload();
         }
@@ -61,14 +63,18 @@ export function CollectionsGrid({
         if (value.success) {
           toast.success("Duplicated !", {
             id: toastId,
-            description: value.message
+            description: <p className='text-foreground'>
+              {value.message}
+            </p>,
           });
           navigate(window.location.pathname);
         }
         else {
           toast.error("Error.", {
             id: toastId,
-            description: value.message
+            description: <p className='text-foreground'>
+              {value.message}
+            </p>,
           });
         }
       });

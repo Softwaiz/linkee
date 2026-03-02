@@ -1,6 +1,5 @@
 import { Collection, db } from "@db/index";
 import { RequestInfo } from "rwsdk/worker";
-import { CollectionsMasonry } from "@/components/collection/grid";
 import { Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/link";
@@ -19,12 +18,12 @@ export default async function SavedCollections(props: RequestInfo) {
         .execute();
 
     return <>
-        <title>Collections you saved</title>
-        <meta name="description" content="Explore curated collections from creators around the world." />
+        <title>Webrings you saved</title>
+        <meta name="description" content="Explore curated webrings you saved." />
         <ContentLayout
             header={{
                 icon: <Heart className='size-7' />,
-                title: "Collections you saved",
+                title: "Webrings you saved",
                 middle: <div className="w-full flex flex-row items-center justify-end">
                     <div className="max-w-lg w-full">
                         <SearchLayout />
@@ -44,7 +43,7 @@ export default async function SavedCollections(props: RequestInfo) {
             }}>
             <div className="w-full space-y-4 md:space-y-6 lg:space-y-8 @container/discover">
                 <div className="w-full flex flex-col items-start justify-start">
-                    <h1 className='text-lg lg:text-2xl font-bold text-foreground'>You previously saved these kits.</h1>
+                    <h1 className='text-lg lg:text-2xl font-bold text-foreground'>You previously saved these webrings.</h1>
                 </div>
                 <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
                     <SearchLayout />

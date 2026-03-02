@@ -1,6 +1,5 @@
 'use client'
-
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Loader2, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Collection } from '@db/index'
@@ -21,12 +20,13 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [draftUrl, setDraftUrl] = useState('');
 
-    const handleCollectDraft = useCallback(async () => {
+    const handleCollectDraft = useCallback(async (overrideUrl?: string | React.SyntheticEvent) => {
 
+        const targetUrl = typeof overrideUrl === 'string' ? overrideUrl : draftUrl;
         let url = undefined;
         try {
-            new URL(draftUrl);
-            url = draftUrl;
+            new URL(targetUrl);
+            url = targetUrl;
         } catch {
             url = undefined;
         }
@@ -77,6 +77,23 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
             setIsLoading(false)
         }
     }, [draftUrl])
+
+    useEffect(() => {
+        const pendingWebring = localStorage.getItem("landing_init_webring")
+        if (pendingWebring) {
+            const parsed = JSON.parse(pendingWebring) as {
+                link: { url: string },
+                title: string,
+                description: string
+            };
+            setDraftUrl(parsed.link.url)
+            localStorage.removeItem('landing_init_webring')
+            // Add a small timeout to let the UI reflect the draftUrl in the input field visually
+            setTimeout(() => {
+                handleCollectDraft(parsed.link.url)
+            }, 300)
+        }
+    }, [handleCollectDraft])
 
     const handleDialogClose = useCallback(() => {
         setDialogOpen(false)
@@ -187,7 +204,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                                                 transition={{ duration: 0.2 }}
                                             >
                                                 <span className='uppercase leading-relaxed'>Resolving</span>
-                                                <Loader2 className="size-6 lg:size-8 animate-spin" />
+                                                <Loader2 className="size-4 lg:size-8 animate-spin" />
                                             </motion.div>
                                         ) : (
                                             <motion.div

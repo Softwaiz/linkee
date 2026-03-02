@@ -45,9 +45,9 @@ export default async function DiscoverPage(props: RequestInfo) {
       }}>
       <div className="w-full space-y-4 md:space-y-6 lg:space-y-8 @container/discover">
         <div className="w-full flex flex-col items-start justify-start">
-          <h1 className='text-lg lg:text-2xl font-bold text-foreground'>These kits are public.</h1>
+          <h1 className='text-lg lg:text-2xl font-bold text-foreground'>These webrings are public.</h1>
           <p className="text-sm text-foreground/80">
-            Explore curated collections from creators around the world.
+            Explore curated webrings from creators around the world.
           </p>
         </div>
         <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
