@@ -88,14 +88,21 @@ export function LinkDropDialog({
             if (result.success) {
                 toast.success('Link added!', {
                     id: toastId,
-                    description: result.message,
+                    description: <p className='text-foreground'>
+                        {result.message}
+                    </p>,
+                    action: <Button variant="link" onClick={() => navigate(`/collections/${selectedCollectionId}`)}>
+                        View collection
+                    </Button>,
                 })
                 onOpenChange(false)
                 resetState()
             } else {
                 toast.error('Failed to add link', {
                     id: toastId,
-                    description: result.message,
+                    description: <p className='text-foreground'>
+                        {result.message}
+                    </p>,
                 })
             }
         } catch {
@@ -147,7 +154,7 @@ export function LinkDropDialog({
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-md space-y-4 max-h-[60vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-lg space-y-4 max-h-[60vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         Link captured !
@@ -173,11 +180,11 @@ export function LinkDropDialog({
                             {metadata.title}
                         </p>
                         {metadata.description && (
-                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                            <p className="text-xs text-foreground/80 mt-0.5 line-clamp-2">
                                 {metadata.description}
                             </p>
                         )}
-                        <p className="text-xs text-muted-foreground/60 mt-1 truncate flex items-center gap-1">
+                        <p className="text-xs mt-1 truncate text-foreground/80 flex items-center gap-1">
                             <ExternalLink className="size-3 shrink-0" />
                             {metadata.url}
                         </p>
@@ -210,7 +217,7 @@ export function LinkDropDialog({
                             <div className="w-full space-y-4 pt-2">
                                 {/* Collection picker */}
                                 <div className="w-full space-y-2">
-                                    <div className="sticky top-0 w-full flex flex-row items-center justify-between bg-background">
+                                    <div className="sticky top-0 w-full flex flex-row items-center justify-between bg-card">
                                         <Label>Select a collection</Label>
                                         <div className="basis-3/5 relative">
                                             <Input

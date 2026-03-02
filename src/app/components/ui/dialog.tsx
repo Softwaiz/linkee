@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence, HTMLMotionProps, Variants } from "motion/react"
 import { Portal } from "../portal";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useScrollLockerEffect } from "@/hooks/useScrollLocker";
+import { useEscapeEffect } from "@/hooks/useEscapeEffect";
 
 interface DialogContextProps extends ComponentProps<typeof DialogPrimitive.Root> {
-
+  onClose: () => void;
 }
 
 const DialogStateContext = createContext<DialogContextProps>(null as any);
@@ -36,7 +38,8 @@ function Dialog({
     }
   }, [props.open, dialogOpen]);
 
-  return <DialogStateContext.Provider value={{ open: dialogOpen }}>
+  return <DialogStateContext.Provider
+    value={{ open: dialogOpen, onClose: () => setDialogOpen(false) }}>
     <DialogPrimitive.Root
       data-slot="dialog"
       {...props}
@@ -89,7 +92,7 @@ function DialogContent({
   showCloseButton?: boolean
 }) {
 
-  const { open } = useDialogState();
+  const { open, onClose } = useDialogState();
 
   const overlayVariants: Variants = {
     initial: {
@@ -142,6 +145,9 @@ function DialogContent({
     }
   }, [open]);
 
+  useScrollLockerEffect(open || false);
+  useEscapeEffect(open || false, onClose);
+
   if (!globalThis.document) {
     return <></>
   }
@@ -165,7 +171,7 @@ function DialogContent({
           {...props}
           layout
           className={cn(
-            "bg-background fixed top-[50%] left-[50%] z-50",
+            "bg-card fixed top-[50%] left-[50%] z-50",
             "w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%]",
             "gap-4 rounded-lg border p-6 shadow-lg outline-none sm:max-w-lg",
             className
@@ -178,7 +184,7 @@ function DialogContent({
             <DialogPrimitive.Close
               data-slot="dialog-close"
               data-state={open ? "open" : "closed"}
-              className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+              className="ring-offset-card focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
             >
               <XIcon />
               <span className="sr-only">Close</span>

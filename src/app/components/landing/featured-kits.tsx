@@ -5,6 +5,7 @@ import { Button } from "../ui/button"
 import { Link } from "../link"
 import { ArrowRight } from "lucide-react"
 import { FeaturedKitsGrid } from "./featured-kits-grid"
+import { SetupInitialWebring } from "./setup-initial-webring"
 
 interface Kit {
     id: string;
@@ -106,6 +107,11 @@ export async function FeaturedKits() {
                         </div>
                     </Link>
                     <FeaturedKitsGrid items={items} />
+                </div>
+                <div className="mt-16 mx-auto flex flex-col items-center justify-center">
+                    <h3 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Let's get you started.</h3>
+                    <p className="mt-2 text-lg text-muted-foreground">Enter a link to start building your own webring.</p>
+                    <SetupInitialWebring layoutIdPrefix="featured-kits" />
                 </div>
             </div>
         </section>

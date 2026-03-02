@@ -4,6 +4,8 @@ import { Collection } from '@db/index'
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { CollectionPopup, PublicCollectionPopup } from '../collection/collection-popup'
+import { useEscapeEffect } from '@/hooks/useEscapeEffect'
+import { useScrollLockerEffect } from '@/hooks/useScrollLocker'
 
 interface DiscoverCardProps {
   collection: Collection & {

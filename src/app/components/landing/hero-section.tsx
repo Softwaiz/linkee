@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ArrowRight, Link as LinkIcon } from "lucide-react";
+import { SetupInitialWebring } from "./setup-initial-webring";
 
 export function HeroSection() {
     const [url, setUrl] = useState("");
@@ -30,6 +31,10 @@ export function HeroSection() {
                     Build curated collections of links, videos, tools and resources.
                     Explore what others have already discovered.
                 </p>
+
+                <div className="container mx-auto flex flex-col items-center justify-center">
+                    <SetupInitialWebring layoutIdPrefix="hero" />
+                </div>
             </div>
         </header>
     )

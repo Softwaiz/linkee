@@ -75,13 +75,13 @@ const initialPage: () => Partial<CollectionInput> = () => ({
   id: generateId(),
   picture: "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk",
   banner: "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk",
-  label: 'My Resource Collection',
+  label: 'My Webring',
   description: 'A curated list of valuable resources',
   nodes: [
     {
       id: generateId(),
       title: "First Topic",
-      description: "This is the first topic in the collection. You can add links to this topic by clicking the add link button.",
+      description: "This is the first topic in the webring. You can add links to this topic by clicking the add link button.",
       items: []
     }
   ],
@@ -582,6 +582,20 @@ export function PageEditor({ header, hasHeader = true, footer, collection, tags:
   }, [cachedPage, page, collection, selectedPicture, selectedBanner, settings, tags]);
 
   const handleSaveCollection = useCallback(async () => {
+
+    const totalLinks = page.nodes?.reduce((acc, node) => acc + node.items.length, 0);
+
+    if (!totalLinks || totalLinks === 0) {
+      toast.error("At least one link, please.",
+        {
+          id: "collection.save",
+          description: <p className="text-sm text-foreground">
+            Add at least one link to your webring.
+          </p>
+        });
+      return;
+    }
+
     if (collection) {
       return handleUpdateCollection();
     }

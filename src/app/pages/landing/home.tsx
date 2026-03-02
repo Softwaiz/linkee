@@ -21,7 +21,6 @@ export default function Home(props: RequestInfo) {
       <main className="flex-1">
         <HeroSection />
         <FeaturedKits />
-        <SetupInitialWebring />
         <HowItWorks />
         <WhoIsThisFor />
       </main>

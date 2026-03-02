@@ -98,14 +98,14 @@ export default async function PublicCollectionPage({ params, ctx, request }: Req
 
     return (
         <div className="min-h-screen bg-background">
-            <title>{`${board.label} - a kit by ${authorLabel} | Linkits`}</title>
-            <meta name="description" content={board.description || `A curated link kit by ${authorLabel} on Linkits.`} />
+            <title>{`${board.label} - a webring by ${authorLabel} | Linkits`}</title>
+            <meta name="description" content={board.description || `A curated webring by ${authorLabel} on Linkits.`} />
             {selectedImage && <link rel="icon" href={selectedImage} type="image/x-icon" />}
             {authorAlias && <link rel="author" href={`${origin}/@${authorAlias}`} />}
             <meta property="og:type" content="article" />
             <meta property="og:site_name" content="Linkits" />
-            <meta property="og:title" content={`${board.label} - a kit by ${authorLabel} | Linkits`} />
-            <meta property="og:description" content={board.description || `A curated link kit by ${authorLabel} on Linkits.`} />
+            <meta property="og:title" content={`${board.label} - a webring by ${authorLabel} | Linkits`} />
+            <meta property="og:description" content={board.description || `A curated webring by ${authorLabel} on Linkits.`} />
             <meta property="og:url" content={collectionUrl} />
             <meta property="og:image" content={ogImage} />
             <meta property="og:image:width" content="1200" />
@@ -114,8 +114,8 @@ export default async function PublicCollectionPage({ params, ctx, request }: Req
             <meta property="article:author" content={authorName} />
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:site" content="@linkits" />
-            <meta name="twitter:title" content={`${board.label} - a kit by ${authorLabel} | Linkits`} />
-            <meta name="twitter:description" content={board.description || `A curated link kit by ${authorLabel} on Linkits.`} />
+            <meta name="twitter:title" content={`${board.label} - a webring by ${authorLabel} | Linkits`} />
+            <meta name="twitter:description" content={board.description || `A curated webring by ${authorLabel} on Linkits.`} />
             <meta name="twitter:image" content={ogImage} />
             <meta name="twitter:image:alt" content={board.label} />
             <Header sticky={false} />

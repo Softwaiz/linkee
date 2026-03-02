@@ -1,11 +1,10 @@
 'use client'
 import { Layers3, ExternalLink } from 'lucide-react'
 import { Collection } from '@db/index'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'motion/react'
 import { CollectionPopup } from '../collection/collection-popup'
 import { useIdentity } from '@/providers/identity'
-import { getMyReactions } from '@/actions/collections/reactions'
 import { useMyReactions } from '@/hooks/use-reactions'
 
 interface CollectionCardProps {

@@ -44,7 +44,13 @@ export const CreateCollectionSchema = z.object({
     picture: z.string().optional(),
     banner: z.string().optional(),
     tags: z.array(z.string()).optional().default([]),
-    nodes: z.array(GroupSchema),
+    nodes: z.array(GroupSchema)
+        .refine((nodes) => {
+            const totalLinks = nodes.reduce((acc, node) => acc + node.items.length, 0);
+            return totalLinks > 0;
+        }, {
+            message: "At least one link, please.",
+        }),
     settings: CollectionSettingsSchema.optional(),
 });
 

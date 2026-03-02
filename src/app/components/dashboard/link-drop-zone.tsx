@@ -79,13 +79,18 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
     }, [draftUrl])
 
     useEffect(() => {
-        const pendingUrl = localStorage.getItem('landing_pending_drop')
-        if (pendingUrl) {
-            setDraftUrl(pendingUrl)
-            localStorage.removeItem('landing_pending_drop')
+        const pendingWebring = localStorage.getItem("landing_init_webring")
+        if (pendingWebring) {
+            const parsed = JSON.parse(pendingWebring) as {
+                link: { url: string },
+                title: string,
+                description: string
+            };
+            setDraftUrl(parsed.link.url)
+            localStorage.removeItem('landing_init_webring')
             // Add a small timeout to let the UI reflect the draftUrl in the input field visually
             setTimeout(() => {
-                handleCollectDraft(pendingUrl)
+                handleCollectDraft(parsed.link.url)
             }, 300)
         }
     }, [handleCollectDraft])
@@ -199,7 +204,7 @@ export function LinkDropZone({ collections }: { collections: Collection[] }) {
                                                 transition={{ duration: 0.2 }}
                                             >
                                                 <span className='uppercase leading-relaxed'>Resolving</span>
-                                                <Loader2 className="size-6 lg:size-8 animate-spin" />
+                                                <Loader2 className="size-4 lg:size-8 animate-spin" />
                                             </motion.div>
                                         ) : (
                                             <motion.div

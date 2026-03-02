@@ -2,23 +2,35 @@
 
 import { ExternalLink } from 'lucide-react'
 import type { LinkItem } from '@/lib/types'
+import { useMemo } from 'react'
 
 interface LinkPreviewProps {
   link: LinkItem
 }
 
 export function LinkPreview({ link }: LinkPreviewProps) {
-  const getDomain = (url: string) => {
+  const domain = useMemo(() => {
     try {
-      return new URL(url).hostname.replace('www.', '')
+      return new URL(link.url).hostname.replace('www.', '')
     } catch {
-      return url
+      return link.url
     }
-  }
+  }, [link.url]);
+
+  const url = useMemo(() => {
+    try {
+      let parsed = new URL(link.url);
+      parsed.searchParams.set("utm_source", "linkits")
+      parsed.searchParams.set("utm_medium", "preview");
+      return parsed;
+    } catch {
+      return undefined;
+    }
+  }, [link.url]);
 
   return (
     <a
-      href={link.url}
+      href={url?.toString() || link.url}
       target="_blank"
       rel="noopener noreferrer"
       className="group flex items-start gap-2 rounded-xl border border-border bg-card/40 p-4 transition-all duration-200 hover:border-accent/50 hover:shadow-md hover:shadow-accent/5"
@@ -49,7 +61,7 @@ export function LinkPreview({ link }: LinkPreviewProps) {
             {link.description}
           </p>
         )}
-        <span className="text-xs text-muted-foreground/70">{getDomain(link.url)}</span>
+        <span className="text-xs text-muted-foreground/70">{domain}</span>
       </div>
     </a>
   )

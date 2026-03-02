@@ -99,9 +99,9 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
         <LinkDropZone collections={items} />
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-foreground">You own these collections.</h1>
+            <h1 className="text-2xl font-bold text-foreground">You own these webrings.</h1>
             <p className="text-foreground/80">
-              Collections you own and recently added collections here.
+              Webrings you own are here.
             </p>
           </div>
           <CollectionsGrid
@@ -124,7 +124,7 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
               </Button>
             </div>
             <p className="text-sm text-foreground/80">
-              You were interested in these collections.
+              You were interested in these webrings.
             </p>
           </div>
           <CollectionsGrid
@@ -136,7 +136,7 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
           <div className="space-y-1">
             <div className="w-full flex flex-row items-center justify-between">
-              <h1 className="text-2xl font-bold text-foreground">Explore collections</h1>
+              <h1 className="text-2xl font-bold text-foreground">Explore webrings</h1>
               <Button asChild variant="outline">
                 <Link href="/discover">
                   <span className="hidden md:inline-block">
@@ -147,7 +147,7 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
               </Button>
             </div>
             <p className="text-sm text-foreground/80">
-              Discover curated collections from creators around the world.
+              Discover curated webrings from creators around the world.
             </p>
           </div>
           <CollectionsGrid
