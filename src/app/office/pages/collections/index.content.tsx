@@ -1,8 +1,13 @@
 "use client";
+import { Link } from "@/components/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
+import { CollectionPopup } from "@office/collections/popup";
 import { ColumnDef } from "@tanstack/react-table";
+import { AnimatePresence } from "motion/react";
+import { useState } from "react";
 
 export type CollectionRow = {
     id: string;
@@ -14,55 +19,74 @@ export type CollectionRow = {
     visibility: string | null;
 };
 
-const columns: ColumnDef<CollectionRow>[] = [
-    {
-        accessorKey: "label",
-        header: "Collection",
-        cell: ({ row }) => {
-            return (
-                <div className="font-medium">
-                    {row.original.label || 'Untitled'}
-                </div>
-            )
-        },
-    },
-    {
-        accessorKey: "owner",
-        header: "Owner",
-        cell: ({ row }) => {
-            return (
-                <div>
-                    {row.original.firstName} {row.original.lastName} <span className="text-muted-foreground">({row.original.email})</span>
-                </div>
-            )
-        },
-    },
-    {
-        accessorKey: "visibility",
-        header: "Visibility",
-        cell: ({ row }) => {
-            return (
-                <Badge variant="outline" className="capitalize">
-                    {row.original.visibility || 'public'}
-                </Badge>
-            )
-        },
-    },
-    {
-        accessorKey: "createdAt",
-        header: "Created At",
-        cell: ({ row }) => {
-            return (
-                <div className="text-muted-foreground">
-                    {new Date(Number(row.original.createdAt)).toLocaleDateString()}
-                </div>
-            )
-        },
-    },
-]
-
-
 export function CollectionContent(props: { title: string, items: CollectionRow[] }) {
+    const [selectedRow, setSelectedRow] = useState<CollectionRow | null>(null);
+
+    const columns: ColumnDef<CollectionRow>[] = [
+        {
+            accessorKey: "label",
+            header: "Collection",
+            cell: ({ row }) => {
+                return (
+                    <div className="font-medium">
+                        {row.original.label || 'Untitled'}
+                    </div>
+                )
+            },
+        },
+        {
+            accessorKey: "owner",
+            header: "Owner",
+            cell: ({ row }) => {
+                return (
+                    <div>
+                        {row.original.firstName} {row.original.lastName} <span className="text-muted-foreground">({row.original.email})</span>
+                    </div>
+                )
+            },
+        },
+        {
+            accessorKey: "visibility",
+            header: "Visibility",
+            cell: ({ row }) => {
+                return (
+                    <Badge variant="outline" className="capitalize">
+                        {row.original.visibility || 'public'}
+                    </Badge>
+                )
+            },
+        },
+        {
+            accessorKey: "createdAt",
+            header: "Created At",
+            cell: ({ row }) => {
+                return (
+                    <div className="text-muted-foreground">
+                        {new Date(Number(row.original.createdAt)).toLocaleDateString()}
+                    </div>
+                )
+            },
+        },
+        {
+            accessorKey: "id",
+            header: "Actions",
+            cell: ({ row }) => {
+                return (
+                    <Button
+                        variant="outline"
+                        className="w-full"
+                        asChild
+                        onClick={() => {
+                            setSelectedRow(row.original);
+                        }}
+                    >
+                        Open
+                    </Button>
+                )
+            },
+        },
+    ]
+
     return <Card>
         <CardHeader>
             <CardTitle>{props.title}</CardTitle>
@@ -73,5 +97,13 @@ export function CollectionContent(props: { title: string, items: CollectionRow[]
         <CardContent>
             <DataTable columns={columns} data={props.items} />
         </CardContent>
+        <AnimatePresence>
+            {selectedRow && (
+                <CollectionPopup
+                    collection={selectedRow}
+                    onClose={() => setSelectedRow(null)}
+                />
+            )}
+        </AnimatePresence>
     </Card>
 }

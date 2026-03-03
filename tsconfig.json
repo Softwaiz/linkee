@@ -44,6 +44,9 @@
       ],
       "@db/*": [
         "./src/db/*"
+      ],
+      "@office/*": [
+        "./src/app/office/*"
       ]
     },
     /* Enable importing .json files */
