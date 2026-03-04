@@ -1,28 +1,32 @@
 'use client'
 import { Layers3, ExternalLink, User } from 'lucide-react'
 import { Collection } from '@db/index'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'motion/react'
 import { CollectionPopup, PublicCollectionPopup } from '../collection/collection-popup'
 import { useEscapeEffect } from '@/hooks/useEscapeEffect'
 import { useScrollLockerEffect } from '@/hooks/useScrollLocker'
+import { HighlightedCollection } from '@/resolvers/collections'
+import { Group } from '@/validations/collection/create'
 
 interface DiscoverCardProps {
-  collection: Collection & {
-    userAlias?: string | null
-    userFullName?: string | null
-  }
+  collection: HighlightedCollection;
   layoutPrefix?: string
   isOwner?: boolean
 }
 
 function CardInner({ collection, isOwner = false, layoutPrefix = "discover" }: DiscoverCardProps) {
   const [open, setOpen] = useState(false)
-  const totalLinks = collection.nodes.reduce(
+
+  const nodes = useMemo(() => {
+    return collection.nodes as Group[];
+  }, [collection.nodes]);
+
+  const totalLinks = nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalTopics = collection.nodes.length
+  const totalTopics = nodes.length
   const creator = collection.userAlias ? `@${collection.userAlias}` : collection.userFullName || null
 
   return (
@@ -38,12 +42,12 @@ function CardInner({ collection, isOwner = false, layoutPrefix = "discover" }: D
           <motion.img
             layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
             src={collection.banner || "https://fastly.picsum.photos/id/110/600/400.jpg?hmac=SwlqtGTf9bmTozBRccGd3Y8G25aXw4ucHtAegJaFRhk"}
-            alt={collection.label}
+            alt={collection.title}
             className="w-full object-cover object-center rounded-t-md h-46"
           />
           <div className="w-full flex flex-col items-start justify-start px-3 py-4">
             <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-foreground/80">
-              {collection.label || 'Untitled Collection'}
+              {collection.title || 'Untitled Collection'}
             </h3>
             <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <p>
@@ -75,7 +79,7 @@ function CardInner({ collection, isOwner = false, layoutPrefix = "discover" }: D
       <CollectionPopup
         layoutId={`${layoutPrefix}-card-${collection.id}`}
         bannerLayoutId={`${layoutPrefix}-card-banner-${collection.id}`}
-        collection={collection}
+        collection={collection as unknown as Collection}
         isOpen={open}
         isOwner={isOwner}
         onClose={() => setOpen(false)}
@@ -94,18 +98,23 @@ export function DiscoverCard({ collection, layoutPrefix, isOwner = false }: Disc
 
 export function PublicDiscoverCard({ collection, layoutPrefix, isOwner = false }: DiscoverCardProps) {
   const [open, setOpen] = useState(false)
-  const totalLinks = collection.nodes.reduce(
+
+  const nodes = useMemo(() => {
+    return collection.nodes as Group[];
+  }, [collection.nodes]);
+
+  const totalLinks = nodes.reduce(
     (acc, section) => acc + section.items.filter(item => item.type === 'link').length,
     0
   )
-  const totalTopics = collection.nodes.length
+  const totalTopics = nodes.length
   const creator = collection.userAlias ? `@${collection.userAlias}` : collection.userFullName || null
 
   return (
     <>
       <motion.button
         role="group"
-        title={`View ${collection.label}`}
+        title={`View ${collection.title}`}
         layoutId={`${layoutPrefix}-card-${collection.id}`}
         onClick={() => setOpen(true)}
         className="w-full text-left group bg-card/5 border border-card hover:bg-card/50 duration-200 transition-all rounded-md flex flex-col items-center justify-start cursor-pointer"
@@ -116,12 +125,12 @@ export function PublicDiscoverCard({ collection, layoutPrefix, isOwner = false }
           <motion.img
             layoutId={`${layoutPrefix}-card-banner-${collection.id}`}
             src={collection.banner || "https://fastly.picsum.photos/id/402/600/180.jpg?hmac=tGbMRulUvCgU0agW7HvyKaaWH6bEnU0-b-UefhnMIHs"}
-            alt={collection.label}
+            alt={collection.title}
             className="w-full object-cover object-center rounded-t-md h-46"
           />
           <div className="w-full flex flex-col items-start justify-start px-3 py-4">
             <h3 className="text-sm font-semibold leading-snug text-foreground group-hover:text-foreground/80">
-              {collection.label || 'Untitled Collection'}
+              {collection.title || 'Untitled Collection'}
             </h3>
             <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
               <p>
@@ -149,11 +158,10 @@ export function PublicDiscoverCard({ collection, layoutPrefix, isOwner = false }
           </div>
         </div>
       </motion.button>
-
       <PublicCollectionPopup
         layoutId={`${layoutPrefix}-card-${collection.id}`}
         bannerLayoutId={`${layoutPrefix}-card-banner-${collection.id}`}
-        collection={collection}
+        collection={collection as unknown as Collection}
         isOpen={open}
         onClose={() => setOpen(false)}
       />

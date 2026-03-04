@@ -1,4 +1,5 @@
 import { type Migrations } from "rwsdk/db";
+import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/sqlite";
 
 export const migrations = {
     "001_initial_schema": {
@@ -196,5 +197,62 @@ export const migrations = {
             await db.schema.dropTable("boardTags").ifExists().execute();
             await db.schema.dropTable("tags").ifExists().execute();
         },
+    },
+    "011_flattened_boards": {
+        async up(db) {
+            return [
+                db.schema
+                    .createView("boards_view")
+                    .materialized()
+                    .ifNotExists()
+                    .as(
+                        db.selectFrom("boards")
+                            .selectAll()
+                            .select(
+                                ({ eb }) => {
+                                    return [
+                                        jsonObjectFrom(
+                                            eb.selectFrom("users")
+                                                .select(["id", "firstName", "lastName", "alias", "email", "createdAt", "updatedAt"])
+                                                .whereRef("users.id", "=", "boards.userId")
+                                                .limit(1)
+                                        )
+                                            .as("owner"),
+                                        jsonObjectFrom(
+                                            eb.selectFrom("boardSettings")
+                                                .select(['visibility'])
+                                                .whereRef("boardSettings.boardId", "=", "boards.id")
+                                                .limit(1)
+                                        )
+                                            .as("settings"),
+                                        jsonArrayFrom(
+                                            eb.selectFrom("boardTags")
+                                                .innerJoin("tags", "tags.id", "boardTags.tagId")
+                                                .select(["tagId", "tags.canonicalLabelEn", "tags.canonicalLabelFr"])
+                                                .whereRef("boardTags.boardId", "=", "boards.id")
+                                        )
+                                            .as("tags")
+                                    ]
+                                }
+                            )
+                    )
+                    .execute()
+            ]
+        },
+        async down(db) {
+            await db.schema.dropView("boards_view").ifExists().execute();
+        },
+    },
+    "012_add_highlighted_collections_cache": {
+        async up(db) {
+            return [
+                await db.schema.alterTable("boards")
+                .addColumn("isHighlighted", "integer", (col) => col.notNull().defaultTo(0))
+                .execute()
+            ];
+        },
+        async down(db) {
+            await db.schema.alterTable("boards").dropColumn("isHighlighted").execute();
+        }
     }
 } satisfies Migrations;

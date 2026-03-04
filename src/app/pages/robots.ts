@@ -8,8 +8,11 @@ Disallow: /home
 Disallow: /collections
 Disallow: /profile
 Allow: /
-
-Sitemap: ${baseUrl}/sitemap`;
+Allow: /html-sitemap
+Allow: /kit/*
+Allow: /@*
+Sitemap: ${baseUrl}/sitemap
+`;
 
     return new Response(robotsTxt, {
         headers: {

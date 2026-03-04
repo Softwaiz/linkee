@@ -1,8 +1,8 @@
 import { LayoutProps } from "rwsdk/router";
 import { getRequestInfo } from "rwsdk/worker";
-import { db } from "@db/index";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider } from "@/components/ui/sidebar";
 import { Layers, Users } from "lucide-react";
+import { WrappedToaster } from "@/toaster";
 
 export function Appbar() {
     return <Sidebar>
@@ -58,6 +58,11 @@ export function Appbar() {
                                         <a href="/office/kits?filter=unlisted">Unlisted</a>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild>
+                                        <a href="/office/kits/highlighted">Highlighted</a>
+                                    </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
                             </SidebarMenuSub>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
@@ -91,6 +96,7 @@ export default async function OfficeLayout(props: LayoutProps) {
             <div className="w-full min-h-dvh bg-gray-50 flex flex-col">
                 {props.children}
             </div>
+            <WrappedToaster position="bottom-right" />
         </SidebarProvider>
     );
 }

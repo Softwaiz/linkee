@@ -21,7 +21,7 @@ const DialogStateContext = createContext<DialogContextProps>(null as any);
 const useDialogState = () => {
   const value = useContext(DialogStateContext);
   if (!value) {
-    throw new Error("useDialogContext must be used within a DialogContext");
+    throw new Error("useDialogState must be used within a DialogContext");
   }
   return value;
 }

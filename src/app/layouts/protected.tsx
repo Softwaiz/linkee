@@ -46,7 +46,7 @@ export default async function ProtectedLayout(props: LayoutProps) {
                         '--sidebar-width': '280px',
                     } as any}
                     className="w-full min-h-dvh flex flex-row items-start justify-start bg-background text-foreground">
-                    <div className="fixed top-0 left-0 h-dvh w-(--sidebar-width) hidden md:block">
+                    <div className="fixed top-0 left-0 h-dvh w-(--sidebar-width) hidden md:block border-r border-border">
                         <AppSideBar
                             user={ctx.user!}
                             privateCollections={collections as unknown as Pick<Collection, "id" | "slug" | "label" | "nodes">[]}

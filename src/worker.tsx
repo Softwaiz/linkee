@@ -41,6 +41,7 @@ import { CollectionsPage } from "@/office/pages/collections";
 import { TagsPage } from "@/office/pages/tags";
 import { seedTags } from "@/api/office/seed-tags";
 import { requireIdentity } from "@/middlewares/authentication";
+import { HighlightedCollections } from "@/office/pages/highlighted";
 export { Database } from "@db/durableObject";
 
 
@@ -138,6 +139,7 @@ const app = defineApp([
         route("/", OfficeDashboard),
         route("/users", UsersPage),
         route("/kits", CollectionsPage),
+        route("/kits/highlighted", HighlightedCollections),
         route("/tags", TagsPage),
         route("/seed/tags/1", seedTags)
       ])
