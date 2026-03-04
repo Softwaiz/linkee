@@ -75,4 +75,65 @@ export class CollectionResolver {
 
         return [...set];
     }
+
+    static async getCollections({ onlyPrivate, onlyPublic, onlyUnlisted}:  { onlyPrivate: boolean, onlyPublic: boolean, onlyUnlisted: boolean }) {
+        let query = db.selectFrom("boards")
+            .innerJoin("users", "users.id", "boards.userId")
+            .leftJoin("boardSettings", "boardSettings.boardId", "boards.id")
+            .select([
+                "boards.id",
+                "boards.label",
+                "boards.createdAt",
+                "users.firstName",
+                "users.lastName",
+                "users.email",
+                "boardSettings.visibility"
+            ]);
+
+        if (onlyPrivate) {
+            query = query.where("boardSettings.visibility", "=", "private");
+        } else if (onlyPublic) {
+            query = query.where((eb) => eb.or([
+                eb("boardSettings.visibility", "=", "public"),
+                eb("boardSettings.visibility", "is", null)
+            ]));
+        } else if (onlyUnlisted) {
+            query = query.where("boardSettings.visibility", "=", "unlisted");
+        }
+
+        const collections = await query.orderBy("boards.createdAt", "desc").execute();
+
+        return {
+            items: collections
+        }
+
+    }
+
+    static async getHighlightedCollections() {
+        const highlightedIds = await env.CONTENT_CACHE.get<string[]>(`webrings:highlighted`, "json") || [];
+        if (highlightedIds.length === 0) {
+            return [];
+        }
+        let items = await db.selectFrom("boards")
+            .innerJoin("users", "users.id", "boards.userId")
+            .leftJoin("boardSettings", "boardSettings.boardId", "boards.id")
+            .select([
+                "boards.id",
+                "boards.label",
+                "boards.createdAt",
+                "users.firstName",
+                "users.lastName",
+                "users.email",
+                "boardSettings.visibility"
+            ])
+            .where("boards.id", "in", highlightedIds)
+            .execute();
+
+        items.sort((a, b) => {
+            const aIndex = highlightedIds.indexOf(a.id);
+            const bIndex = highlightedIds.indexOf(b.id);
+            return aIndex - bIndex;
+        });
+        return items;
+    }
 }

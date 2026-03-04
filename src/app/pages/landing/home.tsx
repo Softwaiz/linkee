@@ -6,7 +6,6 @@ import { WhoIsThisFor } from "@/components/landing/who-is-this-for"
 import { JsonLd } from "@/components/landing/json-ld"
 import { Navbar } from "@/components/landing/navbar"
 import { RequestInfo } from "rwsdk/worker"
-import { SetupInitialWebring } from "@/components/landing/setup-initial-webring"
 
 export default function Home(props: RequestInfo) {
   if (props.ctx.user) {
