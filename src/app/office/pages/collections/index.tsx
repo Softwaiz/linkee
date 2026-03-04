@@ -39,7 +39,7 @@ export const CollectionsPage = async (props: RequestInfo) => {
 
     return (
         <div className="flex flex-col flex-1 p-8">
-            <title>{title} - Linkits Office</title>
+            <title>{`${title} - Linkits Office`}</title>
             <meta name="description" content="Manage Linkits collections" />
             <CollectionContent title={title} items={collections} />
         </div>

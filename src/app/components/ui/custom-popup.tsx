@@ -50,7 +50,7 @@ export function Popup({
                             'mx-auto max-w-2xl',
                             'bg-background border border-border rounded-2xl shadow-2xl',
                             'flex flex-col overflow-hidden',
-                            'max-h-[90vh]',
+                            'h-full max-h-[90vh]',
                             "overflow-y-auto",
                             className
                         )}

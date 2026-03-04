@@ -1,8 +1,5 @@
 import { RequestInfo } from "rwsdk/worker";
 import { db } from "@db/index";
-import { Badge } from "@/components/ui/badge";
-import { DataTable } from "@/components/ui/data-table";
-import { ColumnDef } from "@tanstack/react-table";
 import { UsersPageContent } from "./index.content";
 
 export default async function UsersPage(props: RequestInfo) {
@@ -38,7 +35,7 @@ export default async function UsersPage(props: RequestInfo) {
 
     return (
         <div className="flex flex-col flex-1 p-8">
-            <title>{title} - Linkits Office</title>
+            <title>{`${title} - Linkits Office`}</title>
             <meta name="description" content="Manage Linkits users" />
 
             <UsersPageContent title={title} items={users} />

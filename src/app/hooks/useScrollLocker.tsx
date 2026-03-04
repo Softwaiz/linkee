@@ -19,11 +19,9 @@ export function useScrollLocker() {
         document.body.style.overflowX = "hidden";
         document.body.style.overflowY = "hidden";
         setLocked(true);
-        console.log("lock applied from ", style.overflowX, style.overflowY);
     }, []);
 
     const unlock = useCallback(() => {
-
         if (overflowX.current) {
             document.body.style.overflowX = overflowX.current;
             overflowX.current = undefined;
@@ -33,7 +31,6 @@ export function useScrollLocker() {
             overflowY.current = undefined;
         }
         setLocked(false);
-        console.log("unlock applied from ", overflowX.current, overflowY.current);
     }, []);
 
     return { locked, lock, unlock };
