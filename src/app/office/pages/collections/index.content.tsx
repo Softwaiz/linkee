@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popup } from "@/components/ui/custom-popup";
 import { DataTable } from "@/components/ui/data-table";
-import { getCollection, type GetCollectionResult } from "@/office/collections/queries";
+import { type GetCollectionResult } from "@/office/collections/queries";
 import { ColumnDef } from "@tanstack/react-table";
 import { Copy, Loader2, MoreVertical, Star, StarOff, X } from "lucide-react";
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
