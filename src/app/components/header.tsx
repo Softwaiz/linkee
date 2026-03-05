@@ -6,7 +6,7 @@ import { Logo } from "./logo";
 import { Link } from "./link";
 import { useDimensions } from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
-import { SearchLayout } from "./search/layout";
+import { Searchbar } from "./search/layout";
 
 export function Header({ className, sticky = true }: { className?: string, sticky?: boolean }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,7 +35,7 @@ export function Header({ className, sticky = true }: { className?: string, stick
                 </Link>
 
                 <div className="w-full max-w-md">
-                    <SearchLayout />
+                    <Searchbar />
                 </div>
 
                 <div className="hidden md:flex items-center gap-4">

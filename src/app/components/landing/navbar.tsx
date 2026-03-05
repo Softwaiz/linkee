@@ -4,7 +4,7 @@ import { LogIn, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "../link"
 import { Logo } from "../logo"
-import { SearchLayout } from "../search/layout"
+import { Searchbar } from "../search/layout"
 
 export function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false)
@@ -23,7 +23,7 @@ export function Navbar() {
                     </span>
                 </Link>
                 <div className="hidden lg:block w-full max-w-lg">
-                    <SearchLayout />
+                    <Searchbar />
                 </div>
                 <div className="hidden md:block">
                     <Button

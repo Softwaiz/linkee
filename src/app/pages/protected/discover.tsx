@@ -5,7 +5,7 @@ import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
 import { RequestInfo } from 'rwsdk/worker'
 import { ContentLayout } from '@/components/page/content-layout'
-import { SearchLayout } from '@/components/search/layout'
+import { Searchbar } from '@/components/search/layout'
 
 export default async function DiscoverPage(props: RequestInfo) {
 
@@ -28,7 +28,7 @@ export default async function DiscoverPage(props: RequestInfo) {
         title: "Discover collections",
         middle: <div className="w-full flex flex-row items-center justify-end">
           <div className="max-w-lg w-full">
-            <SearchLayout />
+            <Searchbar />
           </div>
         </div>,
         actions: <>
@@ -51,7 +51,7 @@ export default async function DiscoverPage(props: RequestInfo) {
           </p>
         </div>
         <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
-          <SearchLayout />
+          <Searchbar />
         </div>
 
         <div

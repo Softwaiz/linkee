@@ -4,7 +4,7 @@ import { Heart, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/link";
 import { ContentLayout } from "@/components/page/content-layout";
-import { SearchLayout } from "@/components/search/layout";
+import { Searchbar } from "@/components/search/layout";
 import { CollectionCard } from "@/components/collection/card";
 
 export default async function SavedCollections(props: RequestInfo) {
@@ -26,7 +26,7 @@ export default async function SavedCollections(props: RequestInfo) {
                 title: "Webrings you saved",
                 middle: <div className="w-full flex flex-row items-center justify-end">
                     <div className="max-w-lg w-full">
-                        <SearchLayout />
+                        <Searchbar />
                     </div>
                 </div>,
                 actions: <>
@@ -46,7 +46,7 @@ export default async function SavedCollections(props: RequestInfo) {
                     <h1 className='text-lg lg:text-2xl font-bold text-foreground'>You previously saved these webrings.</h1>
                 </div>
                 <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
-                    <SearchLayout />
+                    <Searchbar />
                 </div>
                 <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {collections.map(collection => (

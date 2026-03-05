@@ -2,7 +2,7 @@ import { CollectionsGrid } from '@/components/dashboard/collections-grid';
 import { LinkDropZone } from '@/components/dashboard/link-drop-zone';
 import { Link } from '@/components/link';
 import { ContentLayout } from '@/components/page/content-layout';
-import { SearchLayout } from '@/components/search/layout';
+import { Searchbar } from '@/components/search/layout';
 import { Button } from '@/components/ui/button';
 import { Collection, db } from '@db/index';
 import { ChevronRight, Home, Plus } from 'lucide-react';
@@ -78,7 +78,7 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
         title: "Your collections",
         middle: <div className="w-full hidden md:flex flex-row items-center justify-end">
           <div className="max-w-lg w-full">
-            <SearchLayout />
+            <Searchbar />
           </div>
         </div>,
         actions: <Button
@@ -94,7 +94,7 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
       }}>
       <div className="w-full space-y-4 @container/home">
         <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
-          <SearchLayout />
+          <Searchbar />
         </div>
         <LinkDropZone collections={items} />
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">

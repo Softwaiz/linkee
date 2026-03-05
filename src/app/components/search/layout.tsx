@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { SearchResults } from "./results";
 import { useSearch } from "@/hooks/useSearch";
 
-export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?: string }>) {
+export function Searchbar({ initialQuery }: PropsWithChildren<{ initialQuery?: string }>) {
     const [searchAreaOpen, setSearchAreaOpen] = useState(false);
     const { query, setQuery, isLoading: isSearching, count: searchCount, items: searchItems } = useSearch(initialQuery ?? '');
 
@@ -55,7 +55,7 @@ export function SearchLayout({ initialQuery }: PropsWithChildren<{ initialQuery?
     }, [searchAreaOpen, currentStyle.x, currentStyle.y]);
 
     return <div className="w-full flex flex-row items-center justify-center relative">
-        <div className="relative w-full text-neutral-600 border border-border rounded-md" ref={inputContainerRef}>
+        <div className="relative w-full border border-border rounded-md" ref={inputContainerRef}>
             <Input
                 type="text"
                 placeholder="Search people, collections, topics..."

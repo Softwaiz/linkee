@@ -1,5 +1,5 @@
 "use client";
-import { SearchLayout } from "@/components/search/layout";
+import { Searchbar } from "@/components/search/layout";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
@@ -16,7 +16,7 @@ export function ProtectedHeader() {
                 <h1 className="text-xl font-bold @md/header:hidden">Linkits</h1>
             </div>
             <div className="grow">
-                <SearchLayout />
+                <Searchbar />
             </div>
         </div>
     </div>
