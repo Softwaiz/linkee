@@ -219,7 +219,7 @@ export function CollectionDetailsPopup(props: { isOpen?: boolean, collectionId: 
                 )}
             </AnimatePresence>
         </motion.div>
-    )
+    );
 }
 
 function CollectionDetails({ collection }: { collection: NonNullable<GetCollectionResult> }) {
