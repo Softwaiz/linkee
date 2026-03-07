@@ -1,7 +1,7 @@
 import { Collection } from '@db/index';
-import { CollectionActions } from './collection-actions'
+import { CollectionActions } from './actions'
 import { SectionPreview } from './section-preview';
-import { CollectionProfile } from './collection-profile';
+import { CollectionProfile } from './profile';
 import { Button } from '../ui/button';
 import { Link } from '../link';
 import { Layers, Pencil } from 'lucide-react';

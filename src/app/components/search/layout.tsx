@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { SearchResults } from "./results";
 import { useSearch } from "@/hooks/useSearch";
 
-export function Searchbar({ initialQuery }: PropsWithChildren<{ initialQuery?: string }>) {
+export function Searchbar({ isPublic = true, initialQuery }: PropsWithChildren<{ isPublic?: boolean; initialQuery?: string }>) {
     const [searchAreaOpen, setSearchAreaOpen] = useState(false);
     const { query, setQuery, isLoading: isSearching, count: searchCount, items: searchItems } = useSearch(initialQuery ?? '');
 
@@ -94,6 +94,7 @@ export function Searchbar({ initialQuery }: PropsWithChildren<{ initialQuery?: s
                         >
                             <div className="container mx-auto bg-card/80 text-card-foreground backdrop-blur-sm flex flex-col gap-2 min-h-20 border border-border rounded-md p-2 lg:p-4">
                                 <SearchResults
+                                isPublic={isPublic}
                                     isPending={isSearching}
                                     count={searchCount}
                                     items={searchItems as any}

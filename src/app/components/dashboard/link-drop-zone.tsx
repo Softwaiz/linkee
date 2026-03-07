@@ -14,7 +14,7 @@ export interface ExtractedMetadata {
     favicon?: string
 }
 
-export function LinkDropZone({ collections }: { collections: Collection[] }) {
+export function LinkDropZone({ destinationPossibilities: collections }: { destinationPossibilities: Collection[] }) {
     const [isLoading, setIsLoading] = useState(false)
     const [metadata, setMetadata] = useState<ExtractedMetadata | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)

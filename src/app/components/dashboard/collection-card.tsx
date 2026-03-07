@@ -3,7 +3,7 @@ import { Layers3, ExternalLink } from 'lucide-react'
 import { Collection } from '@db/index'
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { CollectionPopup } from '../collection/collection-popup'
+import { CollectionPopup } from '../collection/popup'
 import { useIdentity } from '@/providers/identity'
 import { useMyReactions } from '@/hooks/use-reactions'
 

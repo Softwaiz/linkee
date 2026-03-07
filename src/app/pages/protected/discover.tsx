@@ -1,23 +1,15 @@
 import { DiscoverCard } from '@/components/discover/discover-card'
-import { Collection, db } from '@db/index'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/components/link'
 import { Lightbulb, Plus } from 'lucide-react'
 import { RequestInfo } from 'rwsdk/worker'
 import { ContentLayout } from '@/components/page/content-layout'
 import { Searchbar } from '@/components/search/layout'
+import { UserCollectionResolver } from '@/resolvers/collections'
 
 export default async function DiscoverPage(props: RequestInfo) {
 
-  const items = await db
-    .selectFrom("boards")
-    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
-    .leftJoin("users", "boards.userId", "users.id")
-    .select(["boards.id", "boards.label", "boards.description", "boards.createdAt", "boards.updatedAt", "boards.userId", "boards.slug", "boards.sourceId", "boardSettings.visibility", "boards.nodes", "boards.slug", "boards.banner", "users.alias", "users.firstName", "users.lastName"])
-    .where("boardSettings.visibility", "=", "public")
-    .orderBy("boards.createdAt", "desc")
-    .limit(20)
-    .execute();
+  const items = await UserCollectionResolver.getDiscoverableCollections();
 
   return <>
     <title>Discover collections</title>
@@ -56,19 +48,18 @@ export default async function DiscoverPage(props: RequestInfo) {
 
         <div
           className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-          {items.map((collection) => {
-            const col = collection as unknown as Collection & { alias?: string | null, firstName?: string | null, lastName?: string | null }
+          {items.map((col) => {
             const isOwner = props.ctx.user?.id === col.userId
             return (
               <DiscoverCard
-                key={collection.id}
+                key={col.id}
                 isOwner={isOwner}
                 layoutPrefix="kit/discover"
-                collection={{
-                  ...col,
-                  userAlias: col.alias ?? null,
-                  userFullName: col.firstName && col.lastName ? `${col.firstName} ${col.lastName}` : null,
+                user={{
+                  alias: col.alias || '',
+                  fullName: col.firstName && col.lastName ? `${col.firstName} ${col.lastName}` : '',
                 }}
+                collection={col}
               />
             )
           })}

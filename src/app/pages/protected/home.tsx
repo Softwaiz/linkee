@@ -4,70 +4,18 @@ import { Link } from '@/components/link';
 import { ContentLayout } from '@/components/page/content-layout';
 import { Searchbar } from '@/components/search/layout';
 import { Button } from '@/components/ui/button';
+import { UserCollectionResolver } from '@/resolvers/collections';
 import { Collection, db } from '@db/index';
 import { ChevronRight, Home, Plus } from 'lucide-react';
 import { RequestInfo } from 'rwsdk/worker';
 
 export default async function DashboardPage({ ctx }: RequestInfo) {
   const user = ctx.user!;
-  const items = (await db
-    .selectFrom("boards")
-    .selectAll()
-    .where("userId", "=", user?.id)
-    .orderBy("createdAt", "asc")
-    .execute()
-  ) as unknown as Collection[];
-
-  const discoverableItems = await db
-    .selectFrom("boards")
-    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
-    .leftJoin("users", "boards.userId", "users.id")
-    .where("boardSettings.visibility", "=", "public")
-    .select([
-      "boards.id",
-      "boards.label",
-      "boards.description",
-      "boards.createdAt",
-      "boards.updatedAt",
-      "boards.userId",
-      "boards.slug",
-      "boards.sourceId",
-      "boardSettings.visibility",
-      "boards.nodes",
-      "boards.slug",
-      "boards.banner"
-    ])
-    //.where("users.id", "!=", user?.id)
-    .orderBy("boards.createdAt", "desc")
-    .limit(20)
-    .execute();
-
-  const savedItems = await db
-    .selectFrom("boards")
-    .leftJoin("boardSettings", "boards.id", "boardSettings.boardId")
-    .leftJoin("boardReactions", "boards.id", "boardReactions.boardId")
-    .where("boardSettings.visibility", "=", "public")
-    .where((eb) => eb.and([
-      eb("boardReactions.userId", "=", user?.id),
-      eb("boardReactions.type", "=", "save")
-    ]))
-    .select([
-      "boards.id",
-      "boards.label",
-      "boards.description",
-      "boards.createdAt",
-      "boards.updatedAt",
-      "boards.userId",
-      "boards.slug",
-      "boards.sourceId",
-      "boardSettings.visibility",
-      "boards.nodes",
-      "boards.slug",
-      "boards.banner",
-    ])
-    .orderBy("boardReactions.createdAt", "desc")
-    .limit(20)
-    .execute();
+  const [items, discoverableItems, savedItems] = await Promise.all([
+    UserCollectionResolver.getUserCollections(user.id),
+    UserCollectionResolver.getDiscoverableCollections(),
+    UserCollectionResolver.getSavedItems(user.id)
+  ])
 
   return <>
     <title>Your collections</title>
@@ -96,11 +44,11 @@ export default async function DashboardPage({ ctx }: RequestInfo) {
         <div className="w-full flex md:hidden flex-row items-center justify-end @container/search">
           <Searchbar />
         </div>
-        <LinkDropZone collections={items} />
+        <LinkDropZone destinationPossibilities={items as unknown as Collection[]} />
         <div className="w-full space-y-2 bg-card/20 p-4 rounded-md border border-border text-card-foreground @container/discover">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold text-foreground">You own these webrings.</h1>
-            <p className="text-foreground/80">
+            <p className="text-sm text-foreground/80">
               Webrings you own are here.
             </p>
           </div>

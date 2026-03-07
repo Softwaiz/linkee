@@ -5,7 +5,7 @@ import { Collection } from '@db/index'
 import { HTMLAttributes, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { motion } from 'motion/react'
-import { CollectionPopup } from './collection-popup'
+import { CollectionPopup } from './popup'
 import { useMyReactions } from '@/hooks/use-reactions'
 
 interface CollectionCardProps {
