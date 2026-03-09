@@ -45,9 +45,6 @@ export default function SigninContent(props: { redirect: string }) {
             });
     }, [props.redirect]);
 
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const passwordVisibility = useDebounce(5000);
-
     return (
         <section className="bg-background text-foreground py-10 lg:py-10 min-h-dvh flex flex-col items-center justify-center">
             <div className="w-full max-w-md flex flex-col items-center justify-center p-2 md:p-4">
@@ -66,7 +63,7 @@ export default function SigninContent(props: { redirect: string }) {
                             </div>
                         </CardHeader>
                         <form
-                            className="w-full space-y-4"
+                            className="w-full space-y-2 md:space-y-4"
                             onSubmit={(ev) => {
                                 ev.preventDefault();
                                 form.handleSubmit(triggerLogin)(ev);

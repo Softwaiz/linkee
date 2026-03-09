@@ -5,6 +5,10 @@ import { PublicDocument } from "@/documents/PublicDocument";
 import { setCommonHeaders } from "@/headers";
 import LoginPage from "@/pages/auth/signin";
 import Home from "@/pages/landing/home";
+import ForPortfoliosPage from "@/pages/landing/for-portfolios";
+import ForBloggersPage from "@/pages/landing/for-bloggers";
+import ForOpenSourcePage from "@/pages/landing/for-open-source";
+import ForEnterprisesPage from "@/pages/landing/for-enterprises";
 import Signup from "@/pages/auth/signup";
 import BaseLayout from "@/layouts/base";
 import { db } from "@db/index";
@@ -115,6 +119,12 @@ const app = defineApp([
       route("/html-sitemap", HtmlSitemap),
       route("/robots.txt", Robots),
       route("/api/metadata", extractMetadata),
+      prefix("/for", [
+        route("/portfolio", ForPortfoliosPage),
+        route("/blogger", ForBloggersPage),
+        route("/open-source", ForOpenSourcePage),
+        route("/enterprise", ForEnterprisesPage),
+      ]),
       prefix("/", [
         requireIdentity,
         layout(ProtectedLayout, [

@@ -81,11 +81,13 @@ export default function SignupContent() {
                                 </p>
                             </div>
                         </CardHeader>
-                        <form onSubmit={(ev) => {
-                            ev.preventDefault();
-                            form.handleSubmit(onSubmit)(ev);
-                        }} className="space-y-2 w-full flex flex-col">
-                            <FieldGroup className="flex flex-row gap-4">
+                        <form
+                            onSubmit={(ev) => {
+                                ev.preventDefault();
+                                form.handleSubmit(onSubmit)(ev);
+                            }}
+                            className="space-y-2 w-full flex flex-col">
+                            <FieldGroup className="flex flex-col md:flex-row gap-2 md:gap-3 lg:gap-4">
                                 <Controller
                                     control={form.control}
                                     name="firstName"
