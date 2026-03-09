@@ -33,6 +33,19 @@ export const PublicDocument = ({
             }} />
 
             <meta name="google-site-verification" content={env.GOOGLE_SITE_VERIFICATION} />
+
+            <meta property="og:type" content="website" />
+            <meta property="og:site_name" content="Linkits" />
+            <meta property="og:url" content="https://linkits.xyz" />
+            <meta property="og:image" content="https://linkits.xyz/og-image.png" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:image:alt" content="Linkits - Curate, Organize & Share Link Collections" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="@linkits" />
+            <meta name="twitter:title" content="Linkits - Curate, Organize & Share Link Collections" />
+            <meta name="twitter:description" content="Build beautiful link kits. Organize links by topic, keep private notes, or publish curated pages that get indexed by search engines." />
+            <meta name="twitter:image" content="https://linkits.xyz/og-image.png" />
         </head>
         <body className="dark">
             <div id="root">
