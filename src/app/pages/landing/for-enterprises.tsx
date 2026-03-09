@@ -55,6 +55,9 @@ const examples = [
 export default function ForEnterprisesPage() {
     return (
         <div className="flex min-h-screen flex-col">
+            <title>Linkits for Enterprises - One place for everything your brand shares</title>
+            <meta name="description" content="Build a public-facing directory of your company website, GitHub, products, articles, and community links in one shareable collection." />
+            <meta name="keywords" content="enterprise link directory, company link in bio, brand resources hub, corporate links collection, official company links, Linkits for business" />
             <Navbar />
             <main className="flex-1">
                 {/* Hero */}

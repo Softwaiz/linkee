@@ -63,6 +63,9 @@ const examples = [
 export default function ForBloggersPage() {
     return (
         <div className="flex min-h-screen flex-col">
+            <title>Linkits for Bloggers - Curate your top picks & share what you love</title>
+            <meta name="description" content="Turn your reading list into a shareable kit. Mix your own articles with the best of what others have written, grouped by topic." />
+            <meta name="keywords" content="link in bio for bloggers, content curation for writers, top picks collection, share reading list, blogger resources, newsletter curation, Linkits for bloggers" />
             <Navbar />
             <main className="flex-1">
                 {/* Hero */}

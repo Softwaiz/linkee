@@ -47,6 +47,9 @@ const benefits = [
 export default function ForPortfoliosPage() {
     return (
         <div className="flex min-h-screen flex-col">
+            <title>Linkits for Portfolios - Your whole identity, one link</title>
+            <meta name="description" content="Build a curated portfolio kit by grouping your LinkedIn, GitHub, projects, videos, and contributions into one shareable collection." />
+            <meta name="keywords" content="developer portfolio link, designer portfolio links, creator link in bio, showcase projects, personal brand links, Linkits for portfolio" />
             <Navbar />
             <main className="flex-1">
                 {/* Hero */}

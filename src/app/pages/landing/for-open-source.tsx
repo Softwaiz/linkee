@@ -63,6 +63,9 @@ const examples = [
 export default function ForOpenSourcePage() {
     return (
         <div className="flex min-h-screen flex-col">
+            <title>Linkits for Open Source - Help people discover your ecosystem</title>
+            <meta name="description" content="Group plugins, tutorials, integrations, and community resources into shareable kits so anyone can explore what your project offers." />
+            <meta name="keywords" content="open source project links, GitHub ecosystem directory, open source resources hub, developer community links, OSS portfolio, Linkits for open source" />
             <Navbar />
             <main className="flex-1">
                 {/* Hero */}
