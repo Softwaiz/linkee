@@ -1,0 +1,47 @@
+.root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    --padding-x: 16px;
+}
+
+.header {
+    width: 100%;
+    height: 46px;
+    background-color: crimson;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 0 var(--padding-x);
+}
+
+.title {
+    font-size: 12px;
+}
+
+.content {
+    width: 100%;
+    flex-grow: 1;
+    padding: 0 (--padding-x);
+}
+
+.footer {
+    width: 100%;
+    padding: 0 (--padding-x);
+}
+
+.footer button {
+    width: 100%;
+    height: 40px;
+    background-color: green;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 var(--padding-x);
+}

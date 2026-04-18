@@ -1,0 +1,19 @@
+"use client";
+import { AnchorHTMLAttributes } from "react";
+import { navigate, NavigateOptions } from "rwsdk/client";
+
+export function Link({ children, href, target, history, info, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & Partial<NavigateOptions>) {
+    return <a
+        {...props}
+        href={href}
+        onClick={(ev) => {
+            if (href && (!target || target !== "_blank")) {
+                ev.preventDefault();
+                navigate(href, { history, info });
+            }
+            props.onClick?.(ev);
+        }}
+    >
+        {children}
+    </a>
+}

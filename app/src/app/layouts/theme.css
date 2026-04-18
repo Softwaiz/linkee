@@ -1,0 +1,13 @@
+@reference "../styles/globals.css";
+
+:root {
+    --typeface-display: "Red Hat Display", sans-serif;
+    --typeface-heading: "Red Hat Display", sans-serif;
+    --typeface-body: "Google Sans", sans-serif;
+
+    --foreground: oklch(0.3257 0.0203 269.5);
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 600;
+}

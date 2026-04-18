@@ -1,0 +1,26 @@
+html {
+  --screen-width: 300px;
+  --screen-height: 500px;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: var(--screen-width);
+  height: var(--screen-height);
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  background-color: violet;
+  height: 100%;
+}
